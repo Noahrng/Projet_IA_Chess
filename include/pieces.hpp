@@ -1,16 +1,15 @@
 #ifndef PIECES_HPP
 #define PIECES_HPP
-#include <plateau.hpp>
-#include <vector>
+#include <coordonnees.hpp>
 
 class Piece  {
     private:
         bool couleur;
-        Coordonnees coods;
+        Coordonnees coords;
     public:
-        Piece();
+        Piece(bool, Coordonnees);
         virtual ~Piece() = default;
-        virtual std::vector<std::pair<int,int>> deplacements(Plateau g) = 0;
+        virtual bool se_deplacer(Coordonnees) = false;
 };
 
 #endif
