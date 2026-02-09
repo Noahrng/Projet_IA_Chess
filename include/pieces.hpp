@@ -4,7 +4,7 @@
 #include "coordinates.hpp"
 
 class Piece  {
-    private:
+    protected:
         bool color; //0: blanc, 1: noir
         Coordinates coords;
     public:
