@@ -1,4 +1,4 @@
-#include <pieces.hpp>
+#include "pieces.hpp"
 
 
-Piece::Piece(bool col, Coordonnees c) : couleur(col), coords(c){}
+Piece::Piece(bool col, Coordinates c) : color(col), coords(c){}
