@@ -7,7 +7,9 @@ class Coordinates{
         int y;
     public:
         Coordinates(int,int);
-        //~Coordinates();
+        ~Coordinates();
+        int getX();
+        int getY();
 };
 
 
