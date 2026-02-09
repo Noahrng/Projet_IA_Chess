@@ -1,6 +1,7 @@
 #ifndef PIECES_HPP
 #define PIECES_HPP
-#include <coordonnees.hpp>
+
+#include "coordonnees.hpp"
 
 class Piece  {
     private:
@@ -9,7 +10,7 @@ class Piece  {
     public:
         Piece(bool, Coordonnees);
         virtual ~Piece() = default;
-        virtual bool se_deplacer(Coordonnees) = false;
+        virtual bool se_deplacer(Coordonnees) = 0;
 };
 
 #endif

@@ -3,10 +3,11 @@
 
 class Coordonnees{
     private:
-        int x,y;
+        int x;
+        int y;
     public:
         Coordonnees(int,int);
-        ~Coordonnees();
+        //~Coordonnees();
 };
 
 
