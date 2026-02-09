@@ -1,16 +1,16 @@
 #ifndef PIECES_HPP
 #define PIECES_HPP
 
-#include "coordonnees.hpp"
+#include "coordinates.hpp"
 
 class Piece  {
     private:
-        bool couleur;
-        Coordonnees coords;
+        bool color; //0: blanc, 1: noir
+        Coordinates coords;
     public:
-        Piece(bool, Coordonnees);
+        Piece(bool, Coordinates);
         virtual ~Piece() = default;
-        virtual bool se_deplacer(Coordonnees) = 0;
+        virtual bool canMove(Coordinates) = 0;
 };
 
 #endif
