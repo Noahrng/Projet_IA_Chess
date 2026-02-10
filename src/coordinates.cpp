@@ -1,14 +1,71 @@
 #include "coordinates.hpp"
 
-Coordinates::Coordinates(int x,int y): x{x},y{y} {
+int abs(int n){
+    if(n<0) return -n;
+    return n;
+}
+
+Coordinates::Coordinates(int x,int y): x{x},y{y}
+{
 
 }
 
-int Coordinates::getX(){
+bool operator==(const Coordinates &a,const Coordinates &b)
+{
+    return a.x==b.x && a.y==b.y;
+}
+
+bool operator!=(const Coordinates &a,const Coordinates &b)
+{
+    return a.x!=b.x || a.y!=b.y;
+}
+
+int Coordinates::getX()
+/*
+    Arguments:
+        void
+
+    Description:
+        retourne la valeur X courrante
+
+    Retour:
+        int
+*/
+{
     return this->x;
 }
 
-int Coordinates::getY(){
+int Coordinates::getY()
+/*
+    Arguments:
+        void
+
+    Description:
+        retourne la valeur X courrante
+
+    Retour:
+        int
+*/
+{
     return this->y;
+}
+
+int Coordinates::distX(const Coordinates &other)
+{
+    return abs(this->x-other.x);
+}
+
+int Coordinates::distY(const Coordinates &other)
+{
+    return abs(this->y-other.y);
+}
+
+int Coordinates::distX(const int X)
+{
+    return abs(this->x-X);
+}
+int Coordinates::distY(const int Y)
+{
+    return abs(this->y-Y);
 }
 
