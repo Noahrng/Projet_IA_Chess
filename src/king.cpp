@@ -1,4 +1,4 @@
-#include <king.hpp>
+#include "../include/king.hpp"
 
 bool King::canMove(Coordinates coord)
 {

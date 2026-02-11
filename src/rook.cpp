@@ -1,7 +1,8 @@
-#include "rook.hpp"
+#include "../include/rook.hpp"
 
 Rook::Rook(bool col,Coordinates c): Piece(col,c){}
 
-bool Rook::canMove(Coordinates new_c){
-    
+bool Rook::canMove(Coordinates new_coords)
+{
+    return (coords.distX(new_coords) == 0) != (coords.distY(new_coords) == 0);
 }

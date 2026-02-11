@@ -1,5 +1,5 @@
-#ifndef TOUR_HPP
-#define TOUR_HPP
+#ifndef ROOK_HPP
+#define ROOK_HPP
 
 #include "pieces.hpp"
 
