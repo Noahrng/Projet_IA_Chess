@@ -3,7 +3,7 @@
 
 #include "coordinates.hpp"
 
-class Piece{
+class Piece  {
     protected:
         bool color; //0: blanc, 1: noir
         Coordinates coords;

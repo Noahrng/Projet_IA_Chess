@@ -1,10 +1,12 @@
-#ifndef TOUR_HPP
-#define TOUR_HPP
+#ifndef ROOK_HPP
+#define ROOK_HPP
 
-#include <pieces.hpp>
+#include "pieces.hpp"
 
-class Tour : public Piece{
-    
-}
+class Rook : public Piece{
+    public:
+        Rook(bool, Coordinates);
+        bool canMove(Coordinates) override;
+};
 
 #endif

@@ -1,4 +1,4 @@
-#include <pawn.hpp>
+#include "../include/pawn.hpp"
 
 bool Pawn::canMove(Coordinates coord)
 {

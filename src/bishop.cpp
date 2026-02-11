@@ -1,0 +1,8 @@
+#include "bishop.hpp"
+
+Bishop::Bishop(bool col,Coordinates c): Piece(col,c){}
+
+bool Bishop::canMove(Coordinates new_coords)
+{
+    return coords.distX(new_coords) == coords.distY(new_coords) && coords != new_coords;
+}

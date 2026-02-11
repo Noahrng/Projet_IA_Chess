@@ -1,4 +1,4 @@
-#include <knight.hpp>
+#include "../include/knight.hpp"
 
 bool Knight::canMove(Coordinates coord)
 {
