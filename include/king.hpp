@@ -5,6 +5,7 @@
 
 class King:public Piece{
     public:
+        King(bool,Coordinates);
         bool canMove(Coordinates) override;
 };
 

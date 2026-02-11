@@ -1,7 +1,7 @@
 #ifndef COORDINATES_HPP
 #define COORDINATES_HPP
 
-int abs(int);
+//int abs(int);
 
 class Coordinates{
     friend bool operator==(const Coordinates&,const Coordinates&);
@@ -11,7 +11,7 @@ class Coordinates{
         int y;
     public:
         Coordinates(int,int);
-        ~Coordinates();
+        ~Coordinates()=default;
         int distX(const Coordinates&);
         int distY(const Coordinates&);
         int distX(const int);
