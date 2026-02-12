@@ -2,10 +2,10 @@
 #include <pawn.hpp>
 
 int main(){
-    Player J1(false);
+    GameController play;
 
-    J1.addPiece(std::make_unique<Pawn>(false,Coordinates{0,1}));
-
+    std::string test=play.enterPlayerMovement();
+    std::cout<<test<<"\n";
 
     return 0;
 }
