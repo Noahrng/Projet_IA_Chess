@@ -24,7 +24,7 @@ class GameController
 
         bool isLetter(char c);
         bool isNumber(char c);
-        bool isnull();
+        bool isNull();
         Coordinates convertStringIntoCoords(std::string);
 };
 
