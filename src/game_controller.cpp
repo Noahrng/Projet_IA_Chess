@@ -24,47 +24,26 @@ bool GameController::isNumber(char c)
 
 Coordinates GameController::convertStringIntoCoords(std::string move)
 {
-    int i;
-    int j;
+    int i= -1;
+    int j= -1;
     if(move.length() == 2){
-        if(isLetter(move[1]) && isNumber(move[0])
-            || isLetter(move[0]) && isNumber(move[1]))
+        if(isLetter(move[1]) && isNumber(move[0])){
+            if(move[1] <= 'h'){
+                j=move[1] - 'a';
+            }
+            if(move[0] >= '1' && move[0] <= '8'){
+                i = move[0] - '1';
+            }
+        }
+        else if (isLetter(move[0]) && isNumber(move[1]))
         {
-            if(isLetter(move[0])){
-                if(move[0] <= 'h'){
-                    j=move[0] - 'a';
-                }
-                else{
-                    j = -1;
-                }
-                if(move[1] >= '1' && move[1] <= '8'){
-                    i = move[1] - '1';
-                }
-                else{
-                    i= -1;
-                }
+            if(move[0] <= 'h'){
+                j=move[0] - 'a';
             }
-            else{
-                if(move[1] <= 'h'){
-                    j=move[1] - 'a';
-                }
-                else{
-                    j = -1;
-                }
-                if(move[0] >= '1' && move[0] <= '8'){
-                    i = move[0] - '1';
-                }
-                else{
-                    i= -1;
-                }
+            if(move[1] >= '1' && move[1] <= '8'){
+                i = move[1] - '1';
             }
         }
-        else{
-            i= -1 ; j = -1;
-        }
-    }
-    else{
-        i= -1; j = -1;
     }
 
     Coordinates c(j,i);
