@@ -4,6 +4,7 @@ Player::Player(bool color):color{color}
 {
     
 }
+
 void Player::addPiece(std::unique_ptr<Piece> p){
     pieces.push_back(std::move(p));
 }
@@ -13,7 +14,7 @@ void Player::removePiece(Coordinates c){
     while(i<pieces.size() && pieces[i].get()->getCoordinates()!=c){
         i++;
     }
-    pieces.erase(pieces.begin()+i);
+    if(i<pieces.size()) pieces.erase(pieces.begin()+i);
 }
 
     

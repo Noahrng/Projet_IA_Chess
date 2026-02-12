@@ -4,16 +4,17 @@
 #include "player.hpp"
 #include "coordinates.hpp"
 #include <string>
+#include <iostream>
 
 class GameController 
 {
     private:
-        Player* j1;
-        Player* j2;
-        Player* current_player;
+        Player j1;
+        Player j2;
+        Player &current_player;
         Piece* piece_chosen;
     public:
-        GameController(Player*, Player*);
+        GameController();
         //Entrées joueur
         std::string enterPlayerMovement(); 
 
