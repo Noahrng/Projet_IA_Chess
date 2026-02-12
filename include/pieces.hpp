@@ -9,6 +9,7 @@ class Piece  {
         Coordinates coords;
     public:
         Piece(bool, Coordinates);
+        Coordinates getCoordinates();
         virtual ~Piece() = default;
         virtual bool canMove(Coordinates) = 0;
 };

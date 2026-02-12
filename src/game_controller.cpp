@@ -1,4 +1,4 @@
-#include "../include/game_controller.hpp"
+#include <game_controller.hpp>
 
 GameController::GameController(Player* p1, Player* p2) : j1(p1), j2(p2) {}
 
