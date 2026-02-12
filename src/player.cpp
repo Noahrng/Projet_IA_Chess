@@ -8,11 +8,11 @@ void Player::addPiece(std::unique_ptr<Piece> p){
 }
 
 void Player::removePiece(Coordinates c){
-    for(std::size_t i=0;i<pieces.size();i++){
-        if(pieces[i].get()->getCoordinates()==c){
-            pieces.erase(pieces.begin()+i);
-        }
+    std::size_t i=0;
+    while(i<pieces.size() && pieces[i].get()->getCoordinates()!=c){
+        i++;
     }
+    pieces.erase(pieces.begin()+i);
 }
 
     
