@@ -1,6 +1,6 @@
 #include "../include/pawn.hpp"
 
-Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1)
+Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1,"♟")
 {
 
 }

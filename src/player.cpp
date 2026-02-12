@@ -92,6 +92,17 @@ Piece* Player::getPiece(Coordinates c){
     return nullptr;
 }
 
+
+bool Player::isWhite()
+{
+    return !color;
+}
+
+bool Player::isBlack()
+{
+    return color;
+}
+
 void Player::addPiece(std::unique_ptr<Piece> p){
     pieces.push_back(std::move(p));
 }

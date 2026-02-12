@@ -11,7 +11,7 @@ int main(){
 
 
     Player j1(0);
-    Player j2(0);
+    Player j2(1);
     TerminalDisplay t(j1,j2);
     t.printBoard();
     return 0;
