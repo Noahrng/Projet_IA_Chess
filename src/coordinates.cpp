@@ -69,3 +69,6 @@ int Coordinates::distY(const int Y)
     return abs(this->y-Y);
 }
 
+void Coordinates::print(){
+    std::cout<<"x="<<x<<" y="<<y<<"\n";
+}

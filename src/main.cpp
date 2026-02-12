@@ -9,10 +9,21 @@ int main(){
     std::cout<<test<<"\n";
     std::cout<<"♔"<<'\n';
 
+    play.switchTurn();
+    play.switchTurn();
+
+    Coordinates test2=play.convertStringIntoCoords(test);
+    test2.print();
+    play.choosePiece(test2);
+    std::cout<<play.isnull()<<"\n";
+
+    
+
 
     Player j1(0);
     Player j2(0);
     TerminalDisplay t(j1,j2);
     t.printBoard();
+    
     return 0;
 }
