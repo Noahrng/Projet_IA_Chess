@@ -1,6 +1,8 @@
 #ifndef COORDINATES_HPP
 #define COORDINATES_HPP
 
+#include <iostream>
+
 class Coordinates{
     friend bool operator==(const Coordinates&,const Coordinates&);
     friend bool operator!=(const Coordinates&,const Coordinates&);
@@ -16,6 +18,7 @@ class Coordinates{
         int distY(const int);
         int getX();
         int getY();
+        void print();
 };
 
 

@@ -9,7 +9,7 @@
 Player::Player(bool color):color{color}
 {
     //Création de chaque pieces
-
+    std::cout<<"constructeur" <<color << "\n";
     int i,j;
     //Pions:
     for(j = 0 ; j < 8 ; ++j){
@@ -22,61 +22,61 @@ Player::Player(bool color):color{color}
 
     //Cavaliers
     if(!color){
-        Coordinates c1(7,1);
-        Coordinates c2(7,6);
+        Coordinates c1(1,7);
+        Coordinates c2(6,7);
         pieces.push_back(std::make_unique<Knight>(color, c1));
         pieces.push_back(std::make_unique<Knight>(color, c2));
     }
     else{
-        Coordinates c1(0,1);
-        Coordinates c2(0,6);
+        Coordinates c1(1,0);
+        Coordinates c2(6,0);
         pieces.push_back(std::make_unique<Knight>(color, c1));
         pieces.push_back(std::make_unique<Knight>(color, c2));
     }
 
     //Fous
     if(!color){
-        Coordinates c1(7,2);
-        Coordinates c2(7,5);
+        Coordinates c1(2,7);
+        Coordinates c2(5,7);
         pieces.push_back(std::make_unique<Bishop>(color, c1));
         pieces.push_back(std::make_unique<Bishop>(color, c2));
     }
     else{
-        Coordinates c1(0,2);
-        Coordinates c2(0,5);
+        Coordinates c1(2,0);
+        Coordinates c2(5,0);
         pieces.push_back(std::make_unique<Bishop>(color, c1));
         pieces.push_back(std::make_unique<Bishop>(color, c2));
     }
     //Tours
     if(!color){
-        Coordinates c1(7,0);
+        Coordinates c1(0,7);
         Coordinates c2(7,7);
         pieces.push_back(std::make_unique<Rook>(color, c1));
         pieces.push_back(std::make_unique<Rook>(color, c2));
     }
     else{
         Coordinates c1(0,0);
-        Coordinates c2(0,7);
+        Coordinates c2(7,0);
         pieces.push_back(std::make_unique<Rook>(color, c1));
         pieces.push_back(std::make_unique<Rook>(color, c2));
     }
 
     //Reine
     if(!color){
-        Coordinates c(7,3);
+        Coordinates c(3,7);
         pieces.push_back(std::make_unique<Queen>(color, c));
     }
     else{
-        Coordinates c(0,3);
+        Coordinates c(3,0);
         pieces.push_back(std::make_unique<Queen>(color, c));
     }
     //Roi
     if(!color){
-        Coordinates c(7,4);
+        Coordinates c(4,7);
         pieces.push_back(std::make_unique<King>(color, c));
     }
     else{
-        Coordinates c(0,4);
+        Coordinates c(4,0);
         pieces.push_back(std::make_unique<King>(color, c));
     }
 }
@@ -103,5 +103,3 @@ void Player::removePiece(Coordinates c){
     }
     if(i<pieces.size()) pieces.erase(pieces.begin()+i);
 }
-
-    
