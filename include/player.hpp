@@ -16,6 +16,7 @@ class Player
         ~Player()=default;
         void addPiece(std::unique_ptr<Piece>);
         void removePiece(Coordinates);
+        Piece* getPiece(Coordinates);
 
 
 

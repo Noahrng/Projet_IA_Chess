@@ -4,7 +4,7 @@
 int main(){
     GameController play;
 
-    std::string test=play.enterPlayerMovement();
+    std::string test=play.enterPlayerCoordinates();
     std::cout<<test<<"\n";
 
     return 0;
