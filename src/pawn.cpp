@@ -10,7 +10,7 @@ bool Pawn::canMove(Coordinates coord)
     int dist=this->coords.distY(coord);
     if(color==false)
     {
-        if(dist>=1 && dist<=2 && this->coords.distY(1)==0)
+        if(dist>=1 && dist<=2 && this->coords.distY(7)==0)
         {
             return true;
         }
@@ -25,7 +25,7 @@ bool Pawn::canMove(Coordinates coord)
     }
     else
     {
-        if(dist>=1 && dist<=2 && this->coords.distY(7)==0)
+        if(dist>=1 && dist<=2 && this->coords.distY(1)==0)
         {
             return true;
         }
