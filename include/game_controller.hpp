@@ -9,8 +9,8 @@
 class GameController 
 {
     private:
-        Player j1;
-        Player j2;
+        Player &j1;
+        Player &j2;
         Player &current_player;
         Piece* piece_chosen;
     public:

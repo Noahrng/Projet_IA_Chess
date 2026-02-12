@@ -14,6 +14,11 @@ class Player
     public:
         Player(bool color);
         ~Player()=default;
+        Player(const Player&) = delete;            
+        Player& operator=(const Player&) = delete;
+        Player(Player&&) = default;              
+        Player& operator=(Player&&) = default;
+
 
         Piece* getPiece(Coordinates);
         void addPiece(std::unique_ptr<Piece>);
