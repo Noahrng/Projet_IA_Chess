@@ -2,7 +2,7 @@
 #include "../include/bishop.hpp"
 #include "../include/rook.hpp"
 
-Queen::Queen(bool col,Coordinates c): Piece(col,c){}
+Queen::Queen(bool col,Coordinates c): Piece(col,c,9){}
 
 bool Queen::canMove(Coordinates new_coords){
     Bishop b(color, coords);
