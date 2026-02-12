@@ -1,4 +1,4 @@
-#include "bishop.hpp"
+#include "../include/bishop.hpp"
 
 Bishop::Bishop(bool col,Coordinates c): Piece(col,c){}
 

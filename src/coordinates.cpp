@@ -1,4 +1,4 @@
-#include "coordinates.hpp"
+#include "../include/coordinates.hpp"
 
 int abs(int n){
     if(n<0) return -n;
