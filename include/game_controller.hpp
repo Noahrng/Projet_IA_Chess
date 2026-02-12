@@ -12,6 +12,7 @@ class GameController
         Player j1;
         Player j2;
         Player &current_player;
+        Piece* piece_chosen;
     public:
         GameController();
         //Entrées joueur
