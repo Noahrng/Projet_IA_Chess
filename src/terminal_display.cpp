@@ -12,14 +12,36 @@ void TerminalDisplay::printBoard()
     {
         for(int j = 0 ; j < 8 ; ++j)
         {
+            Coordinates c(j,i);
+            Piece * p;
             if((i+j)%2==0){
-                std::cout << "\033[47m";
+                std::cout << "\033[48;2;245;222;179m";
             }
             else{
-                std::cout << "\033[40m";
+                std::cout << "\033[48;2;34;139;34m";
             }
 
-            std::cout << "  \033[0m";
+            if( (p=p1.getPiece(c)) != nullptr){
+                if(p1.isWhite()){
+                    std::cout << "\033[97m" << p->getTerminalSprite() << " \033[0m";
+                }
+                else{
+                    std::cout << "\033[30m" << p->getTerminalSprite() << " \033[0m";
+                }
+            }
+            else if((p=p2.getPiece(c)) != nullptr){
+                if(p2.isWhite()){
+                    std::cout << "\033[97m" << p->getTerminalSprite() << " \033[0m";
+                }
+                else{
+                    std::cout << "\033[30m" << p->getTerminalSprite() << " \033[0m";
+                }
+            }
+            else{
+                std::cout << "  ";
+            }
+
+            std::cout << "\033[0m";
         }
         std::cout << "\n";
     }
