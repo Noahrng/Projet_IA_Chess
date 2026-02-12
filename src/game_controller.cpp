@@ -32,7 +32,7 @@ Coordinates GameController::convertStringIntoCoords(std::string move)
                 j=move[1] - 'a';
             }
             if(move[0] >= '1' && move[0] <= '8'){
-                i = move[0] - '1';
+                i = 7- (move[0] - '1');
             }
         }
         else if (isLetter(move[0]) && isNumber(move[1]))
@@ -41,7 +41,7 @@ Coordinates GameController::convertStringIntoCoords(std::string move)
                 j=move[0] - 'a';
             }
             if(move[1] >= '1' && move[1] <= '8'){
-                i = move[1] - '1';
+                i = 7-(move[1] - '1');
             }
         }
     }
