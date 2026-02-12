@@ -1,6 +1,6 @@
 #include "../include/knight.hpp"
 
-Knight::Knight(bool col,Coordinates c):Piece(col,c)
+Knight::Knight(bool col,Coordinates c):Piece(col,c,3)
 {
 
 }
