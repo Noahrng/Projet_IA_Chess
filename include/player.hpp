@@ -18,8 +18,7 @@ class Player
         Piece* getPiece(Coordinates);
         void addPiece(std::unique_ptr<Piece>);
         void removePiece(Coordinates);
-        Piece* getPiece(Coordinates);
-
+        
 
 
 };

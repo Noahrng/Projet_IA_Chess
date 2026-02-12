@@ -103,13 +103,3 @@ void Player::removePiece(Coordinates c){
     }
     if(i<pieces.size()) pieces.erase(pieces.begin()+i);
 }
-
-Piece* Player::getPiece(Coordinates c){
-    size_t i=0;
-    while(i<pieces.size() && pieces[i].get()->getCoordinates()!=c){
-        i++;
-    }
-    if(i<pieces.size()) return pieces[i].get();
-    return nullptr;
-}
-    
