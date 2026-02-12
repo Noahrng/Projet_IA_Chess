@@ -1,7 +1,10 @@
 #include <game_controller.hpp>
-GameController::GameController():j1{false},j2{true},current_player{j1}{
-
+GameController::GameController()
+    : j1(true), j2(false), current_player(&j1), piece_chosen(nullptr)
+{
+    // ici tu peux ajouter les pièces initiales pour chaque joueur
 }
+
 //GameController::GameController(Player* p1, Player* p2) : j1(p1), j2(p2) {}
 
 //Entrées joueur

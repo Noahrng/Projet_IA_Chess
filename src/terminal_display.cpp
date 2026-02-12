@@ -19,7 +19,7 @@ void TerminalDisplay::printBoard()
                 std::cout << "\033[40m";
             }
 
-            std::cout << "  \033[0m";
+            std::cout << "♔ \033[0m";
         }
         std::cout << "\n";
     }
