@@ -66,6 +66,6 @@ Coordinates GameController::convertStringIntoCoords(std::string move)
     return c;
 }
 
-bool GameController::isnull(){
+bool GameController::isNull(){
     return piece_chosen==nullptr;
 }
