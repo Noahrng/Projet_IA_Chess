@@ -1,6 +1,6 @@
 #include "../include/rook.hpp"
 
-Rook::Rook(bool col,Coordinates c): Piece(col,c){}
+Rook::Rook(bool col,Coordinates c): Piece(col,c,5){}
 
 bool Rook::canMove(Coordinates new_coords)
 {
