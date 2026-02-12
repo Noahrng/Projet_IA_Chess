@@ -1,5 +1,10 @@
 #include "../include/knight.hpp"
 
+Knight::Knight(bool col,Coordinates c):Piece(col,c)
+{
+
+}
+
 bool Knight::canMove(Coordinates coord)
 {
     int distx=this->coords.distX(coord);

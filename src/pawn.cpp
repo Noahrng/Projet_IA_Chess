@@ -1,5 +1,10 @@
 #include "../include/pawn.hpp"
 
+Pawn::Pawn(bool col,Coordinates c):Piece(col,c)
+{
+
+}
+
 bool Pawn::canMove(Coordinates coord)
 {
     int dist=this->coords.distY(coord);

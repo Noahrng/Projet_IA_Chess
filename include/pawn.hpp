@@ -5,6 +5,7 @@
 
 class Pawn:public Piece{
     public:
+        Pawn(bool,Coordinates);
         bool canMove(Coordinates) override;
 };
 
