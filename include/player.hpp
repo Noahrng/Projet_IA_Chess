@@ -25,7 +25,7 @@ class Player
         bool isBlack();
         void addPiece(std::unique_ptr<Piece>);
         void removePiece(Coordinates);
-
+        
 
 
 };

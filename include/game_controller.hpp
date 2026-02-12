@@ -16,10 +16,15 @@ class GameController
     public:
         GameController();
         //Entrées joueur
-        std::string enterPlayerMovement(); 
+
+        
+        std::string enterPlayerCoordinates(); 
+        void choosePiece(Coordinates);
+        void switchTurn();
 
         bool isLetter(char c);
         bool isNumber(char c);
+        bool isnull();
         Coordinates convertStringIntoCoords(std::string);
 };
 

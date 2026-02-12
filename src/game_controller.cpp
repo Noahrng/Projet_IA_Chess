@@ -1,19 +1,31 @@
 #include <game_controller.hpp>
-GameController::GameController()
-    : j1(true), j2(false), current_player(&j1), piece_chosen(nullptr)
+GameController::GameController(): j1(true), j2(false), current_player(&j1), piece_chosen(nullptr)
 {
-    // ici tu peux ajouter les pièces initiales pour chaque joueur
 }
 
 //GameController::GameController(Player* p1, Player* p2) : j1(p1), j2(p2) {}
 
 //Entrées joueur
-std::string GameController::enterPlayerMovement(){
+std::string GameController::enterPlayerCoordinates()
+{
     std::string entry;
-    std::cout<<"entre où veut tu deplacer la pièce"<<std::endl;
+    std::cout<<"entre les coordonnée sur l'echiquier"<<std::endl;
     std::cin>>entry;
     return entry;
 } 
+
+void GameController::choosePiece(Coordinates c)
+{
+    this->piece_chosen=current_player->getPiece(c);
+}
+
+void GameController::switchTurn()
+{
+    if(current_player==&j1) current_player=&j2;
+    else current_player=&j1;
+}
+
+
 
 bool GameController::isLetter(char c)
 {
@@ -52,4 +64,8 @@ Coordinates GameController::convertStringIntoCoords(std::string move)
     Coordinates c(j,i);
 
     return c;
+}
+
+bool GameController::isnull(){
+    return piece_chosen==nullptr;
 }
