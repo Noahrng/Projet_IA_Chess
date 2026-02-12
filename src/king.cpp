@@ -1,6 +1,6 @@
 #include "../include/king.hpp"
 
-King::King(bool col,Coordinates c):Piece(col,c)
+King::King(bool col,Coordinates c):Piece(col,c,1000)
 {
 
 }

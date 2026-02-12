@@ -1,6 +1,6 @@
 #include "../include/bishop.hpp"
 
-Bishop::Bishop(bool col,Coordinates c): Piece(col,c){}
+Bishop::Bishop(bool col,Coordinates c): Piece(col,c,3){}
 
 bool Bishop::canMove(Coordinates new_coords)
 {

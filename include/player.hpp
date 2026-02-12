@@ -14,6 +14,8 @@ class Player
     public:
         Player(bool color);
         ~Player()=default;
+
+        Piece* getPiece(Coordinates);
         void addPiece(std::unique_ptr<Piece>);
         void removePiece(Coordinates);
 
