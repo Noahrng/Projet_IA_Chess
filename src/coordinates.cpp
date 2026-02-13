@@ -5,6 +5,10 @@ int abs(int n){
     return n;
 }
 
+Coordinates::Coordinates(){
+    
+}
+
 Coordinates::Coordinates(int x,int y): x{x},y{y}
 {
 
@@ -69,6 +73,19 @@ int Coordinates::distY(const int Y)
     return abs(this->y-Y);
 }
 
+
+void Coordinates::setX(int new_x){
+    x = new_x;
+}
+
+void Coordinates::setY(int new_y){
+    y = new_y;
+}
+
+void Coordinates::setXY(int new_x,int new_y){
+    x = new_x;
+    y = new_y;
+}
 void Coordinates::print(){
     std::cout<<"x="<<x<<" y="<<y<<"\n";
 }

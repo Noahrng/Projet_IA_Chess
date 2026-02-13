@@ -23,14 +23,14 @@ int main(){
 
     Player j1(0);
     Player j2(1);
-    TerminalDisplay t(j1,j2);
+    TerminalDisplay t(j1,j2,1);
     t.printBoard();
 
     InitWindow(500,500,"Chess");
 
     while(WindowShouldClose()==false){
         BeginDrawing();
-        ClearBackground(GREEN);
+        ClearBackground(WHITE);
         EndDrawing();
     }
 
