@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-TerminalDisplay::TerminalDisplay(Player &j1, Player &j2): p1(j1),p2(j2){
+TerminalDisplay::TerminalDisplay(Player &j1, Player &j2,bool s): Display(j1,j2,s){
 
 }
 
@@ -12,7 +12,9 @@ void TerminalDisplay::printBoard()
     {
         for(int j = 0 ; j < 8 ; ++j)
         {
-            Coordinates c(j,i);
+            Coordinates c;
+            if(!side) c.setXY(j,i);
+            else c.setXY(7-j,7-i);
             Piece * p;
             if((i+j)%2==0){
                 std::cout << "\033[48;2;245;222;179m";

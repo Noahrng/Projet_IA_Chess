@@ -6,10 +6,8 @@
 
 class TerminalDisplay : public Display{
     private: 
-        Player &p1;
-        Player &p2;
     public:
-        TerminalDisplay(Player&, Player&);
+        TerminalDisplay(Player&, Player&, bool);
         void printBoard();
 };
 
