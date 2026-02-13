@@ -17,7 +17,7 @@ all: $(BLD_DIR)/$(EXE)
 
 # === Lien final ===
 $(BLD_DIR)/$(EXE): $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ -L$(RAYLIB_LIB_DIR) -lraylib
+	$(CC) $(CFLAGS) $^ -o $@ -L$(RAYLIB_LIB_DIR) -Wl,-Bstatic -lraylib -Wl,-Bdynamic
 
 # === Compilation générique pour chaque .o ===
 $(BLD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BLD_DIR)
