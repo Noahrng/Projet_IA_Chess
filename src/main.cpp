@@ -1,6 +1,7 @@
 #include <game_controller.hpp>
 #include <pawn.hpp>
 #include "terminal_display.hpp"
+#include <raylib-5.5_linux_amd64/include/raylib.h>
 
 int main(){
     GameController play;
@@ -24,6 +25,15 @@ int main(){
     Player j2(0);
     TerminalDisplay t(j1,j2);
     t.printBoard();
+
+    InitWindow(500,500,"Chess");
+
+    while(WindowShouldClose()==false){
+        BeginDrawing();
+        ClearBackground(GREEN);
+        EndDrawing();
+    }
+
     
     return 0;
 }
