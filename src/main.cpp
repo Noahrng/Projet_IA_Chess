@@ -16,7 +16,7 @@ int main(){
     Coordinates test2=play.convertStringIntoCoords(test);
     test2.print();
     play.choosePiece(test2);
-    std::cout<<play.isnull()<<"\n";
+    std::cout<<play.isNull()<<"\n";
 
     
 
