@@ -5,14 +5,10 @@ Piece::Piece(bool col, Coordinates c,int v, std::string ts) : color(col), coords
 
 bool operator==(const Piece &a,const Piece &b)
 {
-    std::cout<<"test\n";
-    std::cout<<a.terminal_sprite << "[]"<<b.terminal_sprite<<"\n";
     return a.color==b.color && a.coords==b.coords;
 }
 bool operator!=(const Piece &a,const Piece &b)
 {
-    std::cout<<"test\n";
-    std::cout<<a.terminal_sprite << "[]"<<b.terminal_sprite<<"\n";
     return a.color!=b.color || a.coords!=b.coords;
 }
 
