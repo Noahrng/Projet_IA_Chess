@@ -26,6 +26,16 @@ int main(){
     TerminalDisplay t(j1,j2,1);
     t.printBoard();
 
+    bool testcomp=j1==j1;
+
+    std::cout<<"test de comparaison : "<<testcomp<<std::endl;
+
+    GameController playt1,playt2;
+
+    bool testcomp2=playt1==playt2;
+
+    std::cout<<"test de comparaison n2 : "<<testcomp2<<std::endl;
+    /*
     InitWindow(500,500,"Chess");
 
     while(WindowShouldClose()==false){
@@ -33,7 +43,7 @@ int main(){
         ClearBackground(WHITE);
         EndDrawing();
     }
-
+    */
     
     return 0;
 }
