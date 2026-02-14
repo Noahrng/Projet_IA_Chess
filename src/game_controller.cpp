@@ -3,6 +3,16 @@ GameController::GameController(): j1(true), j2(false), current_player(&j1), piec
 {
 }
 
+bool operator==(const GameController &a,const GameController &b)
+{
+    return a.j1==b.j1 && a.j2==b.j2;
+}
+
+bool operator!=(const GameController &a,const GameController &b)
+{
+    return a.j1!=b.j1 || a.j2!=b.j2;
+}
+
 //GameController::GameController(Player* p1, Player* p2) : j1(p1), j2(p2) {}
 
 //Entrées joueur

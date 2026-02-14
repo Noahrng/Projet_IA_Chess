@@ -92,6 +92,27 @@ Piece* Player::getPiece(Coordinates c){
     return nullptr;
 }
 
+bool operator==(const Player &a,const Player &b)
+{
+    std::cout<<"testcompplayer\n";
+    if(a.color!=b.color) return false;
+    if(a.pieces.size()!=b.pieces.size()) return false;
+    for(std::size_t i=0;i<a.pieces.size();i++){
+        if(a.pieces[i]!=b.pieces[i]) return false;
+    }
+    return true;
+}
+
+bool operator!=(const Player &a,const Player &b)
+{
+    if(a.color!=b.color) return true;
+    if(a.pieces.size()!=b.pieces.size()) return true;
+    for(std::size_t i=0;i<a.pieces.size();i++){
+        if(a.pieces[i]!=b.pieces[i]) return true;
+    }
+    return false;
+}
+
 
 bool Player::isWhite()
 {

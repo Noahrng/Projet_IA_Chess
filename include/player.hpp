@@ -7,6 +7,8 @@
 
 class Player
 {
+    friend bool operator==(const Player&,const Player&);
+    friend bool operator!=(const Player&,const Player&);
     private:
         bool color;
         std::vector<std::unique_ptr<Piece>> pieces;

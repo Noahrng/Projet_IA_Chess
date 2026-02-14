@@ -8,6 +8,8 @@
 
 class GameController 
 {
+    friend bool operator==(const GameController&,const GameController&);
+    friend bool operator!=(const GameController&,const GameController&);
     private:
         Player j1;
         Player j2;

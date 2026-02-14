@@ -5,6 +5,8 @@
 #include <string>
 
 class Piece  {
+    friend bool operator==(const Piece&,const Piece&);
+    friend bool operator!=(const Piece&,const Piece&);
     protected:
         bool color; //0: blanc, 1: noir
         Coordinates coords;
@@ -18,5 +20,6 @@ class Piece  {
         virtual ~Piece() = default;
         virtual bool canMove(Coordinates) = 0;
 };
+
 
 #endif
