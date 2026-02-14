@@ -96,12 +96,6 @@ bool operator==(const Player &a,const Player &b)
 {
     if(a.color!=b.color) return false;
     if(a.pieces.size()!=b.pieces.size()) return false;
-    /*
-    for(std::size_t i=0;i<a.pieces.size();i++){
-        if(*(a.pieces[i]).get()!=*(b.pieces[i]).get()) return false;
-    }
-        */
-    
     for(std::size_t i=0;i<a.pieces.size();i++)
     {
         bool found=false;
