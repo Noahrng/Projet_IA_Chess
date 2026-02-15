@@ -9,7 +9,7 @@ bool operator==(const Piece &a,const Piece &b)
 }
 bool operator!=(const Piece &a,const Piece &b)
 {
-    return a.color!=b.color || a.coords!=b.coords;
+    return !(a==b);
 }
 
 std::string Piece::getTerminalSprite(){

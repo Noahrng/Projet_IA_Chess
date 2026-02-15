@@ -21,7 +21,7 @@ bool operator==(const Coordinates &a,const Coordinates &b)
 
 bool operator!=(const Coordinates &a,const Coordinates &b)
 {
-    return a.x!=b.x || a.y!=b.y;
+    return !(a==b);
 }
 
 int Coordinates::getX()
