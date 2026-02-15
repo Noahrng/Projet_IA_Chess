@@ -10,3 +10,8 @@ bool Queen::canMove(Coordinates new_coords){
 
     return b.canMove(new_coords) || r.canMove(new_coords);
 }
+
+PieceType Queen::getType() const
+{
+    return PieceType::Queen;
+};

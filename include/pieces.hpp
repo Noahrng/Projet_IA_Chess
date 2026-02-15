@@ -4,6 +4,16 @@
 #include "coordinates.hpp"
 #include <string>
 
+enum class PieceType
+{
+    Pawn=0,
+    Rook,
+    Knight,
+    Bishop,
+    Queen,
+    King
+};
+
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
     friend bool operator!=(const Piece&,const Piece&);
@@ -18,7 +28,9 @@ class Piece  {
         std::string getTerminalSprite();
         Coordinates getCoordinates();
         virtual ~Piece() = default;
+
         virtual bool canMove(Coordinates) = 0;
+        virtual PieceType getType()const=0;
 };
 
 

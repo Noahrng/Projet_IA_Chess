@@ -21,7 +21,6 @@ class Player
         Player(Player&&) = default;              
         Player& operator=(Player&&) = default;
 
-
         Piece* getPiece(Coordinates);
         bool isWhite();
         bool isBlack();

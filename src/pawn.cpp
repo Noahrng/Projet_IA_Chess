@@ -40,3 +40,7 @@ bool Pawn::canMove(Coordinates coord)
     }
 }
 
+PieceType Pawn::getType() const
+{
+    return PieceType::Pawn;
+};

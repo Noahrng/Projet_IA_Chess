@@ -25,20 +25,15 @@ int main(){
     Player j2(1);
     TerminalDisplay t(j1,j2,1);
     t.printBoard();
-
-    bool testcomp=j1==j1;
-
-    std::cout<<"test de comparaison : "<<testcomp<<std::endl;
-
-    GameController playt1,playt2;
-
-    bool testcomp2=playt1==playt2;
-
-    std::cout<<"test de comparaison n2 : "<<testcomp2<<std::endl;
     
     GraphicDisplay gp1(800,800,"CHESS",j1,j2,1);
-
+    
     gp1.run();
+    std::cout<<"test\n";
+
+
+
+   
     
     return 0;
 }
