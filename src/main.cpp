@@ -1,7 +1,7 @@
 #include <game_controller.hpp>
 #include <pawn.hpp>
 #include "terminal_display.hpp"
-#include <raylib-5.5_linux_amd64/include/raylib.h>
+#include <graphic_display.hpp>
 
 int main(){
     GameController play;
@@ -35,15 +35,10 @@ int main(){
     bool testcomp2=playt1==playt2;
 
     std::cout<<"test de comparaison n2 : "<<testcomp2<<std::endl;
-    /*
-    InitWindow(500,500,"Chess");
+    
+    GraphicDisplay gp1(800,800,"CHESS",j1,j2,1);
 
-    while(WindowShouldClose()==false){
-        BeginDrawing();
-        ClearBackground(WHITE);
-        EndDrawing();
-    }
-    */
+    gp1.run();
     
     return 0;
 }
