@@ -54,6 +54,25 @@ int Coordinates::getY()
     return this->y;
 }
 
+void Coordinates::setX(int new_x){
+    x = new_x;
+}
+
+void Coordinates::setY(int new_y){
+    y = new_y;
+}
+
+void Coordinates::setXY(int new_x,int new_y){
+    x = new_x;
+    y = new_y;
+}
+
+bool Coordinates::onBoard()
+{
+    if(x>=0 && x<8 && y>=0 && y<8) return true;
+    return false;
+}
+
 int Coordinates::distX(const Coordinates &other)
 {
     return abs(this->x-other.x);
@@ -74,18 +93,6 @@ int Coordinates::distY(const int Y)
 }
 
 
-void Coordinates::setX(int new_x){
-    x = new_x;
-}
-
-void Coordinates::setY(int new_y){
-    y = new_y;
-}
-
-void Coordinates::setXY(int new_x,int new_y){
-    x = new_x;
-    y = new_y;
-}
 void Coordinates::print(){
     std::cout<<"x="<<x<<" y="<<y<<"\n";
 }

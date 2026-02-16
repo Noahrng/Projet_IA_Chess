@@ -1,19 +1,29 @@
 #include <game_controller.hpp>
-GameController::GameController(): j1(true), j2(false), current_player(&j1), piece_chosen(nullptr)
+GameController::GameController()
 {
+    current_player = new Player(true);
+    waiting_player = new Player(false);
+    piece_chosen = nullptr;
+}
+
+GameController::~GameController()
+{
+    delete current_player;
+    delete waiting_player;
 }
 
 bool operator==(const GameController &a,const GameController &b)
 {
-    return a.j1==b.j1 && a.j2==b.j2;
+    return *(a.current_player)==*(b.current_player) && 
+    *(a.waiting_player)==*(b.waiting_player) ||
+    *(a.waiting_player)==*(b.current_player) && 
+    *(a.current_player)==*(b.waiting_player);
 }
 
 bool operator!=(const GameController &a,const GameController &b)
 {
     return !(a==b);
 }
-
-//GameController::GameController(Player* p1, Player* p2) : j1(p1), j2(p2) {}
 
 //Entrées joueur
 std::string GameController::enterPlayerCoordinates()
@@ -31,8 +41,9 @@ void GameController::choosePiece(Coordinates c)
 
 void GameController::switchTurn()
 {
-    if(current_player==&j1) current_player=&j2;
-    else current_player=&j1;
+    auto tmp = current_player;
+    current_player = waiting_player;
+    waiting_player = tmp;
 }
 
 
@@ -78,4 +89,27 @@ Coordinates GameController::convertStringIntoCoords(std::string move)
 
 bool GameController::isNull(){
     return piece_chosen==nullptr;
+}
+
+
+//Déplacements
+
+bool GameController::pieceInBetween(Coordinates from, Coordinates to)
+/* 
+Vérifie s'il y a une pièce entre les coordonnées de départ, et les coordonnées d'arrivées. 
+Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, lignes ou colonnes
+*/
+{
+    if(!from.onBoard() || !to.onBoard()) return false;
+
+    if(from.distX(to)  == 0 && from.distY(to) != 0){
+        //Même colonne
+        
+    }
+
+}
+
+bool GameController::canMovePiece(Coordinates from, Coordinates to)
+{
+    if(!from.onBoard() || !to.onBoard()) return false;  
 }

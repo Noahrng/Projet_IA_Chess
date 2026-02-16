@@ -11,9 +11,8 @@ class GameController
     friend bool operator==(const GameController&,const GameController&);
     friend bool operator!=(const GameController&,const GameController&);
     private:
-        Player j1;
-        Player j2;
-        Player *current_player;
+        Player* current_player;
+        Player* waiting_player;
         Piece* piece_chosen;
     public:
         GameController();
@@ -28,6 +27,10 @@ class GameController
         bool isNumber(char c);
         bool isNull();
         Coordinates convertStringIntoCoords(std::string);
+
+        //Déplacements
+        bool pieceInBetween(Coordinates from, Coordinates to);
+        bool canMovePiece(Coordinates, Coordinates);
 };
 
 #endif
