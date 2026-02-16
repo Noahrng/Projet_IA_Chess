@@ -8,25 +8,27 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,Player &j1, Play
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width,height,title.c_str());
     SetTargetFPS(30);
-    this->addImage(AssetID::chessBoard,"assets/PixelArtChess/chess_pink/board.png");
+    this->addImage(AssetID::chessBoard,"assets/board_b&g.png");
 
-    this->addImage(AssetID::pawnWhite,"assets/ChessAssets/w_Pawn.png");
-    this->addImage(AssetID::pawnBlack,"assets/ChessAssets/b_Pawn.png");
+    const std::string basePath = "assets/";
 
-    this->addImage(AssetID::bishopWhite,"assets/ChessAssets/w_Bishop.png");
-    this->addImage(AssetID::bishopBlack,"assets/ChessAssets/b_Bishop.png");
+    this->addImage(AssetID::pawnWhite,basePath+"w_Pawn.png");
+    this->addImage(AssetID::pawnBlack,basePath+"b_Pawn.png");
 
-    this->addImage(AssetID::kingWhite,"assets/ChessAssets/w_King.png");
-    this->addImage(AssetID::kingBlack,"assets/ChessAssets/b_King.png");
+    this->addImage(AssetID::bishopWhite,basePath+"w_Bishop.png");
+    this->addImage(AssetID::bishopBlack,basePath+"b_Bishop.png");
 
-    this->addImage(AssetID::knightWhite,"assets/ChessAssets/w_Knight.png");
-    this->addImage(AssetID::knightBlack,"assets/ChessAssets/b_Knight.png");
+    this->addImage(AssetID::kingWhite,basePath+"w_King.png");
+    this->addImage(AssetID::kingBlack,basePath+"b_King.png");
 
-    this->addImage(AssetID::queenWhite,"assets/ChessAssets/w_Queen.png");
-    this->addImage(AssetID::queenBlack,"assets/ChessAssets/b_Queen.png");
+    this->addImage(AssetID::knightWhite,basePath+"w_Knight.png");
+    this->addImage(AssetID::knightBlack,basePath+"b_Knight.png");
 
-    this->addImage(AssetID::rookWhite,"assets/ChessAssets/w_Rook.png");
-    this->addImage(AssetID::rookBlack,"assets/ChessAssets/b_Rook.png");
+    this->addImage(AssetID::queenWhite,basePath+"w_Queen.png");
+    this->addImage(AssetID::queenBlack,basePath+"b_Queen.png");
+
+    this->addImage(AssetID::rookWhite,basePath+"w_Rook.png");
+    this->addImage(AssetID::rookBlack,basePath+"b_Rook.png");
 
 
 }
@@ -62,6 +64,22 @@ void GraphicDisplay::drawAsset(AssetID id, int x, int y, int size)
     Rectangle dest = {(float)x, (float)y, (float)size, (float)size};
 
     DrawTexturePro(tex, source, dest, {0, 0}, 0.0f, WHITE);
+}
+
+std::string GraphicDisplay::getCoords(int squareSize)
+{
+    int x=GetMouseX()/squareSize;
+    int y=GetMouseY()/squareSize;
+
+    char a='a'+x;
+    char b='8'-y;
+    std::string res="  ";
+    res[0]=a;
+    res[1]=b;
+
+    std::cout<<res<<"\n";
+
+    return res;
 }
 
 void GraphicDisplay::updateDimensions()
@@ -111,6 +129,8 @@ void GraphicDisplay::run()
             updateDimensions();
         }
 
+        
+
         int boardSize = width < height ? width:height;
         int squareSize = boardSize/8;
 
@@ -118,6 +138,11 @@ void GraphicDisplay::run()
         ClearBackground(WHITE);
         drawAsset(AssetID::chessBoard,0,0,boardSize);
         drawPieces(squareSize);
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            std::cout<<getCoords(squareSize)<<"\n";
+        }
 
         
 

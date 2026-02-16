@@ -38,11 +38,11 @@ class GraphicDisplay : public Display{
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;
 
         AssetID getAssetForPiece(const Piece&,bool);
-
         void addImage(AssetID,const std::string&);
         void drawAsset(AssetID,int,int,int);
-        
         void drawPieces(int);
+
+        std::string getCoords(int);
 
         void updateDimensions();
         void run();
