@@ -17,3 +17,8 @@ bool Knight::canMove(Coordinates coord)
     return false;
 }
 
+PieceType Knight::getType() const
+{
+    return PieceType::Knight;
+};
+

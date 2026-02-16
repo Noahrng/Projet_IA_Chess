@@ -18,3 +18,7 @@ bool King::canMove(Coordinates coord)
     return false;
 }
 
+PieceType King::getType() const
+{
+    return PieceType::King;
+};

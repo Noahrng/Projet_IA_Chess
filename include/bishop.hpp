@@ -7,6 +7,7 @@ class Bishop : public Piece{
     public:
         Bishop(bool, Coordinates);
         bool canMove(Coordinates) override;
+        PieceType getType() const override;
 };
 
 #endif
