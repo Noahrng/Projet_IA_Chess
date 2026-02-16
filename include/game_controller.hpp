@@ -24,6 +24,9 @@ class GameController
         void choosePiece(Coordinates);
         void switchTurn();
 
+        Player& getJ1();
+        Player& getJ2();
+
         bool isLetter(char c);
         bool isNumber(char c);
         bool isNull();
