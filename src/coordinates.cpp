@@ -24,6 +24,12 @@ bool operator!=(const Coordinates &a,const Coordinates &b)
     return !(a==b);
 }
 
+std::ostream& operator<<(std::ostream& os, Coordinates &a)
+{
+    os<<"x="<<a.getX()<<" y="<<a.getY()<< " ";
+    return os;
+}
+
 int Coordinates::getX()
 /*
     Arguments:
@@ -74,21 +80,21 @@ bool Coordinates::onBoard()
 }
 
 //Equivalences
-int Coordinates::lowerX(Coordinates c){
-    if(c.x < x) return c.x;
-    return x;
+bool Coordinates::lowerThanX(Coordinates c){
+    if(c.x < x) return false;
+    return true;
 }
-int Coordinates::lowerY(Coordinates c){
-    if(c.y < y) return c.y;
-    return y;
+bool Coordinates::lowerThanY(Coordinates c){
+    if(c.y < y) return false;
+    return true;
 }
-int Coordinates::greaterX(Coordinates c){
-    if(c.x < x) return x;
-    return c.x;
+bool Coordinates::greaterThanX(Coordinates c){
+    if(c.x < x) return true;
+    return false;
 }
-int Coordinates::greaterY(Coordinates c){
-    if(c.y < y) return y;
-    return c.y;
+bool Coordinates::greaterThanY(Coordinates c){
+    if(c.y < y) return true;
+    return false;
 }
 
 //Distances
@@ -113,5 +119,5 @@ int Coordinates::distY(const int Y)
 
 //Affichage
 void Coordinates::print(){
-    std::cout<<"x="<<x<<" y="<<y<<"\n";
+    std::cout<< this;
 }
