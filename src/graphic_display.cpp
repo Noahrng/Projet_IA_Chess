@@ -9,6 +9,10 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width,height,title.c_str());
     SetTargetFPS(30);
+    SetExitKey(KEY_ESCAPE);
+
+    playButton=Button(width/2-100,height/2,200,60,"PLAY");
+
     this->addImage(AssetID::chessBoard,"assets/board_b&g.png");
 
     const std::string basePath = "assets/";
@@ -147,10 +151,29 @@ void GraphicDisplay::switchSide()
     
 }
 
-void GraphicDisplay::showChess()
+void GraphicDisplay::drawMainMenu()
+{
+    BeginDrawing();
+    ClearBackground(Color(0,128,0,0));
+    
+    playButton.draw();
+
+    if(playButton.isClicked()){
+        goToChess();
+    }
+
+    EndDrawing();
+}
+
+void GraphicDisplay::drawChess()
 {
     int boardSize = width < height ? width:height;
     int squareSize = boardSize/8;
+
+    if(IsKeyPressed(KEY_TAB))
+    {
+        goToMainMenu();
+    }
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -169,6 +192,15 @@ void GraphicDisplay::showChess()
     EndDrawing();
 }
 
+void GraphicDisplay::goToMainMenu()
+{
+    etat=State::MainMenu;
+}
+void GraphicDisplay::goToChess()
+{
+    etat=State::Game;
+}
+
 void GraphicDisplay::run()
 {
     while(!WindowShouldClose())
@@ -177,8 +209,17 @@ void GraphicDisplay::run()
         {
             updateDimensions();
         }
+        
+        switch(etat){
+            case State::MainMenu:
+                drawMainMenu();
+                break;
+            
+            case State::Game:
+                drawChess();
+                break;
+        }
 
-        showChess();
         
     }
 }
