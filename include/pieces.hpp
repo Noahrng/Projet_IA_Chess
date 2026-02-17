@@ -24,13 +24,15 @@ class Piece  {
         std::string terminal_sprite;
     public:
         Piece(bool, Coordinates, int, std::string);
+        virtual ~Piece() = default;
 
         std::string getTerminalSprite();
         Coordinates getCoordinates();
-        virtual ~Piece() = default;
 
         virtual bool canMove(Coordinates) = 0;
         virtual PieceType getType()const=0;
+
+        void moveTo(int x, int y);
 };
 
 
