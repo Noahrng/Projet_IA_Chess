@@ -23,11 +23,16 @@ enum class AssetID
     chessBoard
 };
 
+enum class State{
+    MainMenu,
+    Game
+};
 
 class GraphicDisplay : public Display{
     private:
         int width;
         int height;
+        State etat;
         std::string title; 
         std::map<AssetID,Image> images;
         std::map<AssetID,Texture2D> textures;
@@ -42,6 +47,8 @@ class GraphicDisplay : public Display{
         void drawAsset(AssetID,int,int,int);
         void drawPieces(int);
         void switchSide();
+
+        void showChess();
 
         std::string getCoords(int);
 

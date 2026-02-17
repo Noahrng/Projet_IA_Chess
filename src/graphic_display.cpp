@@ -3,6 +3,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     Display(game,s),
     width{w},
     height{h},
+    etat{State::MainMenu},
     title{t}
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -146,6 +147,28 @@ void GraphicDisplay::switchSide()
     
 }
 
+void GraphicDisplay::showChess()
+{
+    int boardSize = width < height ? width:height;
+    int squareSize = boardSize/8;
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+    drawAsset(AssetID::chessBoard,0,0,boardSize);
+    drawPieces(squareSize);
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        std::cout<<getCoords(squareSize)<<"\n";
+    }
+        
+    if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+    {
+        switchSide();
+    }   
+    EndDrawing();
+}
+
 void GraphicDisplay::run()
 {
     while(!WindowShouldClose())
@@ -155,28 +178,7 @@ void GraphicDisplay::run()
             updateDimensions();
         }
 
+        showChess();
         
-
-        int boardSize = width < height ? width:height;
-        int squareSize = boardSize/8;
-
-        BeginDrawing();
-        ClearBackground(WHITE);
-        drawAsset(AssetID::chessBoard,0,0,boardSize);
-        drawPieces(squareSize);
-
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-            std::cout<<getCoords(squareSize)<<"\n";
-        }
-        
-        if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-        {
-            switchSide();
-        }
-
-        
-
-        EndDrawing();
     }
 }
