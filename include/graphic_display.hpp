@@ -32,7 +32,7 @@ class GraphicDisplay : public Display{
         std::map<AssetID,Image> images;
         std::map<AssetID,Texture2D> textures;
     public:
-        GraphicDisplay(int,int,const std::string&,Player&, Player&, bool);
+        GraphicDisplay(int,int,const std::string&,GameController&,bool);
         ~GraphicDisplay();
         GraphicDisplay(const GraphicDisplay&)=delete;
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;

@@ -1,6 +1,6 @@
 #include <graphic_display.hpp>
-GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,Player &j1, Player &j2,bool s):
-    Display(j1,j2,s),
+GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& game,bool s):
+    Display(game,s),
     width{w},
     height{h},
     title{t}
@@ -116,6 +116,9 @@ void GraphicDisplay::drawPieces(int squareSize)
             c.setXY(j,i);
 
             Piece *p;
+
+            Player &p1=game.getJ1();
+            Player &p2=game.getJ2();
             
             if(!side) p=p1.getPiece(c);
             else p=p2.getPiece(c);
