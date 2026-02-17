@@ -1,5 +1,5 @@
 #include <game_controller.hpp>
-GameController::GameController(): j1(true), j2(false), current_player(&j1), piece_chosen(nullptr)
+GameController::GameController(): j1(false), j2(true), current_player(&j1), piece_chosen(nullptr)
 {
 }
 
@@ -35,6 +35,14 @@ void GameController::switchTurn()
     else current_player=&j1;
 }
 
+Player& GameController::getJ1()
+{
+    return j1;
+}
+Player& GameController::getJ2()
+{
+    return j2;
+}
 
 
 bool GameController::isLetter(char c)

@@ -41,6 +41,7 @@ class GraphicDisplay : public Display{
         void addImage(AssetID,const std::string&);
         void drawAsset(AssetID,int,int,int);
         void drawPieces(int);
+        void switchSide();
 
         std::string getCoords(int);
 

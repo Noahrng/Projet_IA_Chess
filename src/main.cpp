@@ -18,15 +18,10 @@ int main(){
     play.choosePiece(test2);
     std::cout<<play.isNull()<<"\n";
 
-    
-
-
-    Player j1(0);
-    Player j2(1);
-    TerminalDisplay t(j1,j2,1);
+    TerminalDisplay t(play.getJ1(),play.getJ2(),1);
     t.printBoard();
     
-    GraphicDisplay gp1(800,800,"CHESS",j1,j2,1);
+    GraphicDisplay gp1(1000,1000,"CHESS",play.getJ1(),play.getJ2(),0);
     
     gp1.run();
     std::cout<<"test\n";
