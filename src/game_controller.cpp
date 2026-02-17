@@ -46,6 +46,14 @@ void GameController::switchTurn()
     waiting_player = tmp;
 }
 
+Player& GameController::getJ1()
+{
+    return j1;
+}
+Player& GameController::getJ2()
+{
+    return j2;
+}
 
 
 bool GameController::isLetter(char c)
