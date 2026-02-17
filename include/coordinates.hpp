@@ -13,15 +13,32 @@ class Coordinates{
         Coordinates();
         Coordinates(int,int);
         ~Coordinates()=default;
+
+        //Getters
+        int getX();
+        int getY();
+        
+        //Setters
+        void setX(int);
+        void setY(int);
+        void setXY(int, int);
+
+        //
+        bool onBoard();
+
+        //Equivalences
+        int lowerX(Coordinates);
+        int lowerY(Coordinates);
+        int greaterX(Coordinates);
+        int greaterY(Coordinates);
+
+        //Distances entre coordonnées
         int distX(const Coordinates&);
         int distY(const Coordinates&);
         int distX(const int);
         int distY(const int);
-        int getX();
-        int getY();
-        void setX(int);
-        void setY(int);
-        void setXY(int, int);
+
+        //Affichage
         void print();
 };
 
