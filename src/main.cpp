@@ -23,10 +23,10 @@ int main(){
     std::cout << "Pièce entre x=0 y=0 et x=0 y=2: " << play.pieceInBetween(c_from,c_to) << "\n";
     
 
-    TerminalDisplay t(play.getJ1(),play.getJ2(),1);
+    TerminalDisplay t(play,1);
     t.printBoard();
     
-    GraphicDisplay gp1(1000,1000,"CHESS",play.getJ1(),play.getJ2(),0);
+    GraphicDisplay gp1(1000,1000,"CHESS",play,0);
     
     gp1.run();
     std::cout<<"test\n";
