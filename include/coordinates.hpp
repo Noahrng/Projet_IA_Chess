@@ -26,6 +26,12 @@ class Coordinates{
         //
         bool onBoard();
 
+        //Equivalences
+        int lowerX(Coordinates);
+        int lowerY(Coordinates);
+        int greaterX(Coordinates);
+        int greaterY(Coordinates);
+
         //Distances entre coordonnées
         int distX(const Coordinates&);
         int distY(const Coordinates&);

@@ -16,6 +16,7 @@ class GameController
         Piece* piece_chosen;
     public:
         GameController();
+        ~GameController();
         //Entrées joueur
 
         
