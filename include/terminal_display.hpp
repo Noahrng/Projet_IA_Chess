@@ -7,7 +7,7 @@
 class TerminalDisplay : public Display{
     private: 
     public:
-        TerminalDisplay(Player&, Player&, bool);
+        TerminalDisplay(GameController&, bool);
         void printBoard();
 };
 

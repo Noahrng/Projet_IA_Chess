@@ -48,11 +48,11 @@ void GameController::switchTurn()
 
 Player& GameController::getJ1()
 {
-    return j1;
+    return *current_player;
 }
 Player& GameController::getJ2()
 {
-    return j2;
+    return *waiting_player;
 }
 
 
@@ -157,4 +157,13 @@ bool GameController::canMovePiece(Coordinates from, Coordinates to)
 {
     if(!from.onBoard() || !to.onBoard()) return false;  
     return true;
+}
+
+bool GameController::pieceDetectionAlly(Coordinates c)
+{
+    return current_player->getPiece(c)!=nullptr;
+}
+bool GameController::pieceDetectionEnemy(Coordinates c)
+{
+    return waiting_player->getPiece(c)!=nullptr;
 }

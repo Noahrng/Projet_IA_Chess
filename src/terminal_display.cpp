@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-TerminalDisplay::TerminalDisplay(Player &j1, Player &j2,bool s): Display(j1,j2,s){
+TerminalDisplay::TerminalDisplay(GameController &game,bool s): Display(game,s){
 
 }
 
@@ -22,6 +22,9 @@ void TerminalDisplay::printBoard()
             else{
                 std::cout << "\033[48;2;34;139;34m";
             }
+
+            Player &p1=game.getJ1();
+            Player &p2=game.getJ2();
 
             if( (p=p1.getPiece(c)) != nullptr){
                 if(p1.isWhite()){
