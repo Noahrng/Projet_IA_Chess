@@ -32,7 +32,7 @@ class GraphicDisplay : public Display{
         std::map<AssetID,Image> images;
         std::map<AssetID,Texture2D> textures;
     public:
-        GraphicDisplay(int,int,const std::string&,Player&, Player&, bool);
+        GraphicDisplay(int,int,const std::string&,GameController&,bool);
         ~GraphicDisplay();
         GraphicDisplay(const GraphicDisplay&)=delete;
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;
@@ -41,6 +41,7 @@ class GraphicDisplay : public Display{
         void addImage(AssetID,const std::string&);
         void drawAsset(AssetID,int,int,int);
         void drawPieces(int);
+        void switchSide();
 
         std::string getCoords(int);
 

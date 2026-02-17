@@ -1,6 +1,6 @@
 #include <graphic_display.hpp>
-GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,Player &j1, Player &j2,bool s):
-    Display(j1,j2,s),
+GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& game,bool s):
+    Display(game,s),
     width{w},
     height{h},
     title{t}
@@ -34,7 +34,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,Player &j1, Play
 }
 
 GraphicDisplay::~GraphicDisplay(){
-    //auto ici est std::map<std::string,T>::iterator
+    //auto ici est std::map<std::string,T>::iterator ou T est Image ou Texture
     for(auto it=images.begin();it != images.end();++it)
     {
         UnloadImage(it->second);
@@ -71,13 +71,23 @@ std::string GraphicDisplay::getCoords(int squareSize)
     int x=GetMouseX()/squareSize;
     int y=GetMouseY()/squareSize;
 
+    x=x>0 ? x:0;
+    x=x<8 ? x:7;
+
+    y=y>0 ? y:0;
+    y=y<8 ? y:7;
+
+    if(side)
+    {
+       y=7-y;
+       x=7-x;
+    }
+
     char a='a'+x;
     char b='8'-y;
     std::string res="  ";
     res[0]=a;
     res[1]=b;
-
-    std::cout<<res<<"\n";
 
     return res;
 }
@@ -91,7 +101,7 @@ void GraphicDisplay::updateDimensions()
 AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
 {
     int base=static_cast<int>(piece.getType())*2;
-    int colorOffset=color ? 1 : 0;
+    int colorOffset=color ? 0 : 1;
 
     return static_cast<AssetID>(base+colorOffset);
 }
@@ -102,22 +112,38 @@ void GraphicDisplay::drawPieces(int squareSize)
     {
         for(int j = 0 ; j < 8 ; ++j)
         {
-            Coordinates c(j,i);
-            Piece *p=p1.getPiece(c);
+            Coordinates c;
+            c.setXY(j,i);
+
+            Piece *p;
+
+            Player &p1=game.getJ1();
+            Player &p2=game.getJ2();
+            
+            if(!side) p=p1.getPiece(c);
+            else p=p2.getPiece(c);
             if(p!=nullptr){
-                int x=c.getX()*squareSize;
-                int y=c.getY()*squareSize;
-                drawAsset(getAssetForPiece(*p,false),x,y,squareSize);
+                int x=side ? (7-j)*squareSize : j*squareSize;
+                int y=side ? (7-i)*squareSize : i*squareSize;
+                drawAsset(getAssetForPiece(*p,!side),x,y,squareSize);
             }
             
-            p=p2.getPiece(c);
+            if(!side) p=p2.getPiece(c);
+            else p=p1.getPiece(c);
             if(p!=nullptr){
-                int x=c.getX()*squareSize;
-                int y=c.getY()*squareSize;
-                drawAsset(getAssetForPiece(*p,true),x,y,squareSize);
+                int x=side ? (7-j)*squareSize : j*squareSize;
+                int y=side ? (7-i)*squareSize : i*squareSize;
+                drawAsset(getAssetForPiece(*p,side),x,y,squareSize);
             }
         }
     }
+}
+
+void GraphicDisplay::switchSide()
+{
+    side=!side;
+    std::cout<<"switchside side ="<<side<<std::endl;
+    
 }
 
 void GraphicDisplay::run()
@@ -142,6 +168,11 @@ void GraphicDisplay::run()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             std::cout<<getCoords(squareSize)<<"\n";
+        }
+        
+        if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+        {
+            switchSide();
         }
 
         

@@ -24,6 +24,9 @@ class GameController
         void choosePiece(Coordinates);
         void switchTurn();
 
+        Player& getJ1();
+        Player& getJ2();
+
         bool isLetter(char c);
         bool isNumber(char c);
         bool isNull();
@@ -32,6 +35,11 @@ class GameController
         //Déplacements
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool canMovePiece(Coordinates, Coordinates);
+
+        //detection
+        bool pieceDetectionAlly(Coordinates);
+        bool pieceDetectionEnemy(Coordinates);
 };
+
 
 #endif
