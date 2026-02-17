@@ -159,11 +159,7 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 
 
 
-bool GameController::canMovePiece(Coordinates from, Coordinates to)
-{
-    if(!from.onBoard() || !to.onBoard()) return false;  
-    return true;
-}
+
 
 bool GameController::pieceDetectionAlly(Coordinates c)
 {
@@ -172,4 +168,47 @@ bool GameController::pieceDetectionAlly(Coordinates c)
 bool GameController::pieceDetectionEnemy(Coordinates c)
 {
     return waiting_player->getPiece(c)!=nullptr;
+}
+
+bool GameController::canMovePiece(Coordinates from, Coordinates to)
+{
+    Piece * p = current_player->getPiece(from);
+
+    if(!from.onBoard() || !to.onBoard()) return false;  
+
+    if(p == nullptr) return false;
+
+    if(pieceInBetween(from,to)) return false;
+
+    if(pieceDetectionAlly(to)) return false;
+    
+    //Vérification si le roi est en échec si on bouge la pièce
+
+    //Vérification si c'est le roi qu'on déplace et qu'on ne le déplace pas sur une case en échecs
+
+    
+    if(p->canMove(to)) return true;
+    return false;
+}
+
+void GameController::movePiece(Coordinates from, Coordinates to)
+{
+    if(canMovePiece(from,to)){
+        std::cout << "[DEBUG] Dans le if\n";
+        if(pieceDetectionEnemy(to)){
+            std::cout << "[DEBUG] ennemi détecté\n";
+            Piece * p = waiting_player->getPiece(to);
+            mangerPiece(p);
+        }
+        else{
+            //Déplacer la pièce
+            Piece * p = current_player->getPiece(from);
+            p->moveTo(to.getX(),to.getY());
+        }
+    }
+}
+
+void GameController::mangerPiece(Piece* p)
+{
+
 }

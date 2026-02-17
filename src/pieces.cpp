@@ -20,3 +20,7 @@ Coordinates Piece::getCoordinates()
 {
     return this->coords;
 }
+
+void Piece::moveTo(int x, int y){
+    coords.setXY(x,y);
+}

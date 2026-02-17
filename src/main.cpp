@@ -18,12 +18,12 @@ int main(){
     play.choosePiece(test2);
     std::cout<<play.isNull()<<"\n";
 
-    Coordinates c_from(0,1);
-    Coordinates c_to(6,7);
-    std::cout << "Pièce entre " << c_from << "et " << c_to << ": " << play.pieceInBetween(c_from,c_to) << "\n";
+    Coordinates c_from(0,6);
+    Coordinates c_to(0,4);
     
+    play.movePiece(c_from,c_to);
 
-    TerminalDisplay t(play,1);
+    TerminalDisplay t(play,0);
     t.printBoard();
     
     GraphicDisplay gp1(1000,1000,"CHESS",play,0);
