@@ -18,9 +18,9 @@ int main(){
     play.choosePiece(test2);
     std::cout<<play.isNull()<<"\n";
 
-    Coordinates c_from(0,0);
-    Coordinates c_to(0,2);
-    std::cout << "Pièce entre x=0 y=0 et x=0 y=2: " << play.pieceInBetween(c_from,c_to) << "\n";
+    Coordinates c_from(0,1);
+    Coordinates c_to(6,7);
+    std::cout << "Pièce entre " << c_from << "et " << c_to << ": " << play.pieceInBetween(c_from,c_to) << "\n";
     
 
 

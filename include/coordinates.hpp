@@ -6,6 +6,7 @@
 class Coordinates{
     friend bool operator==(const Coordinates&,const Coordinates&);
     friend bool operator!=(const Coordinates&,const Coordinates&);
+    friend std::ostream& operator<<(std::ostream&, Coordinates&);
     private:
         int x;
         int y;
@@ -27,10 +28,10 @@ class Coordinates{
         bool onBoard();
 
         //Equivalences
-        int lowerX(Coordinates);
-        int lowerY(Coordinates);
-        int greaterX(Coordinates);
-        int greaterY(Coordinates);
+        bool lowerThanX(Coordinates);
+        bool lowerThanY(Coordinates);
+        bool greaterThanX(Coordinates);
+        bool greaterThanY(Coordinates);
 
         //Distances entre coordonnées
         int distX(const Coordinates&);

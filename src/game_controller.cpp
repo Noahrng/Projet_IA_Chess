@@ -102,45 +102,51 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 {
     if(!from.onBoard() || !to.onBoard()) return false;
 
-    bool same_column;
-    bool same_line;
-    if(from.distX(to)  == 0 && from.distY(to) != 0) same_column = true;
-    if(from.distX(to)  != 0 && from.distY(to) == 0) same_line = true;
+    int dx = from.distX(to);
+    int dy = from.distY(to);
 
-    if(from.distX(to) == from.distY(to) ||
-        same_column || 
-        same_line)
+    int step_x=0; 
+    int step_y=0;
+
+    if(dx == 0 && dy != 0)
     {
-        //Même diagonale
-        int j, i;
-        int dep_x, dep_y, arr_x, arr_y;
-        dep_x = from.lowerX(to);
-        dep_y = from.lowerY(to);
-        arr_x = from.greaterX(to);
-        arr_y = from.greaterY(to);
-
-        if(!same_column) j = dep_x+1;
-        else j = dep_x;
-        if(!same_line) i = dep_y+1;
-        else i = dep_y; 
-        Piece * p_enemy = nullptr;
-        Piece * p_ally = nullptr; 
-        while(j < arr_x && i < arr_y && p_ally == nullptr && p_enemy == nullptr)
-        {
-            Coordinates c(j,i);
-            p_enemy = waiting_player->getPiece(c);
-            p_ally = current_player->getPiece(c);
-            if(!same_column) j++;  
-            if(!same_line) i++;
-        }
-        if(p_ally != nullptr || p_enemy != nullptr) return true;
-        return false;
+        if(from.lowerThanY(to)) step_y = 1;
+        else step_y = -1;
+    }
+    else if(dx != 0 && dy == 0)
+    {
+        if(from.lowerThanX(to)) step_x = 1;
+        else step_x = -1;
+    }
+    else if(dx == dy)
+    {
+        if(from.lowerThanX(to)) step_x = 1;
+        else step_x = -1;
+        if(from.lowerThanY(to)) step_y = 1;
+        else step_y = -1;
     }
     else
     {
         return false;
     }
 
+    int i = from.getY() + step_y;
+    int j = from.getX() + step_x;
+
+    std::cout << "[DEBUG] condition: x=" << to.getX() << " y=" << to.getY() << "\n";
+    while(j != to.getX() || i != to.getY()){
+        Coordinates c(j,i);
+        std::cout << "[DEBUG] i = " << i << ", j = " << j << "\n";
+        if(current_player->getPiece(c)  ||
+        waiting_player->getPiece(c))
+        {
+            std::cout << c << "\n";
+            return true;
+        }
+        i += step_y;
+        j += step_x;
+    }
+    return false;
 }
 
 
