@@ -24,6 +24,11 @@ enum class AssetID
     chessBoard
 };
 
+enum class ButtonID{
+    PlayButton,
+    Option
+};
+
 enum class State{
     MainMenu,
     Game
@@ -33,29 +38,34 @@ class GraphicDisplay : public Display{
     private:
         int width;
         int height;
-        Button playButton;
         State etat;
         std::string title; 
         std::map<AssetID,Image> images;
         std::map<AssetID,Texture2D> textures;
+        std::map<ButtonID,Button> buttons;
     public:
         GraphicDisplay(int,int,const std::string&,GameController&,bool);
         ~GraphicDisplay();
         GraphicDisplay(const GraphicDisplay&)=delete;
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;
 
-        AssetID getAssetForPiece(const Piece&,bool);
         void addImage(AssetID,const std::string&);
+        void addButton(ButtonID,const std::string&,float,float,float,float);
+
+        
+        
         void drawAsset(AssetID,int,int,int);
         void drawPieces(int);
-        void switchSide();
-
         void drawChess();
         void drawMainMenu();
+
+        void switchSide();
 
         void goToMainMenu();
         void goToChess();
 
+        AssetID getAssetForPiece(const Piece&,bool);
+        Button& getButtonForId(ButtonID);
         std::string getCoords(int);
 
         void updateDimensions();

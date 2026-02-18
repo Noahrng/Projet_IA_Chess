@@ -38,3 +38,8 @@ bool Button::isClicked()
 
     return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
+
+Button::~Button()
+{
+    std::cout<<"bouton detruit\n";
+}

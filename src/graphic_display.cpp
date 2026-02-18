@@ -11,11 +11,9 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     SetTargetFPS(30);
     SetExitKey(KEY_ESCAPE);
 
-    playButton=Button(width/2-100,height/2,200,60,"PLAY");
-
-    this->addImage(AssetID::chessBoard,"assets/board_b&g.png");
-
     const std::string basePath = "assets/";
+
+    this->addImage(AssetID::chessBoard,basePath+"board_b&g.png");
 
     this->addImage(AssetID::pawnWhite,basePath+"w_Pawn.png");
     this->addImage(AssetID::pawnBlack,basePath+"b_Pawn.png");
@@ -35,6 +33,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     this->addImage(AssetID::rookWhite,basePath+"w_Rook.png");
     this->addImage(AssetID::rookBlack,basePath+"b_Rook.png");
 
+    this->addButton(ButtonID::PlayButton,"PLAY",width/2-100,height/2,200,60);
 
 }
 
@@ -59,6 +58,25 @@ void GraphicDisplay::addImage(AssetID id,const std::string &path)
     images[id]=img;
     textures[id]=texture;
 }
+
+void GraphicDisplay::addButton(ButtonID id,const std::string &title,float x,float y,float width,float height)
+{
+    buttons[id]=Button(x,y,width,height,title);
+}
+
+AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
+{
+    int base=static_cast<int>(piece.getType())*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+Button& GraphicDisplay::getButtonForId(ButtonID id)
+{
+    return buttons.at(id);
+}
+
 
 
 void GraphicDisplay::drawAsset(AssetID id, int x, int y, int size)
@@ -101,14 +119,6 @@ void GraphicDisplay::updateDimensions()
 {
     width=GetScreenWidth();
     height=GetScreenHeight();
-}
-
-AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
-{
-    int base=static_cast<int>(piece.getType())*2;
-    int colorOffset=color ? 0 : 1;
-
-    return static_cast<AssetID>(base+colorOffset);
 }
 
 void GraphicDisplay::drawPieces(int squareSize)
@@ -156,9 +166,11 @@ void GraphicDisplay::drawMainMenu()
     BeginDrawing();
     ClearBackground(Color(0,128,0,0));
     
-    playButton.draw();
+    Button &button=getButtonForId(ButtonID::PlayButton);
 
-    if(playButton.isClicked()){
+    button.draw();
+
+    if(button.isClicked()){
         goToChess();
     }
 
