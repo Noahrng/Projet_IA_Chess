@@ -61,7 +61,7 @@ void GraphicDisplay::addImage(AssetID id,const std::string &path)
 
 void GraphicDisplay::addButton(ButtonID id,const std::string &title,float x,float y,float width,float height)
 {
-    buttons[id]=Button(x,y,width,height,title);
+    buttons[id]=std::make_unique<Button>(x,y,width,height,title);
 }
 
 AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
@@ -74,7 +74,7 @@ AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
 
 Button& GraphicDisplay::getButtonForId(ButtonID id)
 {
-    return buttons.at(id);
+    return *buttons.at(id).get();
 }
 
 
