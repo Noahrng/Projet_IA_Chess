@@ -140,11 +140,9 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 
     int i = from.getY() + step_y;
     int j = from.getX() + step_x;
-
-    std::cout << "[DEBUG] condition: x=" << to.getX() << " y=" << to.getY() << "\n";
+    
     while(j != to.getX() || i != to.getY()){
         Coordinates c(j,i);
-        std::cout << "[DEBUG] i = " << i << ", j = " << j << "\n";
         if(current_player->getPiece(c)  ||
         waiting_player->getPiece(c))
         {
@@ -161,11 +159,11 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 
 
 
-bool GameController::pieceDetectionAlly(Coordinates c)
+bool GameController::pieceAllyDetection(Coordinates c)
 {
     return current_player->getPiece(c)!=nullptr;
 }
-bool GameController::pieceDetectionEnemy(Coordinates c)
+bool GameController::pieceEnemyDetection(Coordinates c)
 {
     return waiting_player->getPiece(c)!=nullptr;
 }
@@ -180,7 +178,7 @@ bool GameController::canMovePiece(Coordinates from, Coordinates to)
 
     if(pieceInBetween(from,to)) return false;
 
-    if(pieceDetectionAlly(to)) return false;
+    if(pieceAllyDetection(to)) return false;
     
     //Vérification si le roi est en échec si on bouge la pièce
 
@@ -194,21 +192,26 @@ bool GameController::canMovePiece(Coordinates from, Coordinates to)
 void GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(canMovePiece(from,to)){
-        std::cout << "[DEBUG] Dans le if\n";
-        if(pieceDetectionEnemy(to)){
-            std::cout << "[DEBUG] ennemi détecté\n";
-            Piece * p = waiting_player->getPiece(to);
-            mangerPiece(p);
+        Piece * p = current_player->getPiece(from);
+        if(pieceEnemyDetection(to)){
+            Piece * p_mangee = waiting_player->getPiece(to);
+            eatPiece(p_mangee);
         }
-        else{
-            //Déplacer la pièce
-            Piece * p = current_player->getPiece(from);
-            p->moveTo(to.getX(),to.getY());
-        }
+        //Déplacer la pièce
+        p->moveTo(to.getX(),to.getY());
     }
 }
 
-void GameController::mangerPiece(Piece* p)
+void GameController::eatPiece(Piece* p)
 {
-
+    size_t i = 0;
+    size_t n = waiting_player->nbOfPieces();
+    while(i < n && !waiting_player->isPiece(p,i))
+    {
+        i++;
+    }
+    if(i < n)
+    {
+        waiting_player->removePiece(i);
+    }
 }

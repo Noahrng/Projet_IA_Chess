@@ -33,14 +33,14 @@ class GameController
         Coordinates convertStringIntoCoords(std::string);
 
         //Déplacements
-        void mangerPiece(Piece * p);
+        void eatPiece(Piece * p);
         void movePiece(Coordinates from, Coordinates to);
 
         //detection
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool canMovePiece(Coordinates, Coordinates);
-        bool pieceDetectionAlly(Coordinates);
-        bool pieceDetectionEnemy(Coordinates);
+        bool pieceAllyDetection(Coordinates);
+        bool pieceEnemyDetection(Coordinates);
 };
 
 

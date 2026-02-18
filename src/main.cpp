@@ -20,7 +20,26 @@ int main(){
 
     Coordinates c_from(0,6);
     Coordinates c_to(0,4);
-    
+    play.movePiece(c_from,c_to);
+
+    c_from.setXY(0,4);
+    c_to.setXY(0,3);
+
+    play.movePiece(c_from,c_to);
+
+    c_from.setXY(0,3);
+    c_to.setXY(0,2);
+
+    play.movePiece(c_from,c_to);
+
+    c_from.setXY(0,2);
+    c_to.setXY(1,1);
+
+    play.movePiece(c_from,c_to);
+
+    c_from.setXY(1,1);
+    c_to.setXY(0,0);
+
     play.movePiece(c_from,c_to);
 
     TerminalDisplay t(play,0);
