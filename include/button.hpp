@@ -4,14 +4,6 @@
 #include <string>
 #include <raylib-5.5_linux_amd64/include/raylib.h>
 #include <iostream>
-
-enum class ButtonID{
-    PlayButton,
-    Option,
-    Music,
-};
-
-
 class Button
 {
     private:
