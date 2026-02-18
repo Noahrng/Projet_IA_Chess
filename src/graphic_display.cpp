@@ -9,9 +9,11 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width,height,title.c_str());
     SetTargetFPS(30);
-    this->addImage(AssetID::chessBoard,"assets/board_b&g.png");
+    SetExitKey(KEY_ESCAPE);
 
     const std::string basePath = "assets/";
+
+    this->addImage(AssetID::chessBoard,basePath+"board_b&g.png");
 
     this->addImage(AssetID::pawnWhite,basePath+"w_Pawn.png");
     this->addImage(AssetID::pawnBlack,basePath+"b_Pawn.png");
@@ -31,6 +33,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     this->addImage(AssetID::rookWhite,basePath+"w_Rook.png");
     this->addImage(AssetID::rookBlack,basePath+"b_Rook.png");
 
+    this->addButton(ButtonID::PlayButton,"PLAY",width/2-100,height/2,200,60);
 
 }
 
@@ -55,6 +58,25 @@ void GraphicDisplay::addImage(AssetID id,const std::string &path)
     images[id]=img;
     textures[id]=texture;
 }
+
+void GraphicDisplay::addButton(ButtonID id,const std::string &title,float x,float y,float width,float height)
+{
+    buttons[id]=Button(x,y,width,height,title);
+}
+
+AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
+{
+    int base=static_cast<int>(piece.getType())*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+Button& GraphicDisplay::getButtonForId(ButtonID id)
+{
+    return buttons.at(id);
+}
+
 
 
 void GraphicDisplay::drawAsset(AssetID id, int x, int y, int size)
@@ -99,14 +121,6 @@ void GraphicDisplay::updateDimensions()
     height=GetScreenHeight();
 }
 
-AssetID GraphicDisplay::getAssetForPiece(const Piece& piece,bool color)
-{
-    int base=static_cast<int>(piece.getType())*2;
-    int colorOffset=color ? 0 : 1;
-
-    return static_cast<AssetID>(base+colorOffset);
-}
-
 void GraphicDisplay::drawPieces(int squareSize)
 {
     for(int i = 0; i < 8 ; ++i)
@@ -147,10 +161,31 @@ void GraphicDisplay::switchSide()
     
 }
 
-void GraphicDisplay::showChess()
+void GraphicDisplay::drawMainMenu()
+{
+    BeginDrawing();
+    ClearBackground(Color(0,128,0,0));
+    
+    Button &button=getButtonForId(ButtonID::PlayButton);
+
+    button.draw();
+
+    if(button.isClicked()){
+        goToChess();
+    }
+
+    EndDrawing();
+}
+
+void GraphicDisplay::drawChess()
 {
     int boardSize = width < height ? width:height;
     int squareSize = boardSize/8;
+
+    if(IsKeyPressed(KEY_TAB))
+    {
+        goToMainMenu();
+    }
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -169,6 +204,15 @@ void GraphicDisplay::showChess()
     EndDrawing();
 }
 
+void GraphicDisplay::goToMainMenu()
+{
+    etat=State::MainMenu;
+}
+void GraphicDisplay::goToChess()
+{
+    etat=State::Game;
+}
+
 void GraphicDisplay::run()
 {
     while(!WindowShouldClose())
@@ -177,8 +221,17 @@ void GraphicDisplay::run()
         {
             updateDimensions();
         }
+        
+        switch(etat){
+            case State::MainMenu:
+                drawMainMenu();
+                break;
+            
+            case State::Game:
+                drawChess();
+                break;
+        }
 
-        showChess();
         
     }
 }
