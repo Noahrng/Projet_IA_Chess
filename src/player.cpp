@@ -122,6 +122,10 @@ bool operator!=(const Player &a,const Player &b)
     return !(a==b);
 }
 
+bool Player::isPiece(Piece * p, size_t i)
+{
+    return p == pieces[i].get();
+}
 
 bool Player::isWhite()
 {
@@ -133,7 +137,13 @@ bool Player::isBlack()
     return color;
 }
 
-void Player::addPiece(std::unique_ptr<Piece> p){
+size_t Player::nbOfPieces()
+{
+    return pieces.size();
+}
+
+void Player::addPiece(std::unique_ptr<Piece> p)
+{
     pieces.push_back(std::move(p));
 }
 
@@ -143,4 +153,8 @@ void Player::removePiece(Coordinates c){
         i++;
     }
     if(i<pieces.size()) pieces.erase(pieces.begin()+i);
+}
+
+void Player::removePiece(size_t i){
+    if(i < nbOfPieces()) pieces.erase(pieces.begin()+i);
 }

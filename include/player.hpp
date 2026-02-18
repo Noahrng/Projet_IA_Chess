@@ -21,11 +21,14 @@ class Player
         Player(Player&&) = default;              
         Player& operator=(Player&&) = default;
 
+        size_t nbOfPieces();
         Piece* getPiece(Coordinates);
+        bool isPiece(Piece*, size_t);
         bool isWhite();
         bool isBlack();
         void addPiece(std::unique_ptr<Piece>);
         void removePiece(Coordinates);
+        void removePiece(size_t);
         
 
 
