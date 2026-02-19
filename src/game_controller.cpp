@@ -4,6 +4,7 @@ GameController::GameController()
     current_player = new Player(false);
     waiting_player = new Player(true);
     piece_chosen = nullptr;
+    cell_chosen.setXY(-1,-1);
 }
 
 GameController::~GameController()
@@ -168,9 +169,11 @@ bool GameController::pieceEnemyDetection(Coordinates c)
     return waiting_player->getPiece(c)!=nullptr;
 }
 
-bool GameController::canMovePiece(Coordinates from, Coordinates to)
+bool GameController::canMovePiece(Coordinates from, Coordinates to, bool enemy)
 {
-    Piece * p = current_player->getPiece(from);
+    Piece * p = nullptr;
+    if(!enemy) p = current_player->getPiece(from);
+    else p = waiting_player->getPiece(from);
 
     if(!from.onBoard() || !to.onBoard()) return false;  
 
@@ -178,20 +181,43 @@ bool GameController::canMovePiece(Coordinates from, Coordinates to)
 
     if(pieceInBetween(from,to)) return false;
 
-    if(pieceAllyDetection(to)) return false;
+    if(!enemy && pieceAllyDetection(to)) return false;
     
+    if(enemy && pieceEnemyDetection(to)) return false;
+
     //Vérification si le roi est en échec si on bouge la pièce
 
     //Vérification si c'est le roi qu'on déplace et qu'on ne le déplace pas sur une case en échecs
 
-    
     if(p->canMove(to)) return true;
     return false;
 }
 
+int GameController::isThreaten(Coordinates c)
+    /* 
+    Vérifie si une case aux coordonnées c est menacée ou non par une pièce 
+    et renvoie le nombre de pièces qui la menace
+    */    
+{
+    int nb_threats = 0;
+
+    size_t i = 0;
+    while(i < waiting_player->nbOfPieces())
+    {
+        Piece* p = waiting_player->getPiece(i);
+        if(p->canMove(c) && 
+        pieceInBetween(p->getCoordinates(),c)) 
+        {
+            nb_threats++;
+        }
+        i++;
+    }
+    return nb_threats;
+}
+
 void GameController::movePiece(Coordinates from, Coordinates to)
 {
-    if(canMovePiece(from,to)){
+    if(canMovePiece(from,to,0)){
         Piece * p = current_player->getPiece(from);
         if(pieceEnemyDetection(to)){
             Piece * p_mangee = waiting_player->getPiece(to);
@@ -199,6 +225,8 @@ void GameController::movePiece(Coordinates from, Coordinates to)
         }
         //Déplacer la pièce
         p->moveTo(to.getX(),to.getY());
+        piece_chosen = nullptr;
+        cell_chosen.setXY(-1,-1);
     }
 }
 

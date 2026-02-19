@@ -14,6 +14,7 @@ class GameController
         Player* current_player;
         Player* waiting_player;
         Piece* piece_chosen;
+        Coordinates cell_chosen;
     public:
         GameController();
         ~GameController();
@@ -38,9 +39,11 @@ class GameController
 
         //detection
         bool pieceInBetween(Coordinates from, Coordinates to);
-        bool canMovePiece(Coordinates, Coordinates);
+        bool canMovePiece(Coordinates, Coordinates, bool);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
+        int isThreaten(Coordinates c);
+
 };
 
 
