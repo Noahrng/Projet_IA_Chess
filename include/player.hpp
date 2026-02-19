@@ -23,6 +23,7 @@ class Player
 
         size_t nbOfPieces();
         Piece* getPiece(Coordinates);
+        Piece* getPiece(int);
         bool isPiece(Piece*, size_t);
         bool isWhite();
         bool isBlack();

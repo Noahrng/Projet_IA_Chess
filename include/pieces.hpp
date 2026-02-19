@@ -32,6 +32,7 @@ class Piece  {
         virtual bool canMove(Coordinates) = 0;
         virtual PieceType getType()const=0;
 
+
         void moveTo(int x, int y);
 };
 

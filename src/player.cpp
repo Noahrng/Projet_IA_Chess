@@ -81,13 +81,22 @@ Player::Player(bool color):color{color}
     }
 }
 
-Piece* Player::getPiece(Coordinates c){
+Piece* Player::getPiece(Coordinates c)
+{
     if(!c.onBoard()) return nullptr;
     size_t  i = 0;
     while(i < pieces.size() && pieces[i].get()->getCoordinates()!=c){
         i++;
     }
     if(i < pieces.size()){
+        return pieces[i].get();
+    }
+    return nullptr;
+}
+Piece* Player::getPiece(int i)
+{
+    if(i < pieces.size())
+    {
         return pieces[i].get();
     }
     return nullptr;
