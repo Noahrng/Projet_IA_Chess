@@ -2,6 +2,8 @@
 #define SCREEN_MAIN_MENU
 
 #include "screen.hpp"
+#include "button.hpp"
+#include "textbox.hpp"
 #include <vector>
 #include <memory>
 
@@ -10,6 +12,7 @@ class MainMenuScreen : public Screen
 {
     private:
         std::unique_ptr<Button> playButton;
+        std::unique_ptr<TextBox> title;
         bool finished;
     public:
         MainMenuScreen(GameController&,int width,int height);
