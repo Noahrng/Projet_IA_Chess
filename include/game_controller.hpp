@@ -45,7 +45,7 @@ class GameController
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
         int isThreaten(Coordinates c);
-
+        int isChecked();
 };
 
 
