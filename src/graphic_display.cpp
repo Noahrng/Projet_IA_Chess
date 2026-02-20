@@ -14,6 +14,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
 }
 
 GraphicDisplay::~GraphicDisplay(){
+    currentScreen.reset();
     CloseWindow();
 }
 

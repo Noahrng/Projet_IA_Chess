@@ -1,11 +1,12 @@
 #include "textbox.hpp"
 
-TextBox::TextBox(float x,float y,float width,float height,const std::string &text):bounds{x,y,width,height},
-                                                                                   text{text},
-                                                                                   backgroundColor(LIGHTGRAY),
-                                                                                   textColor(BLACK),
-                                                                                   fontSize(20),
-                                                                                   centered(true)
+TextBox::TextBox(float x,float y,float width,float height,const std::string &text):
+    bounds{x,y,width,height},
+    text{text},
+    backgroundColor(LIGHTGRAY),
+    textColor(BLACK),
+    fontSize(20),
+    centered(true)
 {
 
 }
