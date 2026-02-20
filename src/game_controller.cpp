@@ -239,6 +239,21 @@ int GameController::isThreaten(Coordinates c)
     return nb_threats;
 }
 
+int GameController::isChecked()
+/* 
+    Vérifie si un joueur est en échec ou pas et renvoie le nombre de pièces qui le met en échec.
+*/
+{
+    size_t i = 0;
+    Piece * p = nullptr;
+    while(i < current_player->nbOfPieces() && p->getType() != PieceType::King)
+    {
+        p = current_player->getPiece(i++);
+    }
+    Coordinates c = p->getCoordinates();
+    return isThreaten(c);
+}
+
 void GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(canMovePiece(from,to,0)){
