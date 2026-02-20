@@ -14,6 +14,7 @@ GameController::GameController()
 
 GameController::~GameController()
 {
+    std::cout<<"[DEBUG] GameController destructor\n";
     delete current_player;
     delete waiting_player;
 }

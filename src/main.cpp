@@ -45,7 +45,7 @@ int main(){
     TerminalDisplay t(play,0);
     t.printBoard();
     
-    GraphicDisplay gp1(1000,1000,"CHESS",play,0);
+    GraphicDisplay gp1(600,600,"CHESS",play,0);
     
     gp1.run();
     std::cout<<"test\n";
