@@ -1,4 +1,9 @@
-#include <game_controller.hpp>
+#include "game_controller.hpp"
+#include "bishop.hpp"
+#include "queen.hpp"
+#include "rook.hpp"
+#include "knight.hpp"
+
 GameController::GameController()
 {
     current_player = new Player(false);
@@ -156,7 +161,25 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
     return false;
 }
 
+bool GameController::isPromoted(Coordinates c, bool color)
+{
+    Piece * p ;
+    if( (current_player->isWhite() && color == 0) || 
+     (current_player->isBlack() && color == 1)) 
+        p = current_player->getPiece(c);
+    else p = waiting_player->getPiece(c);
 
+    if(p)
+    {
+        if(p->getType() == PieceType::Pawn)
+        {
+            if(!color && p->getCoordinates().getY() == 0) return true;
+            if(color && p->getCoordinates().getY() == 7) return true;
+        }
+    }
+
+    return false;
+}
 
 
 
@@ -227,6 +250,10 @@ void GameController::movePiece(Coordinates from, Coordinates to)
         p->moveTo(to.getX(),to.getY());
         piece_chosen = nullptr;
         cell_chosen.setXY(-1,-1);
+        if(isPromoted(to,current_player->isBlack()))
+        {
+            promoteTo(p,PieceType::Knight);
+        }
     }
 }
 
@@ -241,5 +268,45 @@ void GameController::eatPiece(Piece* p)
     if(i < n)
     {
         waiting_player->removePiece(i);
+    }
+}
+
+void GameController::promoteTo(Piece * p, PieceType t)
+{
+    if(t == PieceType::Bishop)
+    {
+        bool color = current_player->isBlack();
+        Coordinates c = p->getCoordinates();
+        current_player->removePiece(c);
+
+        std::unique_ptr<Bishop> b = std::make_unique<Bishop>(color, c);
+        current_player->addPiece(std::move(b));
+    }
+    else if(t == PieceType::Knight)
+    {
+        bool color = current_player->isBlack();
+        Coordinates c = p->getCoordinates();
+        current_player->removePiece(c);
+
+        std::unique_ptr<Knight> k = std::make_unique<Knight>(color, c);
+        current_player->addPiece(std::move(k));
+    }
+    else if(t == PieceType::Rook)
+    {
+        bool color = current_player->isBlack();
+        Coordinates c = p->getCoordinates();
+        current_player->removePiece(c);
+
+        std::unique_ptr<Rook> r = std::make_unique<Rook>(color, c);
+        current_player->addPiece(std::move(r));        
+    }else if(t == PieceType::Queen)
+    {
+        bool color = current_player->isBlack();
+        Coordinates c = p->getCoordinates();
+        current_player->removePiece(c);
+
+        std::unique_ptr<Queen> q = std::make_unique<Queen>(color, c);
+        current_player->addPiece(std::move(q));
+        
     }
 }

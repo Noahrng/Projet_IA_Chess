@@ -36,8 +36,10 @@ class GameController
         //Déplacements
         void eatPiece(Piece * p);
         void movePiece(Coordinates from, Coordinates to);
+        void promoteTo(Piece*, PieceType t);
 
         //detection
+        bool isPromoted(Coordinates c,bool);
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool canMovePiece(Coordinates, Coordinates, bool);
         bool pieceAllyDetection(Coordinates);

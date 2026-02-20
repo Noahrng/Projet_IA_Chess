@@ -10,11 +10,15 @@ void TerminalDisplay::printBoard()
 {
     for(int i = 0; i < 8 ; ++i)
     {
+        if(side)   std::cout << " " << i+1;
+        else        std::cout << " " << 9-(i+1);
+
         for(int j = 0 ; j < 8 ; ++j)
         {
             Coordinates c;
-            if(!side) c.setXY(j,i);
-            else c.setXY(7-j,7-i);
+            if(!side)   c.setXY(j,i);
+            else        c.setXY(7-j,7-i);
+
             Piece * p;
             if((i+j)%2==0){
                 std::cout << "\033[48;2;245;222;179m";
@@ -50,4 +54,19 @@ void TerminalDisplay::printBoard()
         }
         std::cout << "\n";
     }
+    std::cout << "  ";
+    for(int j = 0 ; j < 8 ; ++j)
+    {
+        char letter;
+        if(side)
+        {
+            letter = 'h' - j;
+        }
+        else
+        {
+            letter = 'a' + j;
+        }
+        std::cout << letter << " ";
+    }
+    std::cout << "\n";
 }
