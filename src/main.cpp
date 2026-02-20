@@ -34,7 +34,13 @@ int main(){
     play.movePiece(c_from,c_to);
     std::cout << "Test après premier move\n";
 
-    std::cout << "menacée :" << play.isThreaten(c_to) << "\n";
+    c_from.setXY(0,2);
+    c_to.setXY(1,1);
+    play.movePiece(c_from,c_to);
+
+    c_from.setXY(1,1);
+    c_to.setXY(0,0);
+    play.movePiece(c_from,c_to);
 
     TerminalDisplay t(play,0);
     t.printBoard();
