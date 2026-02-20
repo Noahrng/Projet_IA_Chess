@@ -28,6 +28,7 @@ ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished
 
 ChessScreen::~ChessScreen()
 {
+    std::cout<<"[DEBUG] ChessScreen destructor\n";
     for(auto it=images.begin();it != images.end();++it)
     {
         UnloadImage(it->second);
