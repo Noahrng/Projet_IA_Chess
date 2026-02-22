@@ -6,53 +6,21 @@
 int main(){
     GameController play;
 
-    std::string test=play.enterPlayerCoordinates();
-    std::cout<<test<<"\n";
+    std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";
+    bool affichage;
+    std::cin >> affichage;
 
-    play.switchTurn();
-    play.switchTurn();
+    if(!affichage)
+    {
+        TerminalDisplay t(play,0);
+        t.run();
+    }
 
-    Coordinates test2=play.convertStringIntoCoords(test);
-    test2.print();
-    play.choosePiece(test2);
-    std::cout<<play.isNull()<<"\n";
-    
-    Coordinates c_from(0,6);
-    Coordinates c_to(0,4);
-    play.movePiece(c_from,c_to);
-    std::cout << "Test après premier move\n";
-
-    c_from.setXY(0,4);
-    c_to.setXY(0,3);
-
-    play.movePiece(c_from,c_to);
-    std::cout << "Test après premier move\n";
-
-    c_from.setXY(0,3);
-    c_to.setXY(0,2);
-
-    play.movePiece(c_from,c_to);
-    std::cout << "Test après premier move\n";
-
-    c_from.setXY(0,2);
-    c_to.setXY(1,1);
-    play.movePiece(c_from,c_to);
-
-    c_from.setXY(1,1);
-    c_to.setXY(0,0);
-    play.movePiece(c_from,c_to);
-
-    TerminalDisplay t(play,0);
-    t.run();
-    
-    GraphicDisplay gp1(600,600,"CHESS",play,0);
-    
-    gp1.run();
-    std::cout<<"test\n";
-
-
-
-   
+    else
+    {
+        GraphicDisplay gp1(600,600,"CHESS",play,0);
+        gp1.run();
+    }   
     
     return 0;
 }
