@@ -9,14 +9,24 @@ TerminalDisplay::TerminalDisplay(GameController &game,bool s): Display(game,s){
 void TerminalDisplay::printBoard()
 {
     bool color_turn = game.blackTurn();
-    if(!color_turn) std::cout<< "\033[47;30m";
-    else std::cout << "\033[40;37m";
+    std::string colored_cell;
+    std::string end_color = "\033[0m";
+
+    if(!color_turn)
+    {
+        colored_cell = "\033[47;30m";
+        std::cout<< colored_cell << "    White's Turn    ";
+    } 
+    else{
+        colored_cell = "\033[40;37m"; 
+        std::cout << colored_cell << "    Black's Turn    ";
+    }
     
-    std::cout << "\033[0m\n";
+    std::cout << end_color << std::endl ;
     for(int i = 0; i < 8 ; ++i)
     {
-        if(side)   std::cout << " " << i+1;
-        else        std::cout << " " << 9-(i+1);
+        if(side)   std::cout << colored_cell << " " << i+1 << end_color;
+        else        std::cout << colored_cell << " " << 9-(i+1) << end_color;
 
         for(int j = 0 ; j < 8 ; ++j)
         {
@@ -37,18 +47,18 @@ void TerminalDisplay::printBoard()
 
             if( (p=p1.getPiece(c)) != nullptr){
                 if(!color_turn){
-                    std::cout << "\033[97m" << p->getTerminalSprite() << " \033[0m";
+                    std::cout << "\033[97m" << p->getTerminalSprite() << " " << end_color;
                 }
                 else{
-                    std::cout << "\033[30m" << p->getTerminalSprite() << " \033[0m";
+                    std::cout << "\033[30m" << p->getTerminalSprite() << " " << end_color;
                 }
             }
             else if((p=p2.getPiece(c)) != nullptr){
                 if(color_turn){
-                    std::cout << "\033[97m" << p->getTerminalSprite() << " \033[0m";
+                    std::cout << "\033[97m" << p->getTerminalSprite() << " " << end_color;
                 }
                 else{
-                    std::cout << "\033[30m" << p->getTerminalSprite() << " \033[0m";
+                    std::cout << "\033[30m" << p->getTerminalSprite() << " " << end_color;
                 }
             }
             else{
@@ -57,9 +67,9 @@ void TerminalDisplay::printBoard()
 
             std::cout << "\033[0m";
         }
-        std::cout << "\n";
+        std::cout << colored_cell << "  " << end_color <<  "\n";
     }
-    std::cout << "  ";
+    std::cout << colored_cell << "  ";
     for(int j = 0 ; j < 8 ; ++j)
     {
         char letter;
@@ -73,7 +83,7 @@ void TerminalDisplay::printBoard()
         }
         std::cout << letter << " ";
     }
-    std::cout << "\n";
+    std::cout << "  " << end_color << "\n";
 }
 
 
@@ -86,19 +96,22 @@ void TerminalDisplay::run()
 {
     while(1)
     {
-        clearTerminal();
-        printBoard();
         std::string coords;
         Coordinates c;
         bool coords_onboard;
         bool got_moved = false;
         bool cancel_move;
+        bool piece_belong_to;
         
 
         while(!got_moved){
+            clearTerminal();
+            printBoard();
             coords_onboard = false;
             cancel_move = false;
-            while(!coords_onboard)
+            piece_belong_to = false;
+
+            while(!coords_onboard || !piece_belong_to)
             {
                 std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
                 coords = game.enterPlayerCoordinates();
@@ -106,12 +119,24 @@ void TerminalDisplay::run()
                 if(c.onBoard())
                 {
                     coords_onboard = true;
+                    game.choosePiece(c);
+                    if(!game.isNull())
+                    {
+                        piece_belong_to = true;
+                    }
+                    else
+                    {
+                        std::cout << "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n";
+                    }
+                }
+                else
+                {
+                    std::cout << "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n";
                 }
             }
 
-            game.choosePiece(c);
 
-            while(!got_moved && !cancel_move)
+            while(!got_moved || cancel_move)
             {
                 std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
                 coords = game.enterPlayerCoordinates();
@@ -119,8 +144,8 @@ void TerminalDisplay::run()
                 else
                 {
                     c=game.convertStringIntoCoords(coords);
-                    if(!c.onBoard()) std::cout << "Coordonnées invalides !\n";
-                    else got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
+                    got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
+                    if(!c.onBoard() || !got_moved) std::cout << "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n";
                 }
             }
         }
