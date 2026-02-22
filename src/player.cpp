@@ -9,7 +9,6 @@
 Player::Player(bool color):color{color}
 {
     //Création de chaque pieces
-    std::cout<<"constructeur" <<color << "\n";
     int i,j;
     //Pions:
     for(j = 0 ; j < 8 ; ++j){

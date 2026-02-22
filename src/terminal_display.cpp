@@ -98,6 +98,8 @@ void TerminalDisplay::run()
     {
         std::string coords;
         Coordinates c;
+        std::string error_color = "\033[41;37m";
+        std::string end_color = "\033[0m";
         bool coords_onboard;
         bool got_moved = false;
         bool cancel_move;
@@ -126,12 +128,17 @@ void TerminalDisplay::run()
                     }
                     else
                     {
-                        std::cout << "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n";
+                        std::cout << error_color <<
+                        "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n"
+                        << end_color;
                     }
                 }
                 else
                 {
-                    std::cout << "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n";
+                    std::cout << error_color <<
+                    "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n"
+                    << end_color;
+
                 }
             }
 
@@ -145,7 +152,10 @@ void TerminalDisplay::run()
                 {
                     c=game.convertStringIntoCoords(coords);
                     got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
-                    if(!c.onBoard() || !got_moved) std::cout << "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n";
+                    if(!c.onBoard() || !got_moved) 
+                        std::cout << error_color << 
+                        "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n"
+                        << end_color;
                 }
             }
         }
