@@ -95,8 +95,8 @@ void ChessScreen::drawPieces(int squareSize)
 
             Piece *p;
 
-            Player &p1=game.getJ1();
-            Player &p2=game.getJ2();
+            Player &p1=game.getCurrentPlayer();
+            Player &p2=game.getWaitingPlayer();
             
             if(!side) p=p1.getPiece(c);
             else p=p2.getPiece(c);

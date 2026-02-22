@@ -9,6 +9,8 @@ class TerminalDisplay : public Display{
     public:
         TerminalDisplay(GameController&, bool);
         void printBoard();
+        void clearTerminal();
+        void run();
 };
 
 #endif
