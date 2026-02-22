@@ -3,6 +3,7 @@
 #include "queen.hpp"
 #include "rook.hpp"
 #include "knight.hpp"
+#include <cstring>
 
 GameController::GameController()
 {
@@ -36,10 +37,14 @@ bool operator!=(const GameController &a,const GameController &b)
 std::string GameController::enterPlayerCoordinates()
 {
     std::string entry;
-    std::cout<<"entre les coordonnée sur l'echiquier"<<std::endl;
     std::cin>>entry;
     return entry;
 } 
+
+bool GameController::moveCancelled(std::string s)
+{
+    return (s == "cancel");
+}
 
 void GameController::choosePiece(Coordinates c)
 {
@@ -53,13 +58,17 @@ void GameController::switchTurn()
     waiting_player = tmp;
 }
 
-Player& GameController::getJ1()
+Player& GameController::getCurrentPlayer()
 {
     return *current_player;
 }
-Player& GameController::getJ2()
+Player& GameController::getWaitingPlayer()
 {
     return *waiting_player;
+}
+Coordinates GameController::getCoordsPieceChosen()
+{
+    return piece_chosen->getCoordinates();
 }
 
 
@@ -106,6 +115,15 @@ bool GameController::isNull(){
     return piece_chosen==nullptr;
 }
 
+bool GameController::whiteTurn()
+{
+    return current_player->isWhite();
+}
+
+bool GameController::blackTurn()
+{
+    return current_player->isBlack();
+}
 
 //Déplacements
 
@@ -254,7 +272,7 @@ int GameController::isChecked()
     return isThreaten(c);
 }
 
-void GameController::movePiece(Coordinates from, Coordinates to)
+bool GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(canMovePiece(from,to,0)){
         Piece * p = current_player->getPiece(from);
@@ -270,7 +288,9 @@ void GameController::movePiece(Coordinates from, Coordinates to)
         {
             promoteTo(p,PieceType::Knight);
         }
+        return true;
     }
+    return false;
 }
 
 void GameController::eatPiece(Piece* p)

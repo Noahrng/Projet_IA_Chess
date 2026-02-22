@@ -22,20 +22,24 @@ class GameController
 
         
         std::string enterPlayerCoordinates(); 
+        bool moveCancelled(std::string s);
         void choosePiece(Coordinates);
         void switchTurn();
 
-        Player& getJ1();
-        Player& getJ2();
+        Player& getCurrentPlayer();
+        Player& getWaitingPlayer();
+        Coordinates getCoordsPieceChosen();
 
         bool isLetter(char c);
         bool isNumber(char c);
         bool isNull();
         Coordinates convertStringIntoCoords(std::string);
+        bool whiteTurn();
+        bool blackTurn();
 
         //Déplacements
         void eatPiece(Piece * p);
-        void movePiece(Coordinates from, Coordinates to);
+        bool movePiece(Coordinates from, Coordinates to);
         void promoteTo(Piece*, PieceType t);
 
         //detection

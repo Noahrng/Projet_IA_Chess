@@ -43,7 +43,7 @@ int main(){
     play.movePiece(c_from,c_to);
 
     TerminalDisplay t(play,0);
-    t.printBoard();
+    t.run();
     
     GraphicDisplay gp1(600,600,"CHESS",play,0);
     
