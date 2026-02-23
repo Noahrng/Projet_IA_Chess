@@ -24,6 +24,15 @@ bool operator!=(const Coordinates &a,const Coordinates &b)
     return !(a==b);
 }
 
+Coordinates operator+(const Coordinates &a,const Coordinates &b)
+{
+    return Coordinates(a.x+b.x,a.y+b.y);
+}
+Coordinates operator-(const Coordinates &a,const Coordinates &b)
+{
+    return Coordinates(a.x-b.x,a.y-b.y);
+}
+
 std::ostream& operator<<(std::ostream& os, Coordinates &a)
 {
     os<<"x="<<a.getX()<<" y="<<a.getY()<< " ";
