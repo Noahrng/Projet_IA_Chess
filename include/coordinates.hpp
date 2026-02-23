@@ -6,6 +6,9 @@
 class Coordinates{
     friend bool operator==(const Coordinates&,const Coordinates&);
     friend bool operator!=(const Coordinates&,const Coordinates&);
+    friend Coordinates operator+(const Coordinates&,const Coordinates&);
+    friend Coordinates operator-(const Coordinates&,const Coordinates&);
+
     friend std::ostream& operator<<(std::ostream&, Coordinates&);
     private:
         int x;
