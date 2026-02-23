@@ -153,7 +153,24 @@ void ChessScreen::draw()
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        std::cout<<getCoords(squareSize)<<"\n";
+        std::string coordinate_string=getCoords(squareSize);
+        Coordinates c=game.convertStringIntoCoords(coordinate_string);
+
+        std::cout<<coordinate_string<<"\n";
+
+        if(!game.isChoosen())
+        {
+            game.choosePiece(c);
+        }
+        else
+        {
+            bool moved=game.movePiece(game.getCoordsPieceChosen(),c);
+            if(moved)
+            {
+                game.unChoosePiece();
+            }
+        }        
+        
     }
         
     if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))

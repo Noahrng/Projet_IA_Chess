@@ -24,6 +24,8 @@ class GameController
         std::string enterPlayerCoordinates(); 
         bool moveCancelled(std::string s);
         void choosePiece(Coordinates);
+        void unChoosePiece();
+        bool isChoosen();
         void switchTurn();
 
         Player& getCurrentPlayer();
@@ -48,6 +50,7 @@ class GameController
         bool canMovePiece(Coordinates, Coordinates, bool);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
+        bool pieceDectection(Coordinates);
         int isThreaten(Coordinates c);
         int isChecked();
 };

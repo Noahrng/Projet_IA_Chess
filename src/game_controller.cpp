@@ -51,6 +51,19 @@ void GameController::choosePiece(Coordinates c)
     this->piece_chosen=current_player->getPiece(c);
 }
 
+void GameController::unChoosePiece()
+{
+    if(piece_chosen!=nullptr)
+    {
+        this->piece_chosen=nullptr;
+    }
+}
+
+bool GameController::isChoosen()
+{
+    return piece_chosen!=nullptr;
+}
+
 void GameController::switchTurn()
 {
     auto tmp = current_player;
@@ -209,6 +222,10 @@ bool GameController::pieceAllyDetection(Coordinates c)
 bool GameController::pieceEnemyDetection(Coordinates c)
 {
     return waiting_player->getPiece(c)!=nullptr;
+}
+bool GameController::pieceDectection(Coordinates c)
+{
+    return this->pieceAllyDetection(c) && this->pieceEnemyDetection(c);
 }
 
 bool GameController::canMovePiece(Coordinates from, Coordinates to, bool enemy)
