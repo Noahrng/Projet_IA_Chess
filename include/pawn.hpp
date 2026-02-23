@@ -8,6 +8,7 @@ class Pawn:public Piece{
         Pawn(bool,Coordinates);
         bool canMove(Coordinates) override;
         PieceType getType() const override;
+        bool canEat(Coordinates);
 };
 
 #endif

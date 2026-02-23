@@ -56,6 +56,7 @@ void GameController::unChoosePiece()
     if(piece_chosen!=nullptr)
     {
         this->piece_chosen=nullptr;
+        cell_chosen.setXY(-1,-1);
     }
 }
 
@@ -279,13 +280,28 @@ int GameController::isChecked()
     Vérifie si un joueur est en échec ou pas et renvoie le nombre de pièces qui le met en échec.
 */
 {
-    size_t i = 0;
-    Piece * p = nullptr;
-    while(i < current_player->nbOfPieces() && p->getType() != PieceType::King)
+    size_t n = current_player->nbOfPieces();
+    if(n == 0)
     {
-        p = current_player->getPiece(i++);
+        return 0;
     }
-    Coordinates c = p->getCoordinates();
+
+    size_t i = 0;
+    Piece * king = nullptr;
+    bool is_king = false;
+    
+    while(i < n && is_king)
+    {
+        king = current_player->getPiece(++i);
+        is_king = king->getType() != PieceType::King;
+    }
+
+    if(i == n)
+    {
+        return 0;
+    }
+
+    Coordinates c = king->getCoordinates();
     return isThreaten(c);
 }
 
@@ -293,19 +309,22 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(canMovePiece(from,to,0)){
         Piece * p = current_player->getPiece(from);
-        if(pieceEnemyDetection(to)){
-            Piece * p_mangee = waiting_player->getPiece(to);
-            eatPiece(p_mangee);
-        }
-        //Déplacer la pièce
-        p->moveTo(to.getX(),to.getY());
-        piece_chosen = nullptr;
-        cell_chosen.setXY(-1,-1);
-        if(isPromoted(to,current_player->isBlack()))
+        if(p != nullptr)
         {
-            promoteTo(p,PieceType::Knight);
+            if(pieceEnemyDetection(to)){
+                Piece * p_mangee = waiting_player->getPiece(to);
+                eatPiece(p_mangee);
+            }
+            //Déplacer la pièce
+
+            p->moveTo(to.getX(),to.getY());
+            unChoosePiece();
+            if(isPromoted(to,current_player->isBlack()))
+            {
+                promoteTo(p,PieceType::Knight);
+            }
+            return true;
         }
-        return true;
     }
     return false;
 }
