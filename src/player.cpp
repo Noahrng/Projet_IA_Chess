@@ -92,7 +92,7 @@ Piece* Player::getPiece(Coordinates c)
     }
     return nullptr;
 }
-Piece* Player::getPiece(int i)
+Piece* Player::getPiece(size_t i)
 {
     if(i < pieces.size())
     {

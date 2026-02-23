@@ -48,3 +48,8 @@ PieceType Pawn::getType() const
 {
     return PieceType::Pawn;
 };
+
+bool Pawn::canEat(Coordinates c)
+{
+
+}
