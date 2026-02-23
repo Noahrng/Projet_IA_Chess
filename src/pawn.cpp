@@ -8,34 +8,38 @@ Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1,"♟")
 bool Pawn::canMove(Coordinates coord)
 {
     int dist=this->coords.distY(coord);
-    if(color==false)
+
+    if(this->coords.distX(coord)==0)
     {
-        if(dist>=1 && dist<=2 && this->coords.distY(6)==0)
+        if(color==false)
         {
-            return true;
-        }
-        else if(dist == 1)
-        {
-            return true;
+            if(dist>=1 && dist<=2 && this->coords.distY(6)==0)
+            {
+                return true;
+            }
+            else if(dist == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return false;
-        }
-    }
-    else
-    {
-        if(dist>=1 && dist<=2 && this->coords.distY(1)==0)
-        {
-            return true;
-        }
-        else if(dist == 1)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
+            if(dist>=1 && dist<=2 && this->coords.distY(1)==0)
+            {
+                return true;
+            }
+            else if(dist == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
