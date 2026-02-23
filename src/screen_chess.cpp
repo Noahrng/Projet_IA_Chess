@@ -28,16 +28,7 @@ ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished
 
 ChessScreen::~ChessScreen()
 {
-    std::cout<<"[DEBUG] ChessScreen destructor\n";
-    for(auto it=images.begin();it != images.end();++it)
-    {
-        UnloadImage(it->second);
-    }
-
-    for(auto it=textures.begin();it != textures.end();++it)
-    {
-        UnloadTexture(it->second);
-    }
+    
 }
 
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
@@ -48,14 +39,13 @@ AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
     return static_cast<AssetID>(base+colorOffset);
 }
 
-void ChessScreen::drawAsset(AssetID id, int x, int y, int size)
+void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
 {
-    Texture2D& tex = textures.at(id);
-
-    Rectangle source = {0, 0, (float)tex.width, (float)tex.height};
-    Rectangle dest = {(float)x, (float)y, (float)size, (float)size};
-
-    DrawTexturePro(tex, source, dest, {0, 0}, 0.0f, WHITE);
+    images.at(id)->setPosition(x,y);
+    images.at(id)->setSize(size);
+    images.at(id)->setTint(tint);
+    images.at(id)->draw();
+    images.at(id)->resetTint();
 }
 
 std::string ChessScreen::getCoords(int squareSize)
@@ -119,10 +109,7 @@ void ChessScreen::drawPieces(int squareSize)
 
 void ChessScreen::addImage(AssetID id,const std::string &path)
 {
-    Image img=LoadImage(path.c_str());
-    Texture2D texture=LoadTextureFromImage(img);
-    images[id]=img;
-    textures[id]=texture;
+    images[id]=std::make_unique<GameAsset>(path,0,0,0);
 }
 
 void ChessScreen::switchSide()
@@ -153,6 +140,7 @@ void ChessScreen::draw()
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
+        std::cout<<"ptn de clic\n";
         std::string coordinate_string=getCoords(squareSize);
         Coordinates c=game.convertStringIntoCoords(coordinate_string);
 
@@ -164,11 +152,10 @@ void ChessScreen::draw()
         }
         else
         {
+            Coordinates from=game.getCoordsPieceChosen();
             bool moved=game.movePiece(game.getCoordsPieceChosen(),c);
-            if(moved)
-            {
-                game.unChoosePiece();
-            }
+            game.unChoosePiece();
+            
         }        
         
     }
@@ -177,6 +164,8 @@ void ChessScreen::draw()
     {
         switchSide();
     }   
+
+    
     EndDrawing();
 }
 
