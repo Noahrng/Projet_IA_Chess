@@ -6,9 +6,21 @@
 int main(){
     GameController play;
 
+    Coordinates t(1,-1);
+    Coordinates t2(-t);
+
+    std::cout<<t<<" "<<t2<<"\n";
+
+    t2*=5;
+
+    std::cout<<t2<<"\n";
+
+
     std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";
     bool affichage;
     std::cin >> affichage;
+
+    
 
     if(!affichage)
     {

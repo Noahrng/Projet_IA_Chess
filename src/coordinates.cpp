@@ -28,9 +28,91 @@ Coordinates operator+(const Coordinates &a,const Coordinates &b)
 {
     return Coordinates(a.x+b.x,a.y+b.y);
 }
+
+Coordinates operator+(const Coordinates &a,const int &lambda)
+{
+    return Coordinates(a.x+lambda,a.y+lambda);
+}
+
+Coordinates operator+(const int &lambda,const Coordinates &a)
+{
+    return Coordinates(a.x+lambda,a.y+lambda);
+}
+
 Coordinates operator-(const Coordinates &a,const Coordinates &b)
 {
     return Coordinates(a.x-b.x,a.y-b.y);
+}
+
+Coordinates operator-(const Coordinates &a)
+{
+    return Coordinates(-a.x,-a.y);
+}
+
+Coordinates operator-(const Coordinates &a,const int &lambda)
+{
+    return Coordinates(a.x-lambda,a.y-lambda);
+}
+
+Coordinates operator-(const int &lambda,const Coordinates &a)
+{
+    return Coordinates(a.x-lambda,a.y-lambda);
+}
+
+Coordinates operator*(const Coordinates &a,const Coordinates &b)
+{
+    return Coordinates(a.x*b.x,a.y*b.y);
+}
+
+Coordinates operator*(const int &lambda,const Coordinates &a)
+{
+    return Coordinates(a.x*lambda,a.y*lambda);
+}
+Coordinates operator*(const Coordinates &a,const int &lambda)
+{
+    return Coordinates(a.x*lambda,a.y*lambda);
+}
+
+Coordinates& Coordinates::operator+=(const Coordinates& other)
+{
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+
+Coordinates& Coordinates::operator+=(const int &lambda)
+{
+    x += lambda;
+    x += lambda;
+    return *this;
+}
+
+Coordinates& Coordinates::operator-=(const Coordinates& other)
+{
+    x -= other.x;
+    y -= other.y;
+    return *this;
+}
+
+Coordinates& Coordinates::operator-=(const int &lambda)
+{
+    x -= lambda;
+    x -= lambda;
+    return *this;
+}
+
+Coordinates& Coordinates::operator*=(const Coordinates& other)
+{
+    x *= other.x;
+    y *= other.y;
+    return *this;
+}
+
+Coordinates& Coordinates::operator*=(const int &lambda)
+{
+    x *= lambda;
+    y *= lambda;
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, Coordinates &a)

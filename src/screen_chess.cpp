@@ -164,7 +164,6 @@ void ChessScreen::draw()
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        std::cout<<"ptn de clic\n";
         std::string coordinate_string=getCoords(squareSize);
         Coordinates c=game.convertStringIntoCoords(coordinate_string);
 
