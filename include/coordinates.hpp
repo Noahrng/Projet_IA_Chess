@@ -20,6 +20,8 @@ class Coordinates{
     friend Coordinates operator*(const int&,const Coordinates&);
     friend Coordinates operator*(const Coordinates&,const int&);
 
+    friend Coordinates operator/(const Coordinates&,const int&);
+
     friend std::ostream& operator<<(std::ostream&, Coordinates&);
     private:
         int x;
@@ -36,6 +38,7 @@ class Coordinates{
         Coordinates& operator-=(const int&);
         Coordinates& operator*=(const Coordinates&);
         Coordinates& operator*=(const int&);
+        Coordinates& operator/=(const int&);
 
         //Getters
         int getX();
