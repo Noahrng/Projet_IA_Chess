@@ -42,6 +42,8 @@ bool Pawn::canMove(Coordinates coord)
             }
         }
     }
+    return false;
+    
 }
 
 PieceType Pawn::getType() const

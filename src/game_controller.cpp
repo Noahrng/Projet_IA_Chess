@@ -290,13 +290,14 @@ int GameController::isChecked()
     Piece * king = nullptr;
     bool is_king = false;
     
-    while(i < n && is_king)
+    while(i < n && !is_king)
     {
-        king = current_player->getPiece(++i);
-        is_king = king->getType() != PieceType::King;
+        king = current_player->getPiece(i);
+        is_king = king->getType() == PieceType::King;
+        i++;
     }
 
-    if(i == n)
+    if(!is_king)
     {
         return 0;
     }

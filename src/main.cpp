@@ -18,7 +18,7 @@ int main(){
 
     else
     {
-        GraphicDisplay gp1(600,600,"CHESS",play,0);
+        GraphicDisplay gp1(900,900,"CHESS",play,0);
         gp1.run();
     }   
     

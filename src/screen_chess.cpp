@@ -5,39 +5,30 @@ ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished
 {
     const std::string basePath = "assets/";
 
-    this->addImage(AssetID::chessBoard,basePath+"board_b&g.png");
+    this->addImage(AssetID::chessBoard,basePath+"Board3.png");
 
-    this->addImage(AssetID::pawnWhite,basePath+"w_Pawn.png");
-    this->addImage(AssetID::pawnBlack,basePath+"b_Pawn.png");
+    this->addImage(AssetID::pawnWhite,basePath+"WhitePawn.png");
+    this->addImage(AssetID::pawnBlack,basePath+"BlackPawn.png");
 
-    this->addImage(AssetID::bishopWhite,basePath+"w_Bishop.png");
-    this->addImage(AssetID::bishopBlack,basePath+"b_Bishop.png");
+    this->addImage(AssetID::bishopWhite,basePath+"WhiteBishop.png");
+    this->addImage(AssetID::bishopBlack,basePath+"BlackBishop.png");
 
-    this->addImage(AssetID::kingWhite,basePath+"w_King.png");
-    this->addImage(AssetID::kingBlack,basePath+"b_King.png");
+    this->addImage(AssetID::kingWhite,basePath+"WhiteKing.png");
+    this->addImage(AssetID::kingBlack,basePath+"BlackKing.png");
 
-    this->addImage(AssetID::knightWhite,basePath+"w_Knight.png");
-    this->addImage(AssetID::knightBlack,basePath+"b_Knight.png");
+    this->addImage(AssetID::knightWhite,basePath+"WhiteKnight.png");
+    this->addImage(AssetID::knightBlack,basePath+"BlackKnight.png");
 
-    this->addImage(AssetID::queenWhite,basePath+"w_Queen.png");
-    this->addImage(AssetID::queenBlack,basePath+"b_Queen.png");
+    this->addImage(AssetID::queenWhite,basePath+"WhiteQueen.png");
+    this->addImage(AssetID::queenBlack,basePath+"BlackQueen.png");
 
-    this->addImage(AssetID::rookWhite,basePath+"w_Rook.png");
-    this->addImage(AssetID::rookBlack,basePath+"b_Rook.png");
+    this->addImage(AssetID::rookWhite,basePath+"WhiteRook.png");
+    this->addImage(AssetID::rookBlack,basePath+"BlackRook.png");
 }
 
 ChessScreen::~ChessScreen()
 {
-    std::cout<<"[DEBUG] ChessScreen destructor\n";
-    for(auto it=images.begin();it != images.end();++it)
-    {
-        UnloadImage(it->second);
-    }
-
-    for(auto it=textures.begin();it != textures.end();++it)
-    {
-        UnloadTexture(it->second);
-    }
+    
 }
 
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
@@ -48,14 +39,13 @@ AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
     return static_cast<AssetID>(base+colorOffset);
 }
 
-void ChessScreen::drawAsset(AssetID id, int x, int y, int size)
+void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
 {
-    Texture2D& tex = textures.at(id);
-
-    Rectangle source = {0, 0, (float)tex.width, (float)tex.height};
-    Rectangle dest = {(float)x, (float)y, (float)size, (float)size};
-
-    DrawTexturePro(tex, source, dest, {0, 0}, 0.0f, WHITE);
+    images.at(id)->setPosition(x,y);
+    images.at(id)->setSize(size);
+    images.at(id)->setTint(tint);
+    images.at(id)->draw();
+    images.at(id)->resetTint();
 }
 
 std::string ChessScreen::getCoords(int squareSize)
@@ -84,8 +74,10 @@ std::string ChessScreen::getCoords(int squareSize)
     return res;
 }
 
-void ChessScreen::drawPieces(int squareSize)
+void ChessScreen::drawPieces(int squareSize,Coordinates choose)
 {
+    Player &p1=game.getCurrentPlayer();
+    Player &p2=game.getWaitingPlayer();
     for(int i = 0; i < 8 ; ++i)
     {
         for(int j = 0 ; j < 8 ; ++j)
@@ -93,36 +85,46 @@ void ChessScreen::drawPieces(int squareSize)
             Coordinates c;
             c.setXY(j,i);
 
+            int x=side ? (7-j)*squareSize : j*squareSize;
+            int y=side ? (7-i)*squareSize : i*squareSize;
+
             Piece *p;
 
-            Player &p1=game.getCurrentPlayer();
-            Player &p2=game.getWaitingPlayer();
-            
-            if(!side) p=p1.getPiece(c);
-            else p=p2.getPiece(c);
-            if(p!=nullptr){
-                int x=side ? (7-j)*squareSize : j*squareSize;
-                int y=side ? (7-i)*squareSize : i*squareSize;
-                drawAsset(getAssetForPiece(*p,!side),x,y,squareSize);
+            p=p1.getPiece(c);
+            if(p!=nullptr)
+            {
+                bool isWhite=p1.isWhite();
+                AssetID id=getAssetForPiece(*p,isWhite);
+                if(p->getType()==PieceType::King)
+                {
+                    if(game.isChecked())
+                    {
+                        drawAsset(id,x,y,squareSize,c == choose ? YELLOW : RED);
+                    }
+                    else
+                        drawAsset(id,x,y,squareSize,c == choose ? YELLOW : WHITE);
+                }
+                else
+                {
+                    drawAsset(id,x,y,squareSize,c == choose ? YELLOW : WHITE);
+                }
             }
-            
-            if(!side) p=p2.getPiece(c);
-            else p=p1.getPiece(c);
-            if(p!=nullptr){
-                int x=side ? (7-j)*squareSize : j*squareSize;
-                int y=side ? (7-i)*squareSize : i*squareSize;
-                drawAsset(getAssetForPiece(*p,side),x,y,squareSize);
+
+            p=p2.getPiece(c);
+            if(p!=nullptr)
+            {
+                bool isWhite=p2.isWhite();
+                AssetID id=getAssetForPiece(*p,isWhite);
+                drawAsset(id,x,y,squareSize,c == choose ? YELLOW : WHITE);
             }
+
         }
     }
 }
 
 void ChessScreen::addImage(AssetID id,const std::string &path)
 {
-    Image img=LoadImage(path.c_str());
-    Texture2D texture=LoadTextureFromImage(img);
-    images[id]=img;
-    textures[id]=texture;
+    images[id]=std::make_unique<GameAsset>(path,0,0,0);
 }
 
 void ChessScreen::switchSide()
@@ -149,10 +151,20 @@ void ChessScreen::draw()
     BeginDrawing();
     ClearBackground(BLACK);
     drawAsset(AssetID::chessBoard,0,0,boardSize);
-    drawPieces(squareSize);
+
+    if(game.isChoosen())
+    {
+        drawPieces(squareSize,game.getCoordsPieceChosen());
+    }
+    else
+    {
+        drawPieces(squareSize);
+    }
+    
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
+        std::cout<<"ptn de clic\n";
         std::string coordinate_string=getCoords(squareSize);
         Coordinates c=game.convertStringIntoCoords(coordinate_string);
 
@@ -164,11 +176,15 @@ void ChessScreen::draw()
         }
         else
         {
-            bool moved=game.movePiece(game.getCoordsPieceChosen(),c);
-            if(moved)
+            Coordinates from=game.getCoordsPieceChosen();
+            if(game.movePiece(from,c))
             {
-                game.unChoosePiece();
+                game.switchTurn();
+                //this->switchSide();
             }
+            game.unChoosePiece();
+            
+            
         }        
         
     }
@@ -177,6 +193,8 @@ void ChessScreen::draw()
     {
         switchSide();
     }   
+
+    
     EndDrawing();
 }
 
