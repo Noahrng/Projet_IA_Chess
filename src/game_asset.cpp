@@ -37,5 +37,5 @@ void GameAsset::draw()
 {
     Rectangle source ={0,0,(float)texture.width,(float)texture.height};
     Rectangle dest={(float)x,(float)y,(float)size,(float)size};
-    DrawTexturePro(texture,source,dest,{0,0},0.0f,WHITE);
+    DrawTexturePro(texture,source,dest,{0,0},0.0f,tint);
 }

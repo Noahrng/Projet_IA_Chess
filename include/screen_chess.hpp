@@ -36,8 +36,8 @@ class ChessScreen : public Screen
         ~ChessScreen();
 
         
-        void drawAsset(AssetID,int,int,int,Color);
-        void drawPieces(int);
+        void drawAsset(AssetID,int,int,int,Color=WHITE);
+        void drawPieces(int,Coordinates={-1,-1});
 
         void addImage(AssetID,const std::string&);
 
