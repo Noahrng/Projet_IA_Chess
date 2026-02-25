@@ -29,8 +29,12 @@ class Piece  {
         std::string getTerminalSprite();
         Coordinates getCoordinates();
 
-        virtual bool canMove(Coordinates) = 0;
+        virtual bool canMovePattern(Coordinates) = 0;
+        virtual bool canEatPattern(Coordinates) = 0;
         virtual PieceType getType()const=0;
+
+        //virtual void onBeforeMove(Coordinates, Coordinates, Player*, Player*); Potentiellement utiles pour le futur
+        //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);
 
 
         void moveTo(int x, int y);

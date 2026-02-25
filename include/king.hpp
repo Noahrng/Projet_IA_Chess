@@ -6,7 +6,8 @@
 class King:public Piece{
     public:
         King(bool,Coordinates);
-        bool canMove(Coordinates) override;
+        bool canMovePattern(Coordinates) override;
+        bool canEatPattern(Coordinates) override;
         PieceType getType() const override;
 };
 

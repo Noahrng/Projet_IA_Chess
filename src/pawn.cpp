@@ -2,43 +2,39 @@
 
 Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1,"♟")
 {
-
+    
 }
 
-bool Pawn::canMove(Coordinates coord)
+bool Pawn::canMovePattern(Coordinates new_coords)
 {
-    int dist=this->coords.distY(coord);
+    if(!new_coords.onBoard()) return false;
 
-    if(this->coords.distX(coord)==0)
+    int dist_x=this->coords.distX(new_coords);
+    int dist_y=this->coords.distY(new_coords);
+
+
+    if(dist_x==0)
     {
         if(color==false)
         {
-            if(dist>=1 && dist<=2 && this->coords.distY(6)==0)
+            if(dist_y>=1 && dist_y<=2 && this->coords.distY(6)==0)
             {
                 return true;
             }
-            else if(dist == 1)
+            else if(dist_y == 1)
             {
                 return true;
-            }
-            else
-            {
-                return false;
             }
         }
         else
         {
-            if(dist>=1 && dist<=2 && this->coords.distY(1)==0)
+            if(dist_y>=1 && dist_y<=2 && this->coords.distY(1)==0)
             {
                 return true;
             }
-            else if(dist == 1)
+            else if(dist_y == 1)
             {
                 return true;
-            }
-            else
-            {
-                return false;
             }
         }
     }
@@ -46,12 +42,23 @@ bool Pawn::canMove(Coordinates coord)
     
 }
 
+bool Pawn::canEatPattern(Coordinates new_coords)
+{
+    if(!new_coords.onBoard()) return false;
+
+    int dir = (color==1) ? 1 : -1;
+    if(new_coords == Coordinates(coords.getX()-1,coords.getY()+dir) ||
+        new_coords == Coordinates(coords.getX()+1, coords.getY()+dir))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 PieceType Pawn::getType() const
 {
     return PieceType::Pawn;
 };
 
-bool Pawn::canEat(Coordinates c)
-{
 
-}

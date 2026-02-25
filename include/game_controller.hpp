@@ -47,7 +47,8 @@ class GameController
         //detection
         bool isPromoted(Coordinates c,bool);
         bool pieceInBetween(Coordinates from, Coordinates to);
-        bool canMovePiece(Coordinates, Coordinates, bool);
+        bool isLegalMove(Coordinates, Coordinates);
+        bool isEmpty(Coordinates);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
         bool pieceDectection(Coordinates);

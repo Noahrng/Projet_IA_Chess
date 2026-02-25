@@ -1,14 +1,15 @@
 #ifndef PAWN_HPP
 #define PAWN_HPP
 
-#include <pieces.hpp>
+#include "pieces.hpp"
+#include "player.hpp"
 
 class Pawn:public Piece{
     public:
         Pawn(bool,Coordinates);
-        bool canMove(Coordinates) override;
+        bool canMovePattern(Coordinates) override;
+        bool canEatPattern(Coordinates) override;
         PieceType getType() const override;
-        bool canEat(Coordinates);
 };
 
 #endif
