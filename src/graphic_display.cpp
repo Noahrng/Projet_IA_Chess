@@ -40,7 +40,5 @@ void GraphicDisplay::run()
         {
             currentScreen=currentScreen->nextScreen();
         }
-
-        
     }
 }
