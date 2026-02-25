@@ -17,24 +17,28 @@ bool Pawn::canMovePattern(Coordinates new_coords)
     {
         if(color==false)
         {
-            if(dist_y>=1 && dist_y<=2 && this->coords.distY(6)==0)
-            {
-                return true;
-            }
-            else if(dist_y == 1)
-            {
-                return true;
+            if(this->getCoordinates().getY() >= new_coords.getY()){
+                if(dist_y>=1 && dist_y<=2 && this->coords.distY(6)==0)
+                {
+                    return true;
+                }
+                else if(dist_y == 1)
+                {
+                    return true;
+                }
             }
         }
         else
         {
-            if(dist_y>=1 && dist_y<=2 && this->coords.distY(1)==0)
-            {
-                return true;
-            }
-            else if(dist_y == 1)
-            {
-                return true;
+            if(this->getCoordinates().getY() <= new_coords.getY()){
+                if(dist_y>=1 && dist_y<=2 && this->coords.distY(1)==0)
+                {
+                    return true;
+                }
+                else if(dist_y == 1)
+                {
+                    return true;
+                }
             }
         }
     }
