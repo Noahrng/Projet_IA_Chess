@@ -1,4 +1,5 @@
 #include "game_controller.hpp"
+#include "pawn.hpp"
 #include "bishop.hpp"
 #include "queen.hpp"
 #include "rook.hpp"
@@ -49,6 +50,7 @@ bool GameController::moveCancelled(std::string s)
 void GameController::choosePiece(Coordinates c)
 {
     this->piece_chosen=current_player->getPiece(c);
+    this->cell_chosen = current_player->getPiece(c)->getCoordinates();
 }
 
 void GameController::unChoosePiece()
@@ -214,7 +216,10 @@ bool GameController::isPromoted(Coordinates c, bool color)
     return false;
 }
 
-
+bool GameController::isEmpty(Coordinates c)
+{
+    return !pieceDectection(c);
+}
 
 bool GameController::pieceAllyDetection(Coordinates c)
 {
@@ -229,28 +234,35 @@ bool GameController::pieceDectection(Coordinates c)
     return this->pieceAllyDetection(c) && this->pieceEnemyDetection(c);
 }
 
-bool GameController::canMovePiece(Coordinates from, Coordinates to, bool enemy)
+bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
-    Piece * p = nullptr;
-    if(!enemy) p = current_player->getPiece(from);
-    else p = waiting_player->getPiece(from);
-
+    Piece * p = current_player->getPiece(from);
+    
     if(!from.onBoard() || !to.onBoard()) return false;  
 
     if(p == nullptr) return false;
 
     if(pieceInBetween(from,to)) return false;
 
-    if(!enemy && pieceAllyDetection(to)) return false;
-    
-    if(enemy && pieceEnemyDetection(to)) return false;
+    if(isEmpty(to))
+    {
+        if(!p->canMovePattern(to)) return false;
+    }
+    else if(pieceEnemyDetection(to))
+    {
+        if(!p->canEatPattern(to)) return false;
+    }
+    else
+    {
+        return false;
+    }
 
     //Vérification si le roi est en échec si on bouge la pièce
 
     //Vérification si c'est le roi qu'on déplace et qu'on ne le déplace pas sur une case en échecs
 
-    if(p->canMove(to)) return true;
-    return false;
+
+    return true;
 }
 
 int GameController::isThreaten(Coordinates c)
@@ -265,7 +277,7 @@ int GameController::isThreaten(Coordinates c)
     while(i < waiting_player->nbOfPieces())
     {
         Piece* p = waiting_player->getPiece(i);
-        if(p->canMove(c) && 
+        if(p->canMovePattern(c) && 
         pieceInBetween(p->getCoordinates(),c)) 
         {
             nb_threats++;
@@ -308,7 +320,7 @@ int GameController::isChecked()
 
 bool GameController::movePiece(Coordinates from, Coordinates to)
 {
-    if(canMovePiece(from,to,0)){
+    if(isLegalMove(from,to)){
         Piece * p = current_player->getPiece(from);
         if(p != nullptr)
         {
@@ -320,10 +332,12 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
 
             p->moveTo(to.getX(),to.getY());
             unChoosePiece();
+            //Màj si Pion promu
             if(isPromoted(to,current_player->isBlack()))
             {
                 promoteTo(p,PieceType::Knight);
             }
+
             return true;
         }
     }
