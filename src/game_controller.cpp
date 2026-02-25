@@ -50,7 +50,10 @@ bool GameController::moveCancelled(std::string s)
 void GameController::choosePiece(Coordinates c)
 {
     this->piece_chosen=current_player->getPiece(c);
-    this->cell_chosen = current_player->getPiece(c)->getCoordinates();
+    if(piece_chosen!=nullptr){
+        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
+    }
+    
 }
 
 void GameController::unChoosePiece()
@@ -231,7 +234,7 @@ bool GameController::pieceEnemyDetection(Coordinates c)
 }
 bool GameController::pieceDectection(Coordinates c)
 {
-    return this->pieceAllyDetection(c) && this->pieceEnemyDetection(c);
+    return this->pieceAllyDetection(c) || this->pieceEnemyDetection(c);
 }
 
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
