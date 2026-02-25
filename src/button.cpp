@@ -1,45 +1,58 @@
 #include "button.hpp"
 
-Button::Button()
+Button::Button(std::unique_ptr<Shape> s,const std::string& text)
+    :shape{std::move(s)},text{text},normalColor{DARKGRAY},hoverColor{LIGHTGRAY},textColor{BLACK},fontSize{25}
 {
 
 }
 
-Button::Button(float x,float y,float width,float height,const std::string &label)
+void Button::SetnormalColor(Color c)
 {
-    bounds={x,y,width,height};
-    text=label;
+    normalColor=c;
+}
 
-    normalColor=DARKGRAY;
-    hoverColor=LIGHTGRAY;
-    textColor=BLACK;
+void Button::SetHoverColor(Color c)
+{
+    hoverColor = c;
+}
+
+void Button::SetTextColor(Color c)
+{
+    textColor = c;
+}
+
+void Button::SetFontSize(int s)
+{
+    fontSize=s;
 }
 
 void Button::draw()
 {
-    Vector2 mouse =  GetMousePosition();
-    bool hover = CheckCollisionPointRec(mouse,bounds);
+    if(this->isHovered())
+    {
+        shape->setBackgroundColor(hoverColor);
+    }
+    else
+    {
+        shape->setBackgroundColor(normalColor);
+    }
+    shape->draw();
 
-    DrawRectangleRec(bounds,hover ? hoverColor : normalColor);
-    int fontSize=25;
-    int textWidth=MeasureText(text.c_str(),fontSize);
+    int textWidth = MeasureText(text.c_str(),fontSize);
+    DrawText(text.c_str(),(int)shape->getCenterX()-textWidth/2,(int)shape->getCenterY()-fontSize/2,fontSize,textColor);
+}
 
-    DrawText(text.c_str(),
-            bounds.x+bounds.width/2-textWidth/2,
-            bounds.y+bounds.height/2-fontSize/2,
-            fontSize,
-            textColor);
+bool Button::isHovered()
+{
+    return shape->isHovered(GetMousePosition());
 }
 
 bool Button::isClicked()
 {
     Vector2 mouse = GetMousePosition();
-    bool hover = CheckCollisionPointRec(mouse,bounds);
-
-    return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+    return shape->isHovered(mouse) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
 Button::~Button()
 {
-    std::cout<<"bouton detruit\n";
 }

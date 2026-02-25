@@ -11,7 +11,7 @@ int main(){
 
     std::cout<<t<<" "<<t2<<"\n";
 
-    t2*=5;
+    t2=t2*4;
 
     std::cout<<t2<<"\n";
 
