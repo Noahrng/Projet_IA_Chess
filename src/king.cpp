@@ -12,7 +12,7 @@ bool King::canMovePattern(Coordinates new_coords)
     int distx=this->coords.distX(new_coords);
     int disty=this->coords.distY(new_coords);
 
-    if((distx==1 || disty==1) && coords!=new_coords)
+    if((distx<=1 && disty<=1) && coords!=new_coords)
     {
         return true;
     }

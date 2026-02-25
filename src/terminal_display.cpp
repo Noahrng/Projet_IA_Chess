@@ -92,9 +92,16 @@ void TerminalDisplay::clearTerminal()
     std::cout << "\x1B[2J\x1B[H";
 }
 
+bool TerminalDisplay::isGameQuitted(std::string s)
+{
+    if(s == "quit") return true;
+    return false;
+}
+
 void TerminalDisplay::run()
 {
-    while(1)
+    bool quit = false;
+    while(1 && !quit)
     {
         std::string coords;
         Coordinates c;
@@ -106,48 +113,53 @@ void TerminalDisplay::run()
         bool piece_belong_to;
         
 
-        while(!got_moved){
+        while(!got_moved && !quit){
             clearTerminal();
             printBoard();
             coords_onboard = false;
             cancel_move = false;
             piece_belong_to = false;
 
-            while(!coords_onboard || !piece_belong_to)
+            while((!coords_onboard || !piece_belong_to) && !quit)
             {
                 std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
                 coords = game.enterPlayerCoordinates();
-                c=game.convertStringIntoCoords(coords);
-                if(c.onBoard())
+                if(isGameQuitted(coords)) quit = true;
+                else
                 {
-                    coords_onboard = true;
-                    game.choosePiece(c);
-                    if(!game.isNull())
+                    c=game.convertStringIntoCoords(coords);
+                    if(c.onBoard())
                     {
-                        piece_belong_to = true;
+                        coords_onboard = true;
+                        game.choosePiece(c);
+                        if(!game.isNull())
+                        {
+                            piece_belong_to = true;
+                        }
+                        else
+                        {
+                            std::cout << error_color <<
+                            "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n"
+                            << end_color;
+                        }
                     }
                     else
                     {
                         std::cout << error_color <<
-                        "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n"
+                        "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n"
                         << end_color;
-                    }
-                }
-                else
-                {
-                    std::cout << error_color <<
-                    "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n"
-                    << end_color;
 
+                    }
                 }
             }
 
 
-            while(!got_moved || cancel_move)
+            while((!got_moved || cancel_move) && !quit)
             {
                 std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
                 coords = game.enterPlayerCoordinates();
-                if(game.moveCancelled(coords)) cancel_move = true;
+                if(isGameQuitted(coords)) quit = true;
+                else if(game.moveCancelled(coords)) cancel_move = true;
                 else
                 {
                     c=game.convertStringIntoCoords(coords);

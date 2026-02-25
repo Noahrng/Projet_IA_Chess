@@ -10,6 +10,7 @@ class TerminalDisplay : public Display{
         TerminalDisplay(GameController&, bool);
         void printBoard();
         void clearTerminal();
+        bool isGameQuitted(std::string);
         void run();
 };
 
