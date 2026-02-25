@@ -48,7 +48,6 @@ bool GameController::moveCancelled(std::string s)
 }
 
 
-
 void GameController::switchTurn()
 {
     auto tmp = current_player;
@@ -194,23 +193,38 @@ void GameController::unChoosePiece()
     }
 }
 
-bool GameController::isChoosen()
+bool GameController::isChosen()
 {
     return piece_chosen!=nullptr;
 }
 
-std::vector<Coordinates> GameController::movePieceChosen()
+std::vector<Coordinates> GameController::movesOfPieceChosen()
 {
-    int i; 
-    int j;
-    for(i = 0 ; i < 8 ; ++i)
+    std::vector<Coordinates> v;
+    if(isChosen())
     {
-        for(j = 0 ; j < 8 ; ++j)
+        int i; 
+        int j;
+        for(i = 0 ; i < 8 ; ++i)
         {
-            
+            for(j = 0 ; j < 8 ; ++j)
+            {
+                Coordinates to(j,i);
+                if(piece_chosen->canMovePattern(to) && isEmpty(to) 
+                    && !pieceInBetween(cell_chosen,to))
+                {
+                    v.push_back(to);
+                }
+                else if(pieceEnemyDetection(to) && piece_chosen->canEatPattern(to) 
+                    && !pieceInBetween(cell_chosen,to))
+                {
+                    v.push_back(to);
+                }
+            }
         }
     }
-}
+    return v;
+}   
 
 bool GameController::isPromoted(Coordinates c, bool color)
 {

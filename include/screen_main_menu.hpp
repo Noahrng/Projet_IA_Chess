@@ -3,8 +3,9 @@
 
 #include "screen.hpp"
 #include "button.hpp"
-#include "textbox.hpp"
-#include <vector>
+#include "text_shape.hpp"
+#include "rectangle_shape.hpp"
+#include "circle_shape.hpp"
 #include <memory>
 
 
@@ -12,7 +13,7 @@ class MainMenuScreen : public Screen
 {
     private:
         std::unique_ptr<Button> playButton;
-        std::unique_ptr<TextBox> title;
+        std::unique_ptr<TextShape> title;
         bool finished;
     public:
         MainMenuScreen(GameController&,int width,int height);

@@ -44,8 +44,8 @@ class GameController
         //Pièces choisies
         void choosePiece(Coordinates);
         void unChoosePiece();
-        bool isChoosen();
-        std::vector<Coordinates> movePieceChosen();
+        bool isChosen();
+        std::vector<Coordinates> movesOfPieceChosen();
 
         //detection
         bool isPromoted(Coordinates c,bool);
