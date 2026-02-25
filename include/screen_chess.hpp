@@ -2,8 +2,10 @@
 #define SCREEN_CHESS_HPP
 
 #include "screen.hpp"
+#include "game_asset.hpp"
 #include "game_controller.hpp"
 #include <map>
+#include <memory>
 
 enum class AssetID
 {
@@ -27,18 +29,15 @@ class ChessScreen : public Screen
     private:
         bool side;
         bool finished;
-        std::map<AssetID,Image> images;
-        std::map<AssetID,Texture2D> textures;
-
-        
+        std::map<AssetID,std::unique_ptr<GameAsset>> images;
 
     public:
         ChessScreen(GameController&);
         ~ChessScreen();
 
         
-        void drawAsset(AssetID,int,int,int);
-        void drawPieces(int);
+        void drawAsset(AssetID,int,int,int,Color=WHITE);
+        void drawPieces(int,Coordinates={-1,-1});
 
         void addImage(AssetID,const std::string&);
 
