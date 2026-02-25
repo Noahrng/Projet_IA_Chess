@@ -50,15 +50,8 @@ bool GameController::moveCancelled(std::string s)
 void GameController::choosePiece(Coordinates c)
 {
     this->piece_chosen=current_player->getPiece(c);
-<<<<<<< HEAD
     if(piece_chosen != nullptr)
         this->cell_chosen = current_player->getPiece(c)->getCoordinates();
-=======
-    if(piece_chosen!=nullptr){
-        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
-    }
-    
->>>>>>> 45b50c354ea686597ab8f697750b2bfb0140810c
 }
 
 void GameController::unChoosePiece()
