@@ -47,33 +47,7 @@ bool GameController::moveCancelled(std::string s)
     return (s == "cancel");
 }
 
-void GameController::choosePiece(Coordinates c)
-{
-    this->piece_chosen=current_player->getPiece(c);
-<<<<<<< HEAD
-    if(piece_chosen != nullptr)
-        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
-=======
-    if(piece_chosen!=nullptr){
-        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
-    }
-    
->>>>>>> 45b50c354ea686597ab8f697750b2bfb0140810c
-}
 
-void GameController::unChoosePiece()
-{
-    if(piece_chosen!=nullptr)
-    {
-        this->piece_chosen=nullptr;
-        cell_chosen.setXY(-1,-1);
-    }
-}
-
-bool GameController::isChoosen()
-{
-    return piece_chosen!=nullptr;
-}
 
 void GameController::switchTurn()
 {
@@ -204,6 +178,40 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
     return false;
 }
 
+void GameController::choosePiece(Coordinates c)
+{
+    this->piece_chosen=current_player->getPiece(c);
+    if(piece_chosen != nullptr)
+        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
+}
+
+void GameController::unChoosePiece()
+{
+    if(piece_chosen!=nullptr)
+    {
+        this->piece_chosen=nullptr;
+        cell_chosen.setXY(-1,-1);
+    }
+}
+
+bool GameController::isChoosen()
+{
+    return piece_chosen!=nullptr;
+}
+
+std::vector<Coordinates> GameController::movePieceChosen()
+{
+    int i; 
+    int j;
+    for(i = 0 ; i < 8 ; ++i)
+    {
+        for(j = 0 ; j < 8 ; ++j)
+        {
+            
+        }
+    }
+}
+
 bool GameController::isPromoted(Coordinates c, bool color)
 {
     Piece * p ;
@@ -285,8 +293,8 @@ int GameController::isThreaten(Coordinates c)
     while(i < waiting_player->nbOfPieces())
     {
         Piece* p = waiting_player->getPiece(i);
-        if(p->canMovePattern(c) && 
-        pieceInBetween(p->getCoordinates(),c)) 
+        if(p->canEatPattern(c) && 
+        !pieceInBetween(p->getCoordinates(),c)) 
         {
             nb_threats++;
         }
