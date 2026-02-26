@@ -98,6 +98,11 @@ bool TerminalDisplay::isGameQuitted(std::string s)
     return false;
 }
 
+bool TerminalDisplay::moveCancelled(std::string s)
+{
+    return (s == "cancel");
+}
+
 void TerminalDisplay::run()
 {
     bool quit = false;
@@ -159,12 +164,12 @@ void TerminalDisplay::run()
             }
 
 
-            while((!got_moved || cancel_move) && !quit)
+            while(!got_moved && !cancel_move && !quit)
             {
                 std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
                 coords = game.enterPlayerCoordinates();
                 if(isGameQuitted(coords)) quit = true;
-                else if(game.moveCancelled(coords)) cancel_move = true;
+                else if(moveCancelled(coords)) cancel_move = true;
                 else
                 {
                     c=game.convertStringIntoCoords(coords);

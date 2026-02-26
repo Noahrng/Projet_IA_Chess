@@ -41,12 +41,6 @@ std::string GameController::enterPlayerCoordinates()
     return entry;
 } 
 
-bool GameController::moveCancelled(std::string s)
-{
-    return (s == "cancel");
-}
-
-
 void GameController::switchTurn()
 {
     auto tmp = current_player;
@@ -262,6 +256,8 @@ bool GameController::pieceDectection(Coordinates c)
     return this->pieceAllyDetection(c) || this->pieceEnemyDetection(c);
 }
 
+
+/*------------------------------Déplacements------------------------------*/
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
 
