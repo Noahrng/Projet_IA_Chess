@@ -11,6 +11,7 @@ class TerminalDisplay : public Display{
         void printBoard();
         void clearTerminal();
         bool isGameQuitted(std::string);
+        bool moveCancelled(std::string s);
         void run();
 };
 
