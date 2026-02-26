@@ -196,13 +196,7 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
             for(j = 0 ; j < 8 ; ++j)
             {
                 Coordinates to(j,i);
-                if(piece_chosen->canMovePattern(to) && isEmpty(to) 
-                    && !pieceInBetween(cell_chosen,to))
-                {
-                    v.push_back(to);
-                }
-                else if(pieceEnemyDetection(to) && piece_chosen->canEatPattern(to) 
-                    && !pieceInBetween(cell_chosen,to))
+                if(isLegalMove(cell_chosen, to))
                 {
                     v.push_back(to);
                 }
