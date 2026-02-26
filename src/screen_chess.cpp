@@ -5,7 +5,7 @@ ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished
 {
     const std::string basePath = "assets/";
 
-    this->addImage(AssetID::chessBoard,basePath+"Board3.png");
+    this->addImage(AssetID::chessBoard,basePath+"Board.png");
 
     this->addImage(AssetID::pawnWhite,basePath+"WhitePawn.png");
     this->addImage(AssetID::pawnBlack,basePath+"BlackPawn.png");
@@ -126,8 +126,8 @@ void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
 {
     for(std::size_t i=0;i<coords.size();i++)
     {
-        int x=coords[i].getX();
-        int y=coords[i].getY();
+        int x=side ? 7-coords[i].getX() : coords[i].getX();
+        int y=side ? 7-coords[i].getY() : coords[i].getY();
         DrawCircle(squareSize*x+squareSize/2,squareSize*y+squareSize/2,squareSize/4,Color{0,0,0,75});
 
     }
