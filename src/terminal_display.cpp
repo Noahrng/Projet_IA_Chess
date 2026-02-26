@@ -6,11 +6,34 @@ TerminalDisplay::TerminalDisplay(GameController &game,bool s): Display(game,s){
 
 }
 
+/*-----------------------------Entrées joueur-----------------------------*/
+std::string TerminalDisplay::enterPlayerCoordinates()
+{
+    std::string entry;
+    std::cin>>entry;
+    return entry;
+} 
+
+/*---------------------Test  sur   entrée  du  joueur---------------------*/
+bool TerminalDisplay::isGameQuitted(std::string s)
+{
+    if(s == "quit") return true;
+    return false;
+}
+
+bool TerminalDisplay::moveCancelled(std::string s)
+{
+    return (s == "cancel");
+}
+
+/*-------------------------Affichage  du terminal-------------------------*/
 void TerminalDisplay::printBoard()
 {
     bool color_turn = game.blackTurn();
     std::string colored_cell;
     std::string end_color = "\033[0m";
+
+    std::string legal_moves = "\033[93m";
 
     if(!color_turn)
     {
@@ -61,6 +84,25 @@ void TerminalDisplay::printBoard()
                     std::cout << "\033[30m" << p->getTerminalSprite() << " " << end_color;
                 }
             }
+            else if(game.isChosen()){
+                Coordinates coords_piece_chosen = game.getCoordsPieceChosen();
+                if(game.isEmpty(c))
+                {
+                    if(game.isLegalMove(coords_piece_chosen,c))
+                    {
+                        std::cout << legal_moves << "◯ " << end_color;
+                    }
+                    else
+                    {
+                        std::cout << "  ";
+                    }
+                }
+                else
+                {
+                    std::cout << "  ";
+                }
+                
+            }
             else{
                 std::cout << "  ";
             }
@@ -92,24 +134,15 @@ void TerminalDisplay::clearTerminal()
     std::cout << "\x1B[2J\x1B[H";
 }
 
-bool TerminalDisplay::isGameQuitted(std::string s)
-{
-    if(s == "quit") return true;
-    return false;
-}
 
-bool TerminalDisplay::moveCancelled(std::string s)
-{
-    return (s == "cancel");
-}
-
+/*----------------------------Exécution du jeu----------------------------*/
 void TerminalDisplay::run()
 {
     bool quit = false;
     bool checkmate = false;
     while(1 && !quit && !checkmate)
     {
-        std::string coords;
+        std::string string_coords;
         Coordinates c;
         //Couleurs ANSI
         std::string error_color = "\033[41;37m"; //Fond Rouge, Texte Blanc
@@ -133,11 +166,11 @@ void TerminalDisplay::run()
             while((!coords_onboard || !piece_belong_to) && !quit)
             {
                 std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
-                coords = game.enterPlayerCoordinates();
-                if(isGameQuitted(coords)) quit = true;
+                string_coords = enterPlayerCoordinates();
+                if(isGameQuitted(string_coords)) quit = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(coords);
+                    c=game.convertStringIntoCoords(string_coords);
                     if(c.onBoard())
                     {
                         coords_onboard = true;
@@ -163,16 +196,18 @@ void TerminalDisplay::run()
                 }
             }
 
+            clearTerminal();
+            printBoard();
 
             while(!got_moved && !cancel_move && !quit)
             {
                 std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
-                coords = game.enterPlayerCoordinates();
-                if(isGameQuitted(coords)) quit = true;
-                else if(moveCancelled(coords)) cancel_move = true;
+                string_coords = enterPlayerCoordinates();
+                if(isGameQuitted(string_coords)) quit = true;
+                else if(moveCancelled(string_coords)) cancel_move = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(coords);
+                    c=game.convertStringIntoCoords(string_coords);
                     got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
                     if(!c.onBoard() || !got_moved) 
                         std::cout << error_color << 
@@ -180,6 +215,7 @@ void TerminalDisplay::run()
                         << end_color;
                 }
             }
+            game.unChoosePiece();
         }
         if(!checkmate) game.switchTurn();
     }
