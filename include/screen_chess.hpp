@@ -38,6 +38,7 @@ class ChessScreen : public Screen
         
         void drawAsset(AssetID,int,int,int,Color=WHITE);
         void drawPieces(int,Coordinates={-1,-1});
+        void drawCircles(int,std::vector<Coordinates>);
 
         void addImage(AssetID,const std::string&);
 

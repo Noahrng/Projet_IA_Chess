@@ -6,7 +6,7 @@ GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& 
     title{t},
     currentScreen{std::make_unique<MainMenuScreen>(game,width,height)}
 {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    //SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width,height,title.c_str());
     SetTargetFPS(30);
     SetExitKey(KEY_ESCAPE);
