@@ -43,7 +43,7 @@ class ChessScreen : public Screen
         void addImage(AssetID,const std::string&);
 
         AssetID getAssetForPiece(const Piece&,bool);
-        std::string getCoords(int);
+        Coordinates getCoords(int);
 
         void switchSide();
 
