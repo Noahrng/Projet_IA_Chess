@@ -57,6 +57,8 @@ class GameController
         bool pieceDectection(Coordinates);
         int isThreaten(Coordinates c);
         int isChecked();
+        bool isKingCheckedAfterMove(Coordinates, Coordinates);
+        bool isCheckmate();
 };
 
 

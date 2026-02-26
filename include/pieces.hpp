@@ -37,7 +37,8 @@ class Piece  {
         //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);
 
 
-        void moveTo(int x, int y);
+        void moveTo(int, int);
+        void moveTo(Coordinates);
 };
 
 

@@ -16,7 +16,6 @@ GameController::GameController()
 
 GameController::~GameController()
 {
-    std::cout<<"[DEBUG] GameController destructor\n";
     delete current_player;
     delete waiting_player;
 }
@@ -168,7 +167,6 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
         if(current_player->getPiece(c)  ||
         waiting_player->getPiece(c))
         {
-            std::cout << c << "\n";
             return true;
         }
         i += step_y;
@@ -266,9 +264,12 @@ bool GameController::pieceDectection(Coordinates c)
 
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
+
     Piece * p = current_player->getPiece(from);
     
     if(!from.onBoard() || !to.onBoard()) return false;  
+
+    if(from == to) return false;
 
     if(p == nullptr) return false;
 
@@ -287,10 +288,10 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
         return false;
     }
 
-    //Vérification si le roi est en échec si on bouge la pièce
-
-    //Vérification si c'est le roi qu'on déplace et qu'on ne le déplace pas sur une case en échecs
-
+    if(isKingCheckedAfterMove(from,to))
+    {
+        return false;
+    }
 
     return true;
 }
@@ -346,6 +347,79 @@ int GameController::isChecked()
 
     Coordinates c = king->getCoordinates();
     return isThreaten(c);
+}
+
+
+bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
+{
+    if(!from.onBoard() || !to.onBoard()) return false;
+
+    Piece *p = current_player->getPiece(from);
+    if(p == nullptr) return false;
+
+    bool checked;
+    int saved_x, saved_y;
+
+    //On sauvegarde les coordonnées de la pièce
+    saved_x = from.getX();
+    saved_y = from.getY();
+
+    p->moveTo(to);  // On simule le coup
+    
+    //Si on mange une pièce, on la sauvegarde aussi
+    if(pieceEnemyDetection(to))
+    {
+        int saved_enemy_x, saved_enemy_y;
+        Piece* enemy = waiting_player->getPiece(to);
+        
+        //on sauvegarde les coordonnées de la pièce ennemie
+        saved_enemy_x = enemy->getCoordinates().getX();
+        saved_enemy_y = enemy->getCoordinates().getY();
+
+        enemy->moveTo(-1,-1); //En dehors du board pour pas qu'on la prenne en compte
+
+        checked = isChecked();
+        enemy->moveTo(saved_enemy_x,saved_enemy_y);
+    }
+    else
+    {
+        checked = isChecked();
+    }
+    p->moveTo(saved_x,saved_y);
+    return checked;
+}
+
+bool GameController::isCheckmate()
+/* 
+    Vérifie si current player est en échec et mat
+*/
+{
+    if(!isChecked())
+    {
+        return false;
+    }
+    Piece * p;
+    size_t piece_i = 0;
+    size_t n = current_player->nbOfPieces();
+
+    while(piece_i < n) //On vérifie pour chaque pièce si elle peut bouger à tous les emplacements du plateau
+    {
+        p = current_player->getPiece(piece_i);
+
+        Coordinates c_piece = p->getCoordinates();
+
+        for(int x = 0 ; x < 8 ; x++)
+        {
+            for(int y = 0 ; y < 8 ; ++y)
+            {
+                Coordinates tmp_to(x,y);
+                if(isLegalMove(c_piece,tmp_to)) return false;
+            }
+        }
+        piece_i++;
+    }
+
+    return true;
 }
 
 bool GameController::movePiece(Coordinates from, Coordinates to)

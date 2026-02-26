@@ -25,3 +25,8 @@ Coordinates Piece::getCoordinates()
 void Piece::moveTo(int x, int y){
     coords.setXY(x,y);
 }
+
+void Piece::moveTo(Coordinates c)
+{
+    coords = c;
+}
