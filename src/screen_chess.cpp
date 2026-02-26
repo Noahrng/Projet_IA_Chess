@@ -122,6 +122,17 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
     }
 }
 
+void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
+{
+    for(std::size_t i=0;i<coords.size();i++)
+    {
+        int x=coords[i].getX();
+        int y=coords[i].getY();
+        DrawCircle(squareSize*x+squareSize/2,squareSize*y+squareSize/2,squareSize/4,Color{0,0,0,75});
+
+    }
+}
+
 void ChessScreen::addImage(AssetID id,const std::string &path)
 {
     images[id]=std::make_unique<GameAsset>(path,0,0,0);
@@ -155,14 +166,23 @@ void ChessScreen::draw()
     if(game.isChosen())
     {
         drawPieces(squareSize,game.getCoordsPieceChosen());
+        drawCircles(squareSize,game.movesOfPieceChosen());
     }
     else
     {
         drawPieces(squareSize);
     }
+
+    /*
+    std::vector<Coordinates> c;
+    c.push_back(Coordinates{4,4});
+    c.push_back(Coordinates{5,5});
+    c.push_back(Coordinates{6,6});
+    drawCircles(squareSize,c);
+    */
     
 
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
     {
         std::string coordinate_string=getCoords(squareSize);
         Coordinates c=game.convertStringIntoCoords(coordinate_string);
@@ -193,6 +213,14 @@ void ChessScreen::draw()
         switchSide();
     }   
 
+    if(game.isCheckmate())
+    {
+        DrawText("ECHEC",10,height/8,200,RED);
+        DrawText("ET",10,height/8+200,200,RED);
+        DrawText("MAT",10,height/8+400,200,RED);
+
+        DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
+    }
     
     EndDrawing();
 }
