@@ -101,19 +101,24 @@ bool TerminalDisplay::isGameQuitted(std::string s)
 void TerminalDisplay::run()
 {
     bool quit = false;
-    while(1 && !quit)
+    bool checkmate = false;
+    while(1 && !quit && !checkmate)
     {
         std::string coords;
         Coordinates c;
-        std::string error_color = "\033[41;37m";
-        std::string end_color = "\033[0m";
+        //Couleurs ANSI
+        std::string error_color = "\033[41;37m"; //Fond Rouge, Texte Blanc
+        std::string end_color = "\033[0m"; //Fin Couleur
+        
         bool coords_onboard;
         bool got_moved = false;
         bool cancel_move;
         bool piece_belong_to;
         
+        checkmate = game.isCheckmate();
+        
 
-        while(!got_moved && !quit){
+        while(!got_moved && !quit && !checkmate){
             clearTerminal();
             printBoard();
             coords_onboard = false;
@@ -171,7 +176,8 @@ void TerminalDisplay::run()
                 }
             }
         }
+        std::cout << "boucle ?\n";
+        if(!checkmate) game.switchTurn();
+    }
 
-        game.switchTurn();
-    }    
 }
