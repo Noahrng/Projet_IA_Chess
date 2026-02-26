@@ -181,7 +181,6 @@ void TerminalDisplay::run()
                 }
             }
         }
-        std::cout << "boucle ?\n";
         if(!checkmate) game.switchTurn();
     }
 
