@@ -23,9 +23,6 @@ class GameController
         
         std::string enterPlayerCoordinates(); 
         bool moveCancelled(std::string s);
-        void choosePiece(Coordinates);
-        void unChoosePiece();
-        bool isChoosen();
         void switchTurn();
 
         Player& getCurrentPlayer();
@@ -43,6 +40,12 @@ class GameController
         void eatPiece(Piece * p);
         bool movePiece(Coordinates from, Coordinates to);
         void promoteTo(Piece*, PieceType t);
+
+        //Pièces choisies
+        void choosePiece(Coordinates);
+        void unChoosePiece();
+        bool isChosen();
+        std::vector<Coordinates> movesOfPieceChosen();
 
         //detection
         bool isPromoted(Coordinates c,bool);

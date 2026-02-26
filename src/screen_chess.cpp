@@ -152,7 +152,7 @@ void ChessScreen::draw()
     ClearBackground(BLACK);
     drawAsset(AssetID::chessBoard,0,0,boardSize);
 
-    if(game.isChoosen())
+    if(game.isChosen())
     {
         drawPieces(squareSize,game.getCoordsPieceChosen());
     }
@@ -169,7 +169,7 @@ void ChessScreen::draw()
 
         std::cout<<coordinate_string<<"\n";
 
-        if(!game.isChoosen())
+        if(!game.isChosen())
         {
             game.choosePiece(c);
         }
