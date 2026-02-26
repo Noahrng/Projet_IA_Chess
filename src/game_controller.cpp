@@ -16,7 +16,6 @@ GameController::GameController()
 
 GameController::~GameController()
 {
-    std::cout<<"[DEBUG] GameController destructor\n";
     delete current_player;
     delete waiting_player;
 }
@@ -168,7 +167,6 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
         if(current_player->getPiece(c)  ||
         waiting_player->getPiece(c))
         {
-            std::cout << c << "\n";
             return true;
         }
         i += step_y;
@@ -270,6 +268,8 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
     Piece * p = current_player->getPiece(from);
     
     if(!from.onBoard() || !to.onBoard()) return false;  
+
+    if(from == to) return false;
 
     if(p == nullptr) return false;
 
@@ -398,38 +398,26 @@ bool GameController::isCheckmate()
     {
         return false;
     }
-    std::cout << "[DEBUG] appel à checkmate\n";
     Piece * p;
     size_t piece_i = 0;
     size_t n = current_player->nbOfPieces();
 
-    int x, y;
     while(piece_i < n) //On vérifie pour chaque pièce si elle peut bouger à tous les emplacements du plateau
     {
         p = current_player->getPiece(piece_i);
 
         Coordinates c_piece = p->getCoordinates();
 
-        
-
-        x=0;
-        while(x < 8)
+        for(int x = 0 ; x < 8 ; x++)
         {
-            std::cout << "[DEBUG] Blocus en boucle x\n";
-            y=0;
-            while(y < 8)
+            for(int y = 0 ; y < 8 ; ++y)
             {
-                std::cout << "[DEBUG] Blocus en boucle y\n";
                 Coordinates tmp_to(x,y);
                 if(isLegalMove(c_piece,tmp_to)) return false;
-                y++;
             }
-            x++;
         }
         piece_i++;
-        std::cout << "piece_i : " << piece_i << ", x: " << x << ", y:" << y << "\n";
     }
-    std::cout << "[DEBUG isCheckmate()] Echec et mat (sauf (8, 8)) en ()" << x << ", " << y << ")\n";
 
     return true;
 }
