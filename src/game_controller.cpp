@@ -33,13 +33,7 @@ bool operator!=(const GameController &a,const GameController &b)
     return !(a==b);
 }
 
-//Entrées joueur
-std::string GameController::enterPlayerCoordinates()
-{
-    std::string entry;
-    std::cin>>entry;
-    return entry;
-} 
+
 
 void GameController::switchTurn()
 {
@@ -58,7 +52,7 @@ Player& GameController::getWaitingPlayer()
 }
 Coordinates GameController::getCoordsPieceChosen()
 {
-    return piece_chosen->getCoordinates();
+    return cell_chosen;
 }
 
 

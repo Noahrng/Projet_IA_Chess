@@ -7,11 +7,22 @@
 class TerminalDisplay : public Display{
     private: 
     public:
+        //Constructeur
         TerminalDisplay(GameController&, bool);
+        
+        //Entrée Joueur
+        std::string enterPlayerCoordinates(); 
+
+        //Test sur entrée du joueur
+        bool isGameQuitted(std::string);
+        bool moveCancelled(std::string);
+
+        //Affichage du terminal
         void printBoard();
         void clearTerminal();
-        bool isGameQuitted(std::string);
-        bool moveCancelled(std::string s);
+
+
+        //Exécution du jeu
         void run();
 };
 
