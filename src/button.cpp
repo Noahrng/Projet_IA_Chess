@@ -1,7 +1,7 @@
 #include "button.hpp"
 
-Button::Button(std::unique_ptr<Drawable> d,const std::string& text)
-    :drawable{std::move(d)},text{text},normalColor{DARKGRAY},hoverColor{LIGHTGRAY},textColor{BLACK},fontSize{25}
+Button::Button(std::unique_ptr<Shape> s,const std::string& text)
+    :shape{std::move(s)},text{text},normalColor{DARKGRAY},hoverColor{LIGHTGRAY},textColor{BLACK},fontSize{25}
 {
 
 }
@@ -30,26 +30,27 @@ void Button::draw()
 {
     if(this->isHovered())
     {
-        drawable->setBackgroundColor(hoverColor);
+        shape->setBackgroundColor(hoverColor);
     }
     else
     {
-        drawable->setBackgroundColor(normalColor);
+        shape->setBackgroundColor(normalColor);
     }
-        drawable->draw();
+    shape->draw();
 
     int textWidth = MeasureText(text.c_str(),fontSize);
-    DrawText(text.c_str(),(int)drawable->getCenterX()-textWidth/2,(int)drawable->getCenterY()-fontSize/2,fontSize,textColor);
+    DrawText(text.c_str(),(int)shape->getCenterX()-textWidth/2,(int)shape->getCenterY()-fontSize/2,fontSize,textColor);
 }
 
 bool Button::isHovered()
 {
-    return drawable->isHovered(GetMousePosition());
+    return shape->isHovered(GetMousePosition());
 }
 
 bool Button::isClicked()
 {
-    return isHovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+    Vector2 mouse = GetMousePosition();
+    return shape->isHovered(mouse) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
 Button::~Button()

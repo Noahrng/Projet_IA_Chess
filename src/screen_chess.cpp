@@ -1,7 +1,7 @@
 #include "screen_chess.hpp"
 #include "screen_main_menu.hpp"
 
-ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false}
+ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},eval{Evaluator(game)}
 {
     const std::string basePath = "assets/";
 
@@ -48,7 +48,7 @@ void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
     images.at(id)->resetTint();
 }
 
-Coordinates ChessScreen::getCoords(int squareSize)
+std::string ChessScreen::getCoords(int squareSize)
 {
     int x=GetMouseX()/squareSize;
     int y=GetMouseY()/squareSize;
@@ -65,7 +65,13 @@ Coordinates ChessScreen::getCoords(int squareSize)
        x=7-x;
     }
 
-    return Coordinates{x,y};
+    char a='a'+x;
+    char b='8'-y;
+    std::string res="  ";
+    res[0]=a;
+    res[1]=b;
+
+    return res;
 }
 
 void ChessScreen::drawPieces(int squareSize,Coordinates choose)
@@ -84,7 +90,7 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
 
             Piece *p;
 
-            p=p1.getPiece(c);
+            p=p1.getPiece(c).get();
             if(p!=nullptr)
             {
                 bool isWhite=p1.isWhite();
@@ -104,7 +110,7 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
                 }
             }
 
-            p=p2.getPiece(c);
+            p=p2.getPiece(c).get();
             if(p!=nullptr)
             {
                 bool isWhite=p2.isWhite();
@@ -157,6 +163,8 @@ void ChessScreen::draw()
     ClearBackground(BLACK);
     drawAsset(AssetID::chessBoard,0,0,boardSize);
 
+
+
     if(game.isChosen())
     {
         drawPieces(squareSize,game.getCoordsPieceChosen());
@@ -175,15 +183,14 @@ void ChessScreen::draw()
     drawCircles(squareSize,c);
     */
     
+    std::cout<<"Avantage joueur en cour:"<<eval.evaluate()<<"\n";
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
     {
-        //std::string coordinate_string=getCoords(squareSize);
-        //Coordinates c=game.convertStringIntoCoords(coordinate_string);
+        std::string coordinate_string=getCoords(squareSize);
+        Coordinates c=game.convertStringIntoCoords(coordinate_string);
 
-        Coordinates c=getCoords(squareSize);
-
-        std::cout<<c<<"\n";
+        std::cout<<coordinate_string<<"\n";
 
         if(!game.isChosen())
         {
@@ -202,6 +209,12 @@ void ChessScreen::draw()
             
         }        
         
+    }
+
+    if(IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE))
+    {
+        std::cout<<"Move annulé\n";
+        game.unMove();
     }
         
     if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))

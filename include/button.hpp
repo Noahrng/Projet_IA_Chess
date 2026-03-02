@@ -8,14 +8,14 @@
 class Button
 {
     private:
-        std::unique_ptr<Drawable> drawable;
+        std::unique_ptr<Shape> shape;
         std::string text;
         Color normalColor;
         Color hoverColor;
         Color textColor;
         int fontSize;
     public:
-        Button(std::unique_ptr<Drawable>,const std::string&);
+        Button(std::unique_ptr<Shape>,const std::string&);
         ~Button();
 
         void SetnormalColor(Color);

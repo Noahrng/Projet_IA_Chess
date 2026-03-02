@@ -68,7 +68,7 @@ void TerminalDisplay::printBoard()
             Player &p1=game.getCurrentPlayer();
             Player &p2=game.getWaitingPlayer();
 
-            if( (p=p1.getPiece(c)) != nullptr){
+            if( (p=p1.getPiece(c).get()) != nullptr){
                 if(!color_turn){
                     std::cout << "\033[97m" << p->getTerminalSprite() << " " << end_color;
                 }
@@ -76,7 +76,7 @@ void TerminalDisplay::printBoard()
                     std::cout << "\033[30m" << p->getTerminalSprite() << " " << end_color;
                 }
             }
-            else if((p=p2.getPiece(c)) != nullptr){
+            else if((p=p2.getPiece(c).get()) != nullptr){
                 if(color_turn){
                     std::cout << "\033[97m" << p->getTerminalSprite() << " " << end_color;
                 }

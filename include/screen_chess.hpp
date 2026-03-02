@@ -4,6 +4,7 @@
 #include "screen.hpp"
 #include "game_asset.hpp"
 #include "game_controller.hpp"
+#include "evaluator.hpp"
 #include <map>
 #include <memory>
 
@@ -30,6 +31,8 @@ class ChessScreen : public Screen
         bool side;
         bool finished;
         std::map<AssetID,std::unique_ptr<GameAsset>> images;
+        Evaluator eval;
+        
 
     public:
         ChessScreen(GameController&);
@@ -43,7 +46,7 @@ class ChessScreen : public Screen
         void addImage(AssetID,const std::string&);
 
         AssetID getAssetForPiece(const Piece&,bool);
-        Coordinates getCoords(int);
+        std::string getCoords(int);
 
         void switchSide();
 

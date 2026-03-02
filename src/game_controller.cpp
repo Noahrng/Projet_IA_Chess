@@ -152,8 +152,8 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
     
     while(j != to.getX() || i != to.getY()){
         Coordinates c(j,i);
-        if(current_player->getPiece(c)  ||
-        waiting_player->getPiece(c))
+        if(current_player->getPiece(c).get()  ||
+        waiting_player->getPiece(c).get())
         {
             return true;
         }
@@ -165,7 +165,7 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 
 void GameController::choosePiece(Coordinates c)
 {
-    this->piece_chosen=current_player->getPiece(c);
+    this->piece_chosen=current_player->getPiece(c).get();
     if(piece_chosen != nullptr)
         this->cell_chosen = current_player->getPiece(c)->getCoordinates();
 }
@@ -211,8 +211,8 @@ bool GameController::isPromoted(Coordinates c, bool color)
     Piece * p ;
     if( (current_player->isWhite() && color == 0) || 
      (current_player->isBlack() && color == 1)) 
-        p = current_player->getPiece(c);
-    else p = waiting_player->getPiece(c);
+        p = current_player->getPiece(c).get();
+    else p = waiting_player->getPiece(c).get();
 
     if(p)
     {
@@ -249,7 +249,7 @@ bool GameController::pieceDectection(Coordinates c)
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
 
-    Piece * p = current_player->getPiece(from);
+    Piece * p = current_player->getPiece(from).get();
     
     if(!from.onBoard() || !to.onBoard()) return false;  
 
@@ -280,6 +280,35 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
     return true;
 }
 
+bool GameController::isLegalMoveFast(Coordinates from,Coordinates to)
+{
+    
+    Piece * p = current_player->getPiece(from).get();
+    
+    if(!from.onBoard() || !to.onBoard()) return false;  
+
+    if(from == to) return false;
+
+    if(p == nullptr) return false;
+
+    if(pieceInBetween(from,to)) return false;
+
+    if(isEmpty(to))
+    {
+        if(!p->canMovePattern(to)) return false;
+    }
+    else if(pieceEnemyDetection(to))
+    {
+        if(!p->canEatPattern(to)) return false;
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
 int GameController::isThreaten(Coordinates c)
     /* 
     Vérifie si une case aux coordonnées c est menacée ou non par une pièce 
@@ -291,7 +320,7 @@ int GameController::isThreaten(Coordinates c)
     size_t i = 0;
     while(i < waiting_player->nbOfPieces())
     {
-        Piece* p = waiting_player->getPiece(i);
+        Piece* p = waiting_player->getPiece(i).get();
         if(p->canEatPattern(c) && 
         !pieceInBetween(p->getCoordinates(),c)) 
         {
@@ -319,7 +348,7 @@ int GameController::isChecked()
     
     while(i < n && !is_king)
     {
-        king = current_player->getPiece(i);
+        king = current_player->getPiece(i).get();
         is_king = king->getType() == PieceType::King;
         i++;
     }
@@ -338,7 +367,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 {
     if(!from.onBoard() || !to.onBoard()) return false;
 
-    Piece *p = current_player->getPiece(from);
+    Piece *p = current_player->getPiece(from).get();
     if(p == nullptr) return false;
 
     bool checked;
@@ -354,7 +383,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     if(pieceEnemyDetection(to))
     {
         int saved_enemy_x, saved_enemy_y;
-        Piece* enemy = waiting_player->getPiece(to);
+        Piece* enemy = waiting_player->getPiece(to).get();
         
         //on sauvegarde les coordonnées de la pièce ennemie
         saved_enemy_x = enemy->getCoordinates().getX();
@@ -388,7 +417,7 @@ bool GameController::isCheckmate()
 
     while(piece_i < n) //On vérifie pour chaque pièce si elle peut bouger à tous les emplacements du plateau
     {
-        p = current_player->getPiece(piece_i);
+        p = current_player->getPiece(piece_i).get();
 
         Coordinates c_piece = p->getCoordinates();
 
@@ -408,12 +437,18 @@ bool GameController::isCheckmate()
 
 bool GameController::movePiece(Coordinates from, Coordinates to)
 {
+    MoveHistory unitMove;
+    unitMove.from=from;
+    unitMove.to=to;
+    unitMove.eaten=nullptr;
+    unitMove.promoted=nullptr;
     if(isLegalMove(from,to)){
-        Piece * p = current_player->getPiece(from);
+        Piece * p = current_player->getPiece(from).get();
         if(p != nullptr)
         {
             if(pieceEnemyDetection(to)){
-                Piece * p_mangee = waiting_player->getPiece(to);
+                Piece * p_mangee = waiting_player->getPiece(to).get();
+                unitMove.eaten=waiting_player->getPiece(to);
                 eatPiece(p_mangee);
             }
             //Déplacer la pièce
@@ -423,13 +458,42 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             //Màj si Pion promu
             if(isPromoted(to,current_player->isBlack()))
             {
+                unitMove.promoted=current_player->getPiece(to);
                 promoteTo(p,PieceType::Knight);
             }
-
+            moves.push(unitMove);
             return true;
         }
     }
     return false;
+}
+
+void GameController::unMove()
+{
+    if(!moves.empty())
+    {
+    MoveHistory unitMove=moves.top();
+    moves.pop();
+    this->switchTurn();
+    
+
+    if(unitMove.eaten!=nullptr)
+    {
+        unitMove.eaten->moveTo(unitMove.to);
+        waiting_player->addPiece(unitMove.eaten);
+    }
+
+    if(unitMove.promoted!=nullptr)
+    {
+        current_player->removePiece(unitMove.to);
+        unitMove.promoted->moveTo(unitMove.from);
+        current_player->addPiece(unitMove.promoted);
+    }
+    else
+    {
+        current_player->getPiece(unitMove.to)->moveTo(unitMove.from);
+    }
+    }
 }
 
 void GameController::eatPiece(Piece* p)
@@ -454,7 +518,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Bishop> b = std::make_unique<Bishop>(color, c);
+        std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
         current_player->addPiece(std::move(b));
     }
     else if(t == PieceType::Knight)
@@ -463,7 +527,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Knight> k = std::make_unique<Knight>(color, c);
+        std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
         current_player->addPiece(std::move(k));
     }
     else if(t == PieceType::Rook)
@@ -472,7 +536,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Rook> r = std::make_unique<Rook>(color, c);
+        std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
         current_player->addPiece(std::move(r));        
     }else if(t == PieceType::Queen)
     {
@@ -480,7 +544,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Queen> q = std::make_unique<Queen>(color, c);
+        std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
         current_player->addPiece(std::move(q));
         
     }

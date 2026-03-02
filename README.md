@@ -23,5 +23,5 @@ Le but n’est pas de rivaliser avec des moteurs professionnels comme Stockfish,
 - qu’elle permet de mettre en pratique des notions clés (recherche, heuristiques, performance)
 
 ## 📚 Inspirations
-- 
--
+- Algorithme Minimax
+- Algorithme Alpha-bêta

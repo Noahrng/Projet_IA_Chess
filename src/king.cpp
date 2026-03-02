@@ -1,8 +1,18 @@
 #include "../include/king.hpp"
 
-King::King(bool col,Coordinates c):Piece(col,c,1000,"♚")
+King::King(bool col,Coordinates c):Piece(col,c,1.0,"♚")
 {
-
+    position_table = 
+    {{
+        {{-0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3}}, // centre : dangereux
+        {{-0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3}}, // centre : dangereux
+        {{-0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3}}, // centre : dangereux
+        {{-0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3}}, // centre : dangereux
+        {{-0.2, -0.3, -0.3, -0.4, -0.4, -0.3, -0.3, -0.2}}, // moins dangereux
+        {{-0.1, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.1}}, // acceptable
+        {{ 0.2,  0.2,  0.0,  0.0,  0.0,  0.0,  0.2,  0.2}},  // aile : roque possible
+        {{ 0.2,  0.3,  0.1,  0.0,  0.0,  0.1,  0.3,  0.2}}   // cases de roque g1/c1 : très bon
+    }};
 }
 
 bool King::canMovePattern(Coordinates new_coords)

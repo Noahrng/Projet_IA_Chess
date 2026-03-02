@@ -5,6 +5,15 @@
 #include "coordinates.hpp"
 #include <string>
 #include <iostream>
+#include <stack>
+
+struct MoveHistory
+{
+    Coordinates from;
+    Coordinates to;
+    std::shared_ptr<Piece> promoted;
+    std::shared_ptr<Piece> eaten;
+};
 
 class GameController 
 {
@@ -15,6 +24,7 @@ class GameController
         Player* waiting_player;
         Piece* piece_chosen;
         Coordinates cell_chosen;
+        std::stack<MoveHistory> moves;
     public:
         GameController();
         ~GameController();
@@ -40,6 +50,7 @@ class GameController
         void eatPiece(Piece * p);
         bool movePiece(Coordinates from, Coordinates to);
         void promoteTo(Piece*, PieceType t);
+        void unMove();
 
         //Pièces choisies
         void choosePiece(Coordinates);
@@ -51,6 +62,7 @@ class GameController
         bool isPromoted(Coordinates c,bool);
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool isLegalMove(Coordinates, Coordinates);
+        bool isLegalMoveFast(Coordinates,Coordinates);
         bool isEmpty(Coordinates);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);

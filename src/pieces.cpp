@@ -21,6 +21,17 @@ Coordinates Piece::getCoordinates()
     return this->coords;
 }
 
+double Piece::getPositionBonus()
+{
+    int row = color ? coords.getY() : 7 - coords.getY();
+    return position_table[row][coords.getX()];
+}
+
+double Piece::getValue()
+{
+    return value;
+}
+
 
 void Piece::moveTo(int x, int y){
     coords.setXY(x,y);
