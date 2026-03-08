@@ -1,19 +1,6 @@
 #include "../include/rook.hpp"
 
-Rook::Rook(bool col,Coordinates c): Piece(col,c,5.0/39.0,"♜")
-{
-    position_table = 
-    {{
-        {{ 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}},  // rang 8 : 7e rangée très forte
-        {{ 0.05, 0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.05}},  // 7e rangée : pénètre chez l'ennemi
-        {{-0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.05}},  // neutre
-        {{-0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.05}},  // neutre
-        {{-0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.05}},  // neutre
-        {{-0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.05}},  // neutre
-        {{-0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.05}},  // neutre
-        {{ 0.0,  0.0,  0.0,  0.05, 0.05, 0.0,  0.0,  0.0}}    // colonnes centrales légèrement mieux
-    }};
-}
+Rook::Rook(bool col,Coordinates c): Piece(col,c,5,"♜"){}
 
 bool Rook::canMovePattern(Coordinates new_coords)
 {

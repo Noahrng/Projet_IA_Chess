@@ -2,20 +2,7 @@
 #include "../include/bishop.hpp"
 #include "../include/rook.hpp"
 
-Queen::Queen(bool col,Coordinates c): Piece(col,c,9.0/39.0,"♛")
-{
-    position_table = 
-    {{
-        {{-0.2, -0.1, -0.1, -0.05,-0.05,-0.1, -0.1, -0.2}}, // bords : mauvais
-        {{-0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.1}}, // neutre
-        {{-0.1,  0.0,  0.05, 0.05, 0.05, 0.05, 0.0, -0.1}}, // légèrement mieux
-        {{-0.05, 0.0,  0.05, 0.05, 0.05, 0.05, 0.0, -0.05}},// centre : bon
-        {{ 0.0,  0.0,  0.05, 0.05, 0.05, 0.05, 0.0, -0.05}},// centre : bon
-        {{-0.1,  0.05, 0.05, 0.05, 0.05, 0.05, 0.0, -0.1}}, // légèrement mieux
-        {{-0.1,  0.0,  0.05, 0.0,  0.0,  0.0,  0.0, -0.1}}, // développement prudent
-        {{-0.2, -0.1, -0.1, -0.05,-0.05,-0.1, -0.1, -0.2}}  // bords : mauvais
-    }};
-}
+Queen::Queen(bool col,Coordinates c): Piece(col,c,9,"♛"){}
 
 bool Queen::canMovePattern(Coordinates new_coords){
     if(!new_coords.onBoard()) return false;

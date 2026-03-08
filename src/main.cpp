@@ -2,7 +2,6 @@
 #include <pawn.hpp>
 #include "terminal_display.hpp"
 #include <graphic_display.hpp>
-#include "position_tree.hpp"
 
 int main(){
     GameController play;
@@ -15,11 +14,6 @@ int main(){
     t2=t2*4;
 
     std::cout<<t2<<"\n";
-    PositionTree pt(play);
-
-    pt.build(3);
-    //pt.print(pt.getRoot(),1);
-    pt.printToFile("moves.txt");
 
 
     std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";

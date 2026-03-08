@@ -33,6 +33,36 @@ void GameAsset::resetTint(){
     tint=WHITE;
 }
 
+bool GameAsset::isHovered(Vector2 mouse)
+{
+    return CheckCollisionPointRec(mouse,{(float)x,(float)y,(float)size,(float)size});
+}
+
+float GameAsset::getCenterX()
+{
+    return x+size/2.0f;
+}
+
+float GameAsset::getCenterY()
+{
+    return y+size/2.0f;
+}
+
+float GameAsset::getWidth()
+{
+    return (float)size;
+}
+
+float GameAsset::getHeight()
+{
+    return (float)size;
+}
+
+void GameAsset::setBackgroundColor(Color c)
+{
+    setTint(c);
+}
+
 void GameAsset::draw()
 {
     Rectangle source ={0,0,(float)texture.width,(float)texture.height};

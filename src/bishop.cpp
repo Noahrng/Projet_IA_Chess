@@ -1,19 +1,6 @@
 #include "../include/bishop.hpp"
 
-Bishop::Bishop(bool col,Coordinates c): Piece(col,c,3.0/39.0,"♝")
-{
-    position_table = 
-    {{
-        {{-0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2}}, // bords : mauvais
-        {{-0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.1}}, // quasi-bord : neutre
-        {{-0.1,  0.0,  0.05, 0.1,  0.1,  0.05, 0.0, -0.1}}, // diagonales actives
-        {{-0.1,  0.05, 0.05, 0.1,  0.1,  0.05, 0.05,-0.1}}, // centre : bon
-        {{-0.1,  0.0,  0.1,  0.1,  0.1,  0.1,  0.0, -0.1}}, // centre : bon
-        {{-0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.1, -0.1}}, // diagonales longues
-        {{-0.1,  0.05, 0.0,  0.0,  0.0,  0.0,  0.05,-0.1}}, // développement normal
-        {{-0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2}}  // bords : mauvais
-    }};
-}
+Bishop::Bishop(bool col,Coordinates c): Piece(col,c,3,"♝"){}
 
 bool Bishop::canMovePattern(Coordinates new_coords)
 {
