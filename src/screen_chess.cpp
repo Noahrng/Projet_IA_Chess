@@ -1,5 +1,6 @@
 #include "screen_chess.hpp"
 #include "screen_main_menu.hpp"
+#include "evaluator.hpp"
 
 ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false}
 {
@@ -152,6 +153,9 @@ void ChessScreen::draw()
     int height=GetScreenHeight();
     int boardSize = width < height ? width:height;
     int squareSize = boardSize/8;
+
+    Evaluator eval(game);
+    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
 
     BeginDrawing();
     ClearBackground(BLACK);
