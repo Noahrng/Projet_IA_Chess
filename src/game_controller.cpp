@@ -454,7 +454,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Bishop> b = std::make_unique<Bishop>(color, c);
+        std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
         current_player->addPiece(std::move(b));
     }
     else if(t == PieceType::Knight)
@@ -463,7 +463,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Knight> k = std::make_unique<Knight>(color, c);
+        std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
         current_player->addPiece(std::move(k));
     }
     else if(t == PieceType::Rook)
@@ -472,7 +472,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Rook> r = std::make_unique<Rook>(color, c);
+        std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
         current_player->addPiece(std::move(r));        
     }else if(t == PieceType::Queen)
     {
@@ -480,7 +480,7 @@ void GameController::promoteTo(Piece * p, PieceType t)
         Coordinates c = p->getCoordinates();
         current_player->removePiece(c);
 
-        std::unique_ptr<Queen> q = std::make_unique<Queen>(color, c);
+        std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
         current_player->addPiece(std::move(q));
         
     }

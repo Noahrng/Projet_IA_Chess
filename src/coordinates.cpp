@@ -89,7 +89,7 @@ Coordinates& Coordinates::operator+=(const Coordinates& other)
 Coordinates& Coordinates::operator+=(const int &lambda)
 {
     x += lambda;
-    x += lambda;
+    y += lambda;
     return *this;
 }
 

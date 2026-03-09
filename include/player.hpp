@@ -11,7 +11,7 @@ class Player
     friend bool operator!=(const Player&,const Player&);
     private:
         bool color;
-        std::vector<std::unique_ptr<Piece>> pieces;
+        std::vector<std::shared_ptr<Piece>> pieces;
     
     public:
         Player(bool color);
@@ -27,7 +27,7 @@ class Player
         bool isPiece(Piece*, size_t);
         bool isWhite();
         bool isBlack();
-        void addPiece(std::unique_ptr<Piece>);
+        void addPiece(std::shared_ptr<Piece>);
         void removePiece(Coordinates);
         void removePiece(size_t);
         
