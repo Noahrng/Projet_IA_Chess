@@ -80,23 +80,23 @@ Player::Player(bool color):color{color}
     }
 }
 
-Piece* Player::getPiece(Coordinates c)
+std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;
     size_t  i = 0;
-    while(i < pieces.size() && pieces[i].get()->getCoordinates()!=c){
+    while(i < pieces.size() && pieces[i]->getCoordinates()!=c){
         i++;
     }
     if(i < pieces.size()){
-        return pieces[i].get();
+        return pieces[i];
     }
     return nullptr;
 }
-Piece* Player::getPiece(size_t i)
+std::shared_ptr<Piece> Player::getPiece(size_t i)
 {
     if(i < pieces.size())
     {
-        return pieces[i].get();
+        return pieces[i];
     }
     return nullptr;
 }
@@ -130,9 +130,9 @@ bool operator!=(const Player &a,const Player &b)
     return !(a==b);
 }
 
-bool Player::isPiece(Piece * p, size_t i)
+bool Player::isPiece(std::shared_ptr<Piece> p, size_t i)
 {
-    return p == pieces[i].get();
+    return p == pieces[i];
 }
 
 bool Player::isWhite()
@@ -160,9 +160,16 @@ void Player::removePiece(Coordinates c){
     while(i<pieces.size() && pieces[i].get()->getCoordinates()!=c){
         i++;
     }
-    if(i<pieces.size()) pieces.erase(pieces.begin()+i);
+    if(i<pieces.size()) 
+    {
+        pieces[i]->moveTo(Coordinates(-1,-1));
+        pieces.erase(pieces.begin()+i);
+    }
 }
 
 void Player::removePiece(size_t i){
-    if(i < nbOfPieces()) pieces.erase(pieces.begin()+i);
+    if(i < nbOfPieces()){
+        pieces[i]->moveTo(Coordinates(-1,-1));
+        pieces.erase(pieces.begin()+i);
+    }
 }

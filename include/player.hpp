@@ -22,9 +22,9 @@ class Player
         Player& operator=(Player&&) = default;
 
         size_t nbOfPieces();
-        Piece* getPiece(Coordinates);
-        Piece* getPiece(size_t);
-        bool isPiece(Piece*, size_t);
+        std::shared_ptr<Piece> getPiece(Coordinates);
+        std::shared_ptr<Piece> getPiece(size_t);
+        bool isPiece(std::shared_ptr<Piece>, size_t);
         bool isWhite();
         bool isBlack();
         void addPiece(std::shared_ptr<Piece>);

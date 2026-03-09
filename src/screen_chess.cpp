@@ -83,7 +83,7 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
             int x=side ? (7-j)*squareSize : j*squareSize;
             int y=side ? (7-i)*squareSize : i*squareSize;
 
-            Piece *p;
+            std::shared_ptr<Piece> p;
 
             p=p1.getPiece(c);
             if(p!=nullptr)
@@ -155,7 +155,7 @@ void ChessScreen::draw()
     int squareSize = boardSize/8;
 
     Evaluator eval(game);
-    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    //std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -179,6 +179,11 @@ void ChessScreen::draw()
     drawCircles(squareSize,c);
     */
     
+    if(IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE))
+    {
+        std::cout<<"Annulation\n";
+        game.unMove();
+    }
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
     {

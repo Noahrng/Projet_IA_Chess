@@ -172,11 +172,8 @@ void GameController::choosePiece(Coordinates c)
 
 void GameController::unChoosePiece()
 {
-    if(piece_chosen!=nullptr)
-    {
-        this->piece_chosen=nullptr;
-        cell_chosen.setXY(-1,-1);
-    }
+    this->piece_chosen=nullptr;
+    cell_chosen.setXY(-1,-1);
 }
 
 bool GameController::isChosen()
@@ -208,7 +205,7 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
 
 bool GameController::isPromoted(Coordinates c, bool color)
 {
-    Piece * p ;
+    std::shared_ptr<Piece> p ;
     if( (current_player->isWhite() && color == 0) || 
      (current_player->isBlack() && color == 1)) 
         p = current_player->getPiece(c);
@@ -249,7 +246,7 @@ bool GameController::pieceDectection(Coordinates c)
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
 
-    Piece * p = current_player->getPiece(from);
+    std::shared_ptr<Piece> p = current_player->getPiece(from);
     
     if(!from.onBoard() || !to.onBoard()) return false;  
 
@@ -291,7 +288,7 @@ int GameController::isThreaten(Coordinates c)
     size_t i = 0;
     while(i < waiting_player->nbOfPieces())
     {
-        Piece* p = waiting_player->getPiece(i);
+        std::shared_ptr<Piece> p = waiting_player->getPiece(i);
         if(p->canEatPattern(c) && 
         !pieceInBetween(p->getCoordinates(),c)) 
         {
@@ -314,7 +311,7 @@ int GameController::isChecked()
     }
 
     size_t i = 0;
-    Piece * king = nullptr;
+    std::shared_ptr<Piece> king = nullptr;
     bool is_king = false;
     
     while(i < n && !is_king)
@@ -338,7 +335,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 {
     if(!from.onBoard() || !to.onBoard()) return false;
 
-    Piece *p = current_player->getPiece(from);
+    std::shared_ptr<Piece> p = current_player->getPiece(from);
     if(p == nullptr) return false;
 
     bool checked;
@@ -354,7 +351,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     if(pieceEnemyDetection(to))
     {
         int saved_enemy_x, saved_enemy_y;
-        Piece* enemy = waiting_player->getPiece(to);
+        std::shared_ptr<Piece> enemy = waiting_player->getPiece(to);
         
         //on sauvegarde les coordonnées de la pièce ennemie
         saved_enemy_x = enemy->getCoordinates().getX();
@@ -382,7 +379,7 @@ bool GameController::isCheckmate()
     {
         return false;
     }
-    Piece * p;
+    std::shared_ptr<Piece> p;
     size_t piece_i = 0;
     size_t n = current_player->nbOfPieces();
 
@@ -409,11 +406,17 @@ bool GameController::isCheckmate()
 bool GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(isLegalMove(from,to)){
-        Piece * p = current_player->getPiece(from);
+        MoveHistory unitMove;
+        unitMove.from=from;
+        unitMove.to=to;
+        unitMove.eatenPiece=nullptr;
+        unitMove.promotedPiece=nullptr;
+        std::shared_ptr<Piece> p = current_player->getPiece(from);
         if(p != nullptr)
         {
             if(pieceEnemyDetection(to)){
-                Piece * p_mangee = waiting_player->getPiece(to);
+                std::shared_ptr<Piece> p_mangee = waiting_player->getPiece(to);
+                unitMove.eatenPiece=p_mangee;
                 eatPiece(p_mangee);
             }
             //Déplacer la pièce
@@ -423,8 +426,10 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             //Màj si Pion promu
             if(isPromoted(to,current_player->isBlack()))
             {
+                unitMove.promotedPiece=p;
                 promoteTo(p,PieceType::Knight);
             }
+            moves.push(unitMove);
 
             return true;
         }
@@ -432,7 +437,36 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
     return false;
 }
 
-void GameController::eatPiece(Piece* p)
+void GameController::unMove()
+{
+    if(!moves.empty())
+    {
+        this->switchTurn();
+        MoveHistory h=moves.top();
+        moves.pop();
+
+        if(h.promotedPiece!=nullptr)
+        {
+            current_player->removePiece(h.to);
+            h.promotedPiece->moveTo(h.from);
+            current_player->addPiece(h.promotedPiece);
+        }
+        else{
+            std::shared_ptr<Piece> p = current_player->getPiece(h.to);
+            p->moveTo(h.from); 
+        }
+
+        if(h.eatenPiece!=nullptr)
+        {
+            h.eatenPiece->moveTo(h.to);
+            waiting_player->addPiece(h.eatenPiece);
+        }
+        
+
+    }
+}
+
+void GameController::eatPiece(std::shared_ptr<Piece> p)
 {
     size_t i = 0;
     size_t n = waiting_player->nbOfPieces();
@@ -446,7 +480,7 @@ void GameController::eatPiece(Piece* p)
     }
 }
 
-void GameController::promoteTo(Piece * p, PieceType t)
+void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 {
     if(t == PieceType::Bishop)
     {
