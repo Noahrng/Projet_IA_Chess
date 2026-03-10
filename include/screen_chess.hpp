@@ -6,6 +6,7 @@
 #include "game_controller.hpp"
 #include <map>
 #include <memory>
+#include <cstdlib>
 
 enum class AssetID
 {

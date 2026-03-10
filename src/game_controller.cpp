@@ -460,7 +460,6 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 
             std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
             current_player->addPiece(std::move(b));
-            waiting_promotion=false;
         }
         else if(t == PieceType::Knight)
         {
@@ -470,7 +469,6 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 
             std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
             current_player->addPiece(std::move(k));
-            waiting_promotion=false;
         }
         else if(t == PieceType::Rook)
         {
@@ -479,8 +477,7 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
             current_player->removePiece(c);
 
             std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
-            current_player->addPiece(std::move(r));  
-            waiting_promotion=false;      
+            current_player->addPiece(std::move(r));       
         }else if(t == PieceType::Queen)
         {
             bool color = current_player->isBlack();
@@ -489,8 +486,8 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 
             std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
             current_player->addPiece(std::move(q));
-            waiting_promotion=false;
         }
+        waiting_promotion=false;
     }
 }
 

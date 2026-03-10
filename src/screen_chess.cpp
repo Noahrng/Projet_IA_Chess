@@ -5,6 +5,7 @@
 ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
+    srand(0);
 
     this->addImage(AssetID::chessBoard,basePath+"Board.png");
 
@@ -45,7 +46,15 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 
     AssetID id=getAssetForPiece(t[idx],color);
 
-    drawAsset(id,0,0,4*squareSize,PINK);
+    static unsigned char r=0,g=0,b=0;
+
+    r=std::clamp((r+10)%255,100,256);
+    g=std::clamp((g+10)%255,100,256);
+    b=std::clamp((b+10)%255,100,256);
+
+    drawAsset(id,0,0,8*squareSize,Color{r,g,b,255});
+
+    DrawText("Promotion",0,0,170,RED);
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
@@ -216,7 +225,7 @@ void ChessScreen::draw()
     drawCircles(squareSize,c);
     */
     
-    if(IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE))
+    if((IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) && !game.promotionPending())
     {
         std::cout<<"Annulation\n";
         game.unMove();
