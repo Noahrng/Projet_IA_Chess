@@ -219,6 +219,8 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 
     if(p == nullptr) return false;
 
+    
+
     if(pieceInBetween(from,to)) return false;
 
     if(isEmpty(to))
@@ -387,7 +389,9 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             //Déplacer la pièce
 
             p->moveTo(to.getX(),to.getY());
+            p->moving();
             unChoosePiece();
+
             //Màj si Pion promu
             if(isPawnPromoted(to,current_player->isBlack()))
             {
@@ -488,4 +492,85 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
             waiting_promotion=false;
         }
     }
+}
+
+
+void GameController::rock(Coordinates to)
+{
+    bool color = current_player->isBlack();
+    std::shared_ptr<Piece> king;
+    std::shared_ptr<Piece> rook;
+    if(color)
+    {
+        king = current_player->getPiece(4,0);
+        if(4 < to.getX()) //tour droite
+        {
+            rook = current_player->getPiece(7,0);
+            king->moveTo(6,0);
+            rook->moveTo(5,0);
+        }
+        else //tour gauche
+        {
+            rook = current_player->getPiece(0,0);
+            king->moveTo(2,0);
+            rook->moveTo(3,0);
+        }
+
+    }
+    else
+    {
+        king = current_player->getPiece(4,7);
+        if(4 < to.getX()) //tour droite
+        {
+            rook = current_player->getPiece(7,7);
+            king->moveTo(6,7);
+            rook->moveTo(5,7);
+        }
+        else   //tour gauche
+        {
+            rook = current_player->getPiece(0,7);
+            king->moveTo(2,7);
+            rook->moveTo(3,7);
+        }
+    }
+
+
+}
+
+bool GameController::isMoveRock(Coordinates from, Coordinates to)
+{
+    std::shared_ptr<Piece> p = current_player->getPiece(from);
+    if(p->getType() == PieceType::King)
+    {
+        if(from.getX() == 4){
+            bool color = current_player->isBlack();
+            if( (from.getY() == 0 && color) || 
+            (from.getY() == 7 && !color) ){
+                if(from.distX(to) == 2 && from.distY(to) == 0)
+                {
+                    std::shared_ptr<Piece> rook;
+                    if(from.getX() < to.getX()) //tour droite
+                    {
+                        if(color) rook = current_player->getPiece(7,0);
+                        else rook = current_player->getPiece(7,7);
+                    }
+                    else
+                    {
+                        if(color) rook = current_player->getPiece(0,0);
+                        else rook = current_player->getPiece(0,7);
+                    }
+                    if(!p->hasMoved() && !rook->hasMoved())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool GameController::canRock(Coordinates to)
+{
+
 }

@@ -80,6 +80,12 @@ Player::Player(bool color):color{color}
     }
 }
 
+std::shared_ptr<Piece> Player::getPiece(int x, int y)
+{
+    Coordinates c(x,y);
+    return getPiece(c);
+}
+
 std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;

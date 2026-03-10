@@ -22,6 +22,7 @@ class Player
         Player& operator=(Player&&) = default;
 
         size_t nbOfPieces();
+        std::shared_ptr<Piece> getPiece(int, int);
         std::shared_ptr<Piece> getPiece(Coordinates);
         std::shared_ptr<Piece> getPiece(size_t);
         bool isPiece(std::shared_ptr<Piece>, size_t);
