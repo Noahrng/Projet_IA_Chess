@@ -32,6 +32,13 @@ ChessScreen::~ChessScreen()
     
 }
 
+void ChessScreen::scrollPiece(Coordinates c)
+{
+    std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
+
+    if(p!=nullptr) game.promoteTo(p,PieceType::Queen);
+}
+
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
 {
     int base=static_cast<int>(piece.getType())*2;
@@ -191,6 +198,8 @@ void ChessScreen::draw()
         //Coordinates c=game.convertStringIntoCoords(coordinate_string);
 
         Coordinates c=getCoords(squareSize);
+
+        scrollPiece(c);
 
         std::cout<<c<<"\n";
 
