@@ -32,8 +32,6 @@ class GameController
         //Entrées joueur
 
         
-        std::string enterPlayerCoordinates(); 
-        bool moveCancelled(std::string s);
         void switchTurn();
 
         Player& getCurrentPlayer();
