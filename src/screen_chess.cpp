@@ -48,7 +48,7 @@ void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
     images.at(id)->resetTint();
 }
 
-std::string ChessScreen::getCoords(int squareSize)
+Coordinates ChessScreen::getCoords(int squareSize)
 {
     int x=GetMouseX()/squareSize;
     int y=GetMouseY()/squareSize;
@@ -65,11 +65,7 @@ std::string ChessScreen::getCoords(int squareSize)
        x=7-x;
     }
 
-    char a='a'+x;
-    char b='8'-y;
-    std::string res="  ";
-    res[0]=a;
-    res[1]=b;
+    Coordinates res(x,y);
 
     return res;
 }
@@ -184,10 +180,7 @@ void ChessScreen::draw()
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
     {
-        std::string coordinate_string=getCoords(squareSize);
-        Coordinates c=game.convertStringIntoCoords(coordinate_string);
-
-        std::cout<<coordinate_string<<"\n";
+        Coordinates c=getCoords(squareSize);
 
         if(!game.isChosen())
         {

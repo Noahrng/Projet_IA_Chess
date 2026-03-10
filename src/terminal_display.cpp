@@ -222,7 +222,7 @@ void TerminalDisplay::run()
                 if(isGameQuitted(string_coords)) quit = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(string_coords);
+                    c=convertStringIntoCoords(string_coords);
                     if(c.onBoard())
                     {
                         coords_onboard = true;
@@ -259,7 +259,7 @@ void TerminalDisplay::run()
                 else if(moveCancelled(string_coords)) cancel_move = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(string_coords);
+                    c=convertStringIntoCoords(string_coords);
                     got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
                     if(!c.onBoard() || !got_moved) 
                         std::cout << error_color << 
