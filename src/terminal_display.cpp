@@ -106,7 +106,7 @@ void TerminalDisplay::printBoard()
             if(!side)   c.setXY(j,i);
             else        c.setXY(7-j,7-i);
 
-            Piece * p;
+            std::shared_ptr<Piece> p;
             if((i+j)%2==0){
                 std::cout << "\033[48;2;245;222;179m";
             }

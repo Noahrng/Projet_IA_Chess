@@ -11,7 +11,7 @@ class Piece  {
     protected:
         bool color; //0: blanc, 1: noir
         Coordinates coords;
-        int value; //La valeur d'une pièce par rapport à une autre
+        double value; //La valeur d'une pièce par rapport à une autre
         std::string terminal_sprite;
     public:
         Piece(bool, Coordinates, int, std::string);
@@ -19,6 +19,8 @@ class Piece  {
 
         std::string getTerminalSprite();
         Coordinates getCoordinates();
+        double getValue();
+
 
         virtual bool canMovePattern(Coordinates) = 0;
         virtual bool canEatPattern(Coordinates) = 0;
