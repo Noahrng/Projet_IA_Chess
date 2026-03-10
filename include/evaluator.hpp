@@ -8,7 +8,7 @@ class Evaluator{
     private:
         GameController &game;
 
-        static constexpr double MAX_MATERIAL = 39.0;
+        const double MAX_MATERIAL;
 
         double evaluateMaterial();
 

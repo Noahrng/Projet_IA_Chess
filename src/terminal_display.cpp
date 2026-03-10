@@ -267,7 +267,7 @@ void TerminalDisplay::run()
                         << end_color;
                 }
             }
-            if(got_moved && game.isPromoted(c,game.blackTurn()))
+            if(got_moved && game.promotionPending())
             {
                 std::string promotion;
                 PieceType t = PieceType::Nothing;
@@ -283,6 +283,9 @@ void TerminalDisplay::run()
                     t = convertStringIntoType(promotion);
                 }
                 //Promouvoir la pièce
+                Player& curr = game.getCurrentPlayer();
+                std::shared_ptr<Piece> p = curr.getPiece(c);
+                game.promoteTo(p,t);
             }
             game.unChoosePiece();
         }
