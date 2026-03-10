@@ -18,7 +18,7 @@ double Evaluator::evaluateMaterial()
 
     for(size_t i = 0; i < white.nbOfPieces();i++)
     {
-        Piece *p = white.getPiece(i);
+        std::shared_ptr<Piece> p = white.getPiece(i);
         if(p!=nullptr && p->getType()!=PieceType::King)
         {
             white_score+=p->getValue();
@@ -27,7 +27,7 @@ double Evaluator::evaluateMaterial()
 
     for(size_t i = 0; i < black.nbOfPieces();i++)
     {
-        Piece *p = black.getPiece(i);
+        std::shared_ptr<Piece> p = black.getPiece(i);
         if(p!=nullptr && p->getType()!=PieceType::King)
         {
             black_score+=p->getValue();

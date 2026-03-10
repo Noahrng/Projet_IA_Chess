@@ -8,16 +8,15 @@
 
 GameController::GameController()
 {
-    current_player = new Player(false);
-    waiting_player = new Player(true);
+    current_player = std::make_shared<Player>(false);
+    waiting_player = std::make_shared<Player>(true);
     piece_chosen = nullptr;
     cell_chosen.setXY(-1,-1);
 }
 
 GameController::~GameController()
 {
-    delete current_player;
-    delete waiting_player;
+    
 }
 
 bool operator==(const GameController &a,const GameController &b)

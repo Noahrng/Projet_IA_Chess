@@ -20,8 +20,8 @@ class GameController
     friend bool operator==(const GameController&,const GameController&);
     friend bool operator!=(const GameController&,const GameController&);
     private:
-        Player* current_player;
-        Player* waiting_player;
+        std::shared_ptr<Player> current_player;
+        std::shared_ptr<Player> waiting_player;
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
         std::stack<MoveHistory> moves;
