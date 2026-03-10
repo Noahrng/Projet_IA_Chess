@@ -238,23 +238,25 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 
     if(p == nullptr) return false;
 
-    
-
     if(pieceInBetween(from,to)) return false;
 
-    if(isEmpty(to))
-    {
-        if(!p->canMovePattern(to)) return false;
+    if(isMoveRock(from,to)){
+        if(!canRock(from,to)) return false;
     }
-    else if(pieceEnemyDetection(to))
-    {
-        if(!p->canEatPattern(to)) return false;
+    else{
+        if(isEmpty(to))
+        {
+            if(!p->canMovePattern(to)) return false;
+        }
+        else if(pieceEnemyDetection(to))
+        {
+            if(!p->canEatPattern(to)) return false;
+        }
+        else
+        {
+            return false;
+        }
     }
-    else
-    {
-        return false;
-    }
-
     if(isKingCheckedAfterMove(from,to))
     {
         return false;
@@ -407,7 +409,8 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             }
             //Déplacer la pièce
 
-            p->moveTo(to.getX(),to.getY());
+            if(isMoveRock(from,to)) rock(to);
+            else p->moveTo(to.getX(),to.getY());
             p->moving();
             unChoosePiece();
 
@@ -564,21 +567,7 @@ bool GameController::isMoveRock(Coordinates from, Coordinates to)
             (from.getY() == 7 && !color) ){
                 if(from.distX(to) == 2 && from.distY(to) == 0)
                 {
-                    std::shared_ptr<Piece> rook;
-                    if(from.getX() < to.getX()) //tour droite
-                    {
-                        if(color) rook = current_player->getPiece(7,0);
-                        else rook = current_player->getPiece(7,7);
-                    }
-                    else
-                    {
-                        if(color) rook = current_player->getPiece(0,0);
-                        else rook = current_player->getPiece(0,7);
-                    }
-                    if(!p->hasMoved() && !rook->hasMoved())
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
@@ -586,7 +575,24 @@ bool GameController::isMoveRock(Coordinates from, Coordinates to)
     return false;
 }
 
-bool GameController::canRock(Coordinates to)
+bool GameController::canRock(Coordinates from, Coordinates to)
 {
-
+    bool color = current_player->isBlack();
+    std::shared_ptr<Piece> king = current_player->getPiece(from);
+    std::shared_ptr<Piece> rook;
+    if(from.getX() < to.getX()) //tour droite
+    {
+        if(color) rook = current_player->getPiece(7,0);
+        else rook = current_player->getPiece(7,7);
+    }
+    else
+    {
+        if(color) rook = current_player->getPiece(0,0);
+        else rook = current_player->getPiece(0,7);
+    }
+    if(!king->hasMoved() && !rook->hasMoved())
+    {
+        return true;
+    }
+    return false;
 }

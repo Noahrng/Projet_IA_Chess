@@ -62,17 +62,17 @@ class GameController
         int CountMovesOfPiece(std::shared_ptr<Piece>);
 
         //detection
-        bool isPawnPromoted(Coordinates c,bool);
+        bool isPawnPromoted(Coordinates,bool);
         bool promotionPending();
-        bool isMoveRock(Coordinates from, Coordinates to)
-        bool canRock(Coordinates to);
-        bool pieceInBetween(Coordinates from, Coordinates to);
+        bool isMoveRock(Coordinates, Coordinates);
+        bool canRock(Coordinates, Coordinates);
+        bool pieceInBetween(Coordinates, Coordinates);
         bool isLegalMove(Coordinates, Coordinates);
         bool isEmpty(Coordinates);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
         bool pieceDectection(Coordinates);
-        int isThreaten(Coordinates c);
+        int isThreaten(Coordinates);
         int isChecked();
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
         bool isCheckmate();
