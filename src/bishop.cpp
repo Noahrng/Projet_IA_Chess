@@ -1,6 +1,6 @@
 #include "../include/bishop.hpp"
 
-Bishop::Bishop(bool col,Coordinates c): Piece(col,c,3,"♝"){}
+Bishop::Bishop(bool col,Coordinates c): Piece(col,c,3.0,"♝"){}
 
 bool Bishop::canMovePattern(Coordinates new_coords)
 {

@@ -21,6 +21,11 @@ Coordinates Piece::getCoordinates()
     return this->coords;
 }
 
+double Piece::getValue()
+{
+    return value;
+}
+
 
 void Piece::moveTo(int x, int y){
     coords.setXY(x,y);

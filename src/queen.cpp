@@ -2,7 +2,7 @@
 #include "../include/bishop.hpp"
 #include "../include/rook.hpp"
 
-Queen::Queen(bool col,Coordinates c): Piece(col,c,9,"♛"){}
+Queen::Queen(bool col,Coordinates c): Piece(col,c,9.0,"♛"){}
 
 bool Queen::canMovePattern(Coordinates new_coords){
     if(!new_coords.onBoard()) return false;
