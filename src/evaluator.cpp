@@ -1,6 +1,6 @@
 #include "evaluator.hpp"
 
-Evaluator::Evaluator(GameController &game):game{game}
+Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0}
 {
 
 }

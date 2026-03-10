@@ -67,7 +67,7 @@ class Tree
         size_t size(std::shared_ptr<Node<T>> node)
         {
             if(!node) return 0;
-            int total = 1;
+            size_t total = 1;
             for(auto& enfant : node->enfants)
                 total+=size(enfant);
             return total;

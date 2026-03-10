@@ -13,7 +13,7 @@ MainMenuScreen::MainMenuScreen(GameController &game,int width,int height):Screen
 
     title = std::make_unique<TextShape>(
         std::make_unique<RectangleShape>(width/2-300,50,400,120),
-        "Bienvenu sur notre jeux d'echec"
+        "Bienvenue sur notre jeu d'échecs"
     );
 
     title->setTextColor(WHITE);

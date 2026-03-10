@@ -24,6 +24,7 @@ class GameController
         std::shared_ptr<Player> waiting_player;
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
+        bool waiting_promotion;
         std::stack<MoveHistory> moves;
 
     public:
@@ -58,7 +59,8 @@ class GameController
         void unMove();
 
         //detection
-        bool isPromoted(Coordinates c,bool);
+        bool isPawnPromoted(Coordinates c,bool);
+        bool promotionPending();
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool isLegalMove(Coordinates, Coordinates);
         bool isEmpty(Coordinates);
