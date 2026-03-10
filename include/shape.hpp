@@ -2,8 +2,10 @@
 #define SHAPE_HPP 
 
 #include <raylib-5.5_linux_amd64/include/raylib.h>
+#include "drawable.hpp"
 
-class Shape{
+class Shape : public Drawable
+{
     protected:
         float x,y;
         Color backgroundColor;
@@ -13,12 +15,11 @@ class Shape{
         Shape(float,float);
         virtual ~Shape()=default;
 
-        void setBackgroundColor(Color);
+        void setBackgroundColor(Color) override;
         void setBorderColor(Color);
         void setBorderThickness(float);
 
         virtual void draw()=0;
-
         virtual bool isHovered(Vector2 mouse)=0;
         virtual float getCenterX()=0;
         virtual float getCenterY()=0;
