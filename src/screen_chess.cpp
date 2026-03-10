@@ -2,7 +2,7 @@
 #include "screen_main_menu.hpp"
 #include "evaluator.hpp"
 
-ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false}
+ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
 
@@ -32,9 +32,42 @@ ChessScreen::~ChessScreen()
     
 }
 
+void ChessScreen::scrollPiece(Coordinates c,int squareSize)
+{
+    std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
+
+    PieceType t[4]={PieceType::Rook,PieceType::Knight,PieceType::Bishop,PieceType::Queen};
+    static int idx=0;
+    if(GetMouseWheelMove()!=0.0)
+    {
+        idx=(idx+1)%4;
+    }
+
+    AssetID id=getAssetForPiece(t[idx],color);
+
+    drawAsset(id,0,0,4*squareSize,PINK);
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        game.promoteTo(p,t[idx]);
+        game.switchTurn();
+    }
+    
+
+
+}
+
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
 {
     int base=static_cast<int>(piece.getType())*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
+{
+    int base=static_cast<int>(piece)*2;
     int colorOffset=color ? 0 : 1;
 
     return static_cast<AssetID>(base+colorOffset);
@@ -171,6 +204,10 @@ void ChessScreen::draw()
         drawPieces(squareSize);
     }
 
+    if(game.promotionPending())
+    {
+        scrollPiece(promoted,squareSize);
+    }
     /*
     std::vector<Coordinates> c;
     c.push_back(Coordinates{4,4});
@@ -189,6 +226,9 @@ void ChessScreen::draw()
     {
         Coordinates c=getCoords(squareSize);
 
+
+        std::cout<<c<<"\n";
+
         if(!game.isChosen())
         {
             game.choosePiece(c);
@@ -198,10 +238,15 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
-                game.switchTurn();
+                color=game.getCurrentPlayer().isWhite();
+                if(!game.promotionPending()) game.switchTurn();
                 //this->switchSide();
             }
+            
             game.unChoosePiece();
+
+            promoted=c;
+            
             
             
         }        
