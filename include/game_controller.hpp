@@ -50,6 +50,7 @@ class GameController
         void eatPiece(std::shared_ptr<Piece> p);
         bool movePiece(Coordinates from, Coordinates to);
         void promoteTo(std::shared_ptr<Piece>,PieceType t);
+        void rock(Coordinates to);
 
         //Pièces choisies
         void choosePiece(Coordinates);
@@ -61,6 +62,8 @@ class GameController
         //detection
         bool isPawnPromoted(Coordinates c,bool);
         bool promotionPending();
+        bool isMoveRock(Coordinates from, Coordinates to)
+        bool canRock(Coordinates to);
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool isLegalMove(Coordinates, Coordinates);
         bool isEmpty(Coordinates);

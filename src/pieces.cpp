@@ -1,7 +1,9 @@
 #include "../include/pieces.hpp"
 
 #include <iostream>
-Piece::Piece(bool col, Coordinates c,int v, std::string ts) : color(col), coords(c), value(v), terminal_sprite(ts){}
+Piece::Piece(bool col, Coordinates c,int v, std::string ts) : color(col), moved(false), coords(c), value(v), terminal_sprite(ts){}
+
+Piece::Piece(bool col, bool move, Coordinates c, int v, std::string ts): color(col), moved(move), coords(c), value(v), terminal_sprite(ts){}
 
 bool operator==(const Piece &a,const Piece &b)
 {
@@ -24,6 +26,16 @@ Coordinates Piece::getCoordinates()
 double Piece::getValue()
 {
     return value;
+}
+
+bool Piece::hasMoved()
+{
+    return moved;
+}
+
+void Piece::moving()
+{
+    moved = true;
 }
 
 
