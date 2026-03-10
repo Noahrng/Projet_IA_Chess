@@ -6,11 +6,11 @@
 #include "knight.hpp"
 #include <cstring>
 
-GameController::GameController()
+GameController::GameController(): current_player{std::make_shared<Player>(false)} ,
+waiting_player{std::make_shared<Player>(true)} ,
+piece_chosen{nullptr} ,
+waiting_promotion{false}
 {
-    current_player = std::make_shared<Player>(false);
-    waiting_player = std::make_shared<Player>(true);
-    piece_chosen = nullptr;
     cell_chosen.setXY(-1,-1);
 }
 
@@ -54,45 +54,6 @@ Coordinates GameController::getCoordsPieceChosen()
     return cell_chosen;
 }
 
-
-bool GameController::isLetter(char c)
-{
-    return (c >= 'a' && c<='z') || (c >= 'A' && c<= 'Z');
-}
-
-bool GameController::isNumber(char c)
-{
-    return (c >= '0' && c<='9');
-}
-
-Coordinates GameController::convertStringIntoCoords(std::string move)
-{
-    int i= -1;
-    int j= -1;
-    if(move.length() == 2){
-        if(isLetter(move[1]) && isNumber(move[0])){
-            if(move[1] <= 'h'){
-                j=move[1] - 'a';
-            }
-            if(move[0] >= '1' && move[0] <= '8'){
-                i = 7- (move[0] - '1');
-            }
-        }
-        else if (isLetter(move[0]) && isNumber(move[1]))
-        {
-            if(move[0] <= 'h'){
-                j=move[0] - 'a';
-            }
-            if(move[1] >= '1' && move[1] <= '8'){
-                i = 7-(move[1] - '1');
-            }
-        }
-    }
-
-    Coordinates c(j,i);
-
-    return c;
-}
 
 bool GameController::isNull(){
     return piece_chosen==nullptr;
@@ -202,7 +163,7 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
     return v;
 }   
 
-bool GameController::isPromoted(Coordinates c, bool color)
+bool GameController::isPawnPromoted(Coordinates c, bool color)
 {
     std::shared_ptr<Piece> p ;
     if( (current_player->isWhite() && color == 0) || 
@@ -220,6 +181,11 @@ bool GameController::isPromoted(Coordinates c, bool color)
     }
 
     return false;
+}
+
+bool GameController::promotionPending()
+{
+    return waiting_promotion;
 }
 
 bool GameController::isEmpty(Coordinates c)
@@ -423,10 +389,10 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             p->moveTo(to.getX(),to.getY());
             unChoosePiece();
             //Màj si Pion promu
-            if(isPromoted(to,current_player->isBlack()))
+            if(isPawnPromoted(to,current_player->isBlack()))
             {
                 unitMove.promotedPiece=p;
-                promoteTo(p,PieceType::Knight);
+                waiting_promotion = true;
             }
             moves.push(unitMove);
 
@@ -481,40 +447,45 @@ void GameController::eatPiece(std::shared_ptr<Piece> p)
 
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 {
-    if(t == PieceType::Bishop)
-    {
-        bool color = current_player->isBlack();
-        Coordinates c = p->getCoordinates();
-        current_player->removePiece(c);
+    if(waiting_promotion){
+        if(t == PieceType::Bishop)
+        {
+            bool color = current_player->isBlack();
+            Coordinates c = p->getCoordinates();
+            current_player->removePiece(c);
 
-        std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
-        current_player->addPiece(std::move(b));
-    }
-    else if(t == PieceType::Knight)
-    {
-        bool color = current_player->isBlack();
-        Coordinates c = p->getCoordinates();
-        current_player->removePiece(c);
+            std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
+            current_player->addPiece(std::move(b));
+            waiting_promotion=false;
+        }
+        else if(t == PieceType::Knight)
+        {
+            bool color = current_player->isBlack();
+            Coordinates c = p->getCoordinates();
+            current_player->removePiece(c);
 
-        std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
-        current_player->addPiece(std::move(k));
-    }
-    else if(t == PieceType::Rook)
-    {
-        bool color = current_player->isBlack();
-        Coordinates c = p->getCoordinates();
-        current_player->removePiece(c);
+            std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
+            current_player->addPiece(std::move(k));
+            waiting_promotion=false;
+        }
+        else if(t == PieceType::Rook)
+        {
+            bool color = current_player->isBlack();
+            Coordinates c = p->getCoordinates();
+            current_player->removePiece(c);
 
-        std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
-        current_player->addPiece(std::move(r));        
-    }else if(t == PieceType::Queen)
-    {
-        bool color = current_player->isBlack();
-        Coordinates c = p->getCoordinates();
-        current_player->removePiece(c);
+            std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
+            current_player->addPiece(std::move(r));  
+            waiting_promotion=false;      
+        }else if(t == PieceType::Queen)
+        {
+            bool color = current_player->isBlack();
+            Coordinates c = p->getCoordinates();
+            current_player->removePiece(c);
 
-        std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
-        current_player->addPiece(std::move(q));
-        
+            std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
+            current_player->addPiece(std::move(q));
+            waiting_promotion=false;
+        }
     }
 }

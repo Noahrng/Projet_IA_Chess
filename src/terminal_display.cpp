@@ -7,7 +7,7 @@ TerminalDisplay::TerminalDisplay(GameController &game,bool s): Display(game,s){
 }
 
 /*-----------------------------Entrées joueur-----------------------------*/
-std::string TerminalDisplay::enterPlayerCoordinates()
+std::string TerminalDisplay::playerEntryString()
 {
     std::string entry;
     std::cin>>entry;
@@ -24,6 +24,55 @@ bool TerminalDisplay::isGameQuitted(std::string s)
 bool TerminalDisplay::moveCancelled(std::string s)
 {
     return (s == "cancel");
+}
+
+bool TerminalDisplay::isLetter(char c)
+{
+    return (c >= 'a' && c<='z') || (c >= 'A' && c<= 'Z');
+}
+
+bool TerminalDisplay::isNumber(char c)
+{
+    return (c >= '0' && c<='9');
+}
+
+/*---------------------------Conversions String---------------------------*/
+Coordinates TerminalDisplay::convertStringIntoCoords(std::string move)
+{
+    int i= -1;
+    int j= -1;
+    if(move.length() == 2){
+        if(isLetter(move[1]) && isNumber(move[0])){
+            if(move[1] <= 'h'){
+                j=move[1] - 'a';
+            }
+            if(move[0] >= '1' && move[0] <= '8'){
+                i = 7- (move[0] - '1');
+            }
+        }
+        else if (isLetter(move[0]) && isNumber(move[1]))
+        {
+            if(move[0] <= 'h'){
+                j=move[0] - 'a';
+            }
+            if(move[1] >= '1' && move[1] <= '8'){
+                i = 7-(move[1] - '1');
+            }
+        }
+    }
+
+    Coordinates c(j,i);
+
+    return c;
+}
+
+PieceType TerminalDisplay::convertStringIntoType(std::string type)
+{
+    if(type == "queen") return PieceType::Queen;
+    if(type == "bishop") return PieceType::Bishop;
+    if(type == "knight") return PieceType::Knight;
+    if(type == "rook") return PieceType::Rook;
+    else return PieceType::Nothing; 
 }
 
 /*-------------------------Affichage  du terminal-------------------------*/
@@ -128,12 +177,15 @@ void TerminalDisplay::printBoard()
     std::cout << "  " << end_color << "\n";
 }
 
-
 void TerminalDisplay::clearTerminal()
 {
     std::cout << "\x1B[2J\x1B[H";
 }
 
+void TerminalDisplay::printInfosPromote()
+{
+    std::cout << "Promotion : queen, rook, bishop, knight" << "\n";
+}
 
 /*----------------------------Exécution du jeu----------------------------*/
 void TerminalDisplay::run()
@@ -166,11 +218,11 @@ void TerminalDisplay::run()
             while((!coords_onboard || !piece_belong_to) && !quit)
             {
                 std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
-                string_coords = enterPlayerCoordinates();
+                string_coords = playerEntryString();
                 if(isGameQuitted(string_coords)) quit = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(string_coords);
+                    c=convertStringIntoCoords(string_coords);
                     if(c.onBoard())
                     {
                         coords_onboard = true;
@@ -202,18 +254,38 @@ void TerminalDisplay::run()
             while(!got_moved && !cancel_move && !quit)
             {
                 std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
-                string_coords = enterPlayerCoordinates();
+                string_coords = playerEntryString();
                 if(isGameQuitted(string_coords)) quit = true;
                 else if(moveCancelled(string_coords)) cancel_move = true;
                 else
                 {
-                    c=game.convertStringIntoCoords(string_coords);
+                    c=convertStringIntoCoords(string_coords);
                     got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
                     if(!c.onBoard() || !got_moved) 
                         std::cout << error_color << 
                         "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n"
                         << end_color;
                 }
+            }
+            if(got_moved && game.promotionPending())
+            {
+                std::string promotion;
+                PieceType t = PieceType::Nothing;
+
+                while(t == PieceType::Nothing)
+                {
+                    clearTerminal();
+                    printBoard();
+                    printInfosPromote();
+                    std::cout << "Quelle pièce choisissez-vous pour la promotion ?\n";
+                    
+                    promotion = playerEntryString();
+                    t = convertStringIntoType(promotion);
+                }
+                //Promouvoir la pièce
+                Player& curr = game.getCurrentPlayer();
+                std::shared_ptr<Piece> p = curr.getPiece(c);
+                game.promoteTo(p,t);
             }
             game.unChoosePiece();
         }

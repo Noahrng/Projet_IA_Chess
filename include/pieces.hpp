@@ -3,16 +3,7 @@
 
 #include "coordinates.hpp"
 #include <string>
-
-enum class PieceType
-{
-    Pawn=0,
-    Rook,
-    Knight,
-    Bishop,
-    Queen,
-    King
-};
+#include "piece_type.hpp"
 
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
