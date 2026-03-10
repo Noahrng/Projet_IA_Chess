@@ -65,9 +65,7 @@ Coordinates ChessScreen::getCoords(int squareSize)
        x=7-x;
     }
 
-    Coordinates res(x,y);
-
-    return res;
+    return Coordinates{x,y};
 }
 
 void ChessScreen::drawPieces(int squareSize,Coordinates choose)
