@@ -39,6 +39,7 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 
     PieceType t[4]={PieceType::Rook,PieceType::Knight,PieceType::Bishop,PieceType::Queen};
     static int idx=0;
+    
     if(GetMouseWheelMove()!=0.0)
     {
         idx=(idx+1)%4;
@@ -48,13 +49,15 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 
     static unsigned char r=0,g=0,b=0;
 
-    r=std::clamp((r+10)%255,100,256);
-    g=std::clamp((g+10)%255,100,256);
-    b=std::clamp((b+10)%255,100,256);
+    r=std::clamp((r+5)%255,150,256);
+    g=std::clamp((g+5)%255,150,256);
+    b=std::clamp((b+5)%255,150,256);
 
-    drawAsset(id,0,0,8*squareSize,Color{r,g,b,255});
+    Color couleur={r,g,b,255};
 
-    DrawText("Promotion",0,0,170,RED);
+    drawAsset(id,0,0,8*squareSize,couleur);
+
+    DrawText("Promotion",0,0,170,couleur);
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
@@ -197,7 +200,7 @@ void ChessScreen::draw()
     int squareSize = boardSize/8;
 
     Evaluator eval(game);
-    //std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
 
     BeginDrawing();
     ClearBackground(BLACK);

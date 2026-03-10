@@ -163,6 +163,25 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
     return v;
 }   
 
+int GameController::CountMovesOfPiece(std::shared_ptr<Piece> p)
+{
+    int moves=0;
+    Coordinates p_coord=p->getCoordinates();
+    int i,j;
+    for(i=0;i<8;i++)
+    {
+        for(j=0;j<8;j++)
+        {
+            Coordinates to(j,i);
+            if(isLegalMove(p_coord,to))
+            {
+                moves++;
+            }
+        }
+    }
+    return moves;
+}
+
 bool GameController::isPawnPromoted(Coordinates c, bool color)
 {
     std::shared_ptr<Piece> p ;
