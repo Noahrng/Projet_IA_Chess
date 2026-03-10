@@ -59,6 +59,8 @@ class GameController
         std::vector<Coordinates> movesOfPieceChosen();
         void unMove();
 
+        int CountMovesOfPiece(std::shared_ptr<Piece>);
+
         //detection
         bool isPawnPromoted(Coordinates,bool);
         bool promotionPending();

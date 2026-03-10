@@ -2,9 +2,10 @@
 #include "screen_main_menu.hpp"
 #include "evaluator.hpp"
 
-ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false}
+ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
+    srand(0);
 
     this->addImage(AssetID::chessBoard,basePath+"Board.png");
 
@@ -32,9 +33,53 @@ ChessScreen::~ChessScreen()
     
 }
 
+void ChessScreen::scrollPiece(Coordinates c,int squareSize)
+{
+    std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
+
+    PieceType t[4]={PieceType::Rook,PieceType::Knight,PieceType::Bishop,PieceType::Queen};
+    static int idx=0;
+    
+    if(GetMouseWheelMove()!=0.0)
+    {
+        idx=(idx+1)%4;
+    }
+
+    AssetID id=getAssetForPiece(t[idx],color);
+
+    static unsigned char r=0,g=0,b=0;
+
+    r=std::clamp((r+5)%255,150,256);
+    g=std::clamp((g+5)%255,150,256);
+    b=std::clamp((b+5)%255,150,256);
+
+    Color couleur={r,g,b,255};
+
+    drawAsset(id,0,0,8*squareSize,couleur);
+
+    DrawText("Promotion",0,0,170,couleur);
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        game.promoteTo(p,t[idx]);
+        game.switchTurn();
+    }
+    
+
+
+}
+
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
 {
     int base=static_cast<int>(piece.getType())*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
+{
+    int base=static_cast<int>(piece)*2;
     int colorOffset=color ? 0 : 1;
 
     return static_cast<AssetID>(base+colorOffset);
@@ -155,7 +200,7 @@ void ChessScreen::draw()
     int squareSize = boardSize/8;
 
     Evaluator eval(game);
-    //std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -171,6 +216,10 @@ void ChessScreen::draw()
         drawPieces(squareSize);
     }
 
+    if(game.promotionPending())
+    {
+        scrollPiece(promoted,squareSize);
+    }
     /*
     std::vector<Coordinates> c;
     c.push_back(Coordinates{4,4});
@@ -179,7 +228,7 @@ void ChessScreen::draw()
     drawCircles(squareSize,c);
     */
     
-    if(IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE))
+    if((IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) && !game.promotionPending())
     {
         std::cout<<"Annulation\n";
         game.unMove();
@@ -188,6 +237,9 @@ void ChessScreen::draw()
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
     {
         Coordinates c=getCoords(squareSize);
+
+
+        std::cout<<c<<"\n";
 
         if(!game.isChosen())
         {
@@ -198,10 +250,15 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
-                game.switchTurn();
+                color=game.getCurrentPlayer().isWhite();
+                if(!game.promotionPending()) game.switchTurn();
                 //this->switchSide();
             }
+            
             game.unChoosePiece();
+
+            promoted=c;
+            
             
             
         }        

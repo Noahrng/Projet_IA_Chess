@@ -9,8 +9,10 @@ class Evaluator{
         GameController &game;
 
         const double MAX_MATERIAL;
+        const double MAX_MOBILITY;
 
         double evaluateMaterial();
+        double evaluateMobility();
 
 
     public:
