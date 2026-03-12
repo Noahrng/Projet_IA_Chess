@@ -413,11 +413,7 @@ bool GameController::isCheckmate()
 bool GameController::movePiece(Coordinates from, Coordinates to)
 {
     if(isLegalMove(from,to)){
-        MoveHistory unitMove;
-        unitMove.from=from;
-        unitMove.to=to;
-        unitMove.eatenPiece=nullptr;
-        unitMove.promotedPiece=nullptr;
+        MoveHistory unitMove(from,to);
         std::shared_ptr<Piece> p = current_player->getPiece(from);
         if(p != nullptr)
         {
@@ -428,8 +424,17 @@ bool GameController::movePiece(Coordinates from, Coordinates to)
             }
             //Déplacer la pièce
 
-            if(isMoveRock(from,to)) rock(to);
-            else if(isMoveEnPassant(from,to)) enPassant(from,to);
+            if(isMoveRock(from,to))
+            {
+                unitMove.rookRockFrom=rock(to);
+            }
+            else if(isMoveEnPassant(from,to)) 
+            {
+                std::shared_ptr<Piece> p_mangee = waiting_player->getPiece(moves.top().to);
+                unitMove.enPassantInfo.first=p_mangee;
+                unitMove.enPassantInfo.second=p_mangee->getCoordinates();
+                enPassant(from,to);
+            }
             else p->moveTo(to.getX(),to.getY());
             p->incrementNbOfMoves();
             unChoosePiece();
@@ -472,6 +477,21 @@ void GameController::unMove()
         {
             h.eatenPiece->moveTo(h.to);
             waiting_player->addPiece(h.eatenPiece);
+        }
+
+        if(h.enPassantInfo.first!=nullptr)
+        {
+            Coordinates c = h.enPassantInfo.second;
+            h.enPassantInfo.first->moveTo(c);
+            waiting_player->addPiece(h.enPassantInfo.first);
+        }
+
+        if(h.rookRockFrom!=Coordinates(-1,-1))
+        {
+            Coordinates c(h.rookRockFrom.getX()==7 ? 5:3,current_player->isWhite() ? 7:0);
+            std::shared_ptr<Piece> p = current_player->getPiece(c);
+            p->moveTo(h.rookRockFrom);
+            
         }
 
         
@@ -537,23 +557,26 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 }
 
 
-void GameController::rock(Coordinates to)
+Coordinates GameController::rock(Coordinates to)
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> king;
     std::shared_ptr<Piece> rook;
+    Coordinates c;
     if(color)
     {
         king = current_player->getPiece(4,0);
         if(4 < to.getX()) //tour droite
         {
             rook = current_player->getPiece(7,0);
+            c.setXY(7,0);
             king->moveTo(6,0);
             rook->moveTo(5,0);
         }
         else //tour gauche
         {
             rook = current_player->getPiece(0,0);
+            c.setXY(0,0);
             king->moveTo(2,0);
             rook->moveTo(3,0);
         }
@@ -565,18 +588,19 @@ void GameController::rock(Coordinates to)
         if(4 < to.getX()) //tour droite
         {
             rook = current_player->getPiece(7,7);
+            c.setXY(7,7);
             king->moveTo(6,7);
             rook->moveTo(5,7);
         }
         else   //tour gauche
         {
             rook = current_player->getPiece(0,7);
+            c.setXY(0,7);
             king->moveTo(2,7);
             rook->moveTo(3,7);
         }
     }
-
-
+    return c;
 }
 
 

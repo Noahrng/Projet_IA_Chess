@@ -200,7 +200,7 @@ void ChessScreen::draw()
     int squareSize = boardSize/8;
 
     Evaluator eval(game);
-    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    //std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
 
     BeginDrawing();
     ClearBackground(BLACK);

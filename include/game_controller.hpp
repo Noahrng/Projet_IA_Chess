@@ -11,8 +11,18 @@ struct MoveHistory
 {
     Coordinates from;
     Coordinates to;
+    Coordinates rookRockFrom;
     std::shared_ptr<Piece> eatenPiece;
     std::shared_ptr<Piece> promotedPiece;
+    std::pair<std::shared_ptr<Piece>,Coordinates> enPassantInfo;
+
+
+    MoveHistory(Coordinates from,Coordinates to):from{from},
+                                                to{to},
+                                                rookRockFrom(Coordinates(-1,-1)),
+                                                eatenPiece{nullptr},
+                                                promotedPiece{nullptr},
+                                                enPassantInfo{nullptr,Coordinates(-1,-1)}{}
 };
 
 class GameController 
@@ -78,7 +88,7 @@ class GameController
         
         bool isMoveRock(Coordinates, Coordinates);
         bool canRock(Coordinates, Coordinates);
-        void rock(Coordinates);
+        Coordinates rock(Coordinates);
 
         bool isMoveEnPassant(Coordinates, Coordinates);
         bool canEnPassant(Coordinates, Coordinates);
