@@ -12,6 +12,7 @@ class Player
     private:
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
+        double sum_point;
     
     public:
         Player(bool color);
@@ -25,6 +26,8 @@ class Player
         std::shared_ptr<Piece> getPiece(int, int);
         std::shared_ptr<Piece> getPiece(Coordinates);
         std::shared_ptr<Piece> getPiece(size_t);
+        double getPoint();
+
         bool isPiece(std::shared_ptr<Piece>, size_t);
         bool isWhite();
         bool isBlack();

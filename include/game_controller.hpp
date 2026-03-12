@@ -64,7 +64,7 @@ class GameController
         //detection
         bool isPawnPromoted(Coordinates c,bool);
         bool promotionPending();
-        bool isMoveRock(Coordinates from, Coordinates to)
+        bool isMoveRock(Coordinates from, Coordinates to);
         bool canRock(Coordinates to);
         bool pieceInBetween(Coordinates from, Coordinates to);
         bool isLegalMove(Coordinates, Coordinates);
