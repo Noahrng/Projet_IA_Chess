@@ -40,9 +40,6 @@ double Evaluator::evaluateMobility()
     Player &current = game.getCurrentPlayer();
     Player &waiting = game.getWaitingPlayer();
 
-    Player &white = current.isWhite() ? current : waiting;
-    Player &black = current.isBlack() ? current : waiting;
-
     for(size_t i=0;i<current.nbOfPieces();i++)
     {
         if(current.isWhite())

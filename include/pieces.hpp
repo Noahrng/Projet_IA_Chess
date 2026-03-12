@@ -10,13 +10,13 @@ class Piece  {
     friend bool operator!=(const Piece&,const Piece&);
     protected:
         bool color; //0: blanc, 1: noir
-        bool moved; //Indique si la pièce a déjà bougé ou pas
+        int nb_of_moves; //Nombre de mouvements de la pièce
         Coordinates coords;
         double value; //La valeur d'une pièce par rapport à une autre
         std::string terminal_sprite;
     public:
         Piece(bool, Coordinates, int, std::string);
-        Piece(bool, bool, Coordinates, int, std::string);
+        Piece(bool, int, Coordinates, int, std::string);
         virtual ~Piece() = default;
 
         std::string getTerminalSprite();
@@ -31,8 +31,9 @@ class Piece  {
         //virtual void onBeforeMove(Coordinates, Coordinates, Player*, Player*); Potentiellement utiles pour le futur
         //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);
 
-        bool hasMoved();
-        void moving();
+        int howManyMoves();
+        void incrementNbOfMoves();
+        void decrementNbOfMoves();
         void moveTo(int, int);
         void moveTo(Coordinates);
 };

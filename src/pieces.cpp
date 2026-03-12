@@ -1,9 +1,9 @@
 #include "../include/pieces.hpp"
 
 #include <iostream>
-Piece::Piece(bool col, Coordinates c,int v, std::string ts) : color(col), moved(false), coords(c), value(v), terminal_sprite(ts){}
+Piece::Piece(bool col, Coordinates c,int v, std::string ts) : color(col), nb_of_moves(0), coords(c), value(v), terminal_sprite(ts){}
 
-Piece::Piece(bool col, bool move, Coordinates c, int v, std::string ts): color(col), moved(move), coords(c), value(v), terminal_sprite(ts){}
+Piece::Piece(bool col, int nb, Coordinates c, int v, std::string ts): color(col), nb_of_moves(nb), coords(c), value(v), terminal_sprite(ts){}
 
 bool operator==(const Piece &a,const Piece &b)
 {
@@ -28,16 +28,20 @@ double Piece::getValue()
     return value;
 }
 
-bool Piece::hasMoved()
+int Piece::howManyMoves()
 {
-    return moved;
+    return nb_of_moves;
 }
 
-void Piece::moving()
+void Piece::incrementNbOfMoves()
 {
-    moved = true;
+    nb_of_moves++;
 }
 
+void Piece::decrementNbOfMoves()
+{
+    nb_of_moves--;
+}
 
 void Piece::moveTo(int x, int y){
     coords.setXY(x,y);

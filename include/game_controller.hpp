@@ -28,54 +28,62 @@ class GameController
         std::stack<MoveHistory> moves;
 
     public:
+        //Constructeurs / Destructeurs
         GameController();
         ~GameController();
-        //Entrées joueur
 
-        
-        void switchTurn();
-
+        //Getters
         Player& getCurrentPlayer();
         Player& getWaitingPlayer();
         Coordinates getCoordsPieceChosen();
 
-        bool isLetter(char c);
-        bool isNumber(char c);
-        bool isNull();
-        Coordinates convertStringIntoCoords(std::string);
+        //Tours Des Joueurs
+        void switchTurn();
         bool whiteTurn();
         bool blackTurn();
 
-        //Déplacements
-        void eatPiece(std::shared_ptr<Piece> p);
-        bool movePiece(Coordinates from, Coordinates to);
-        void promoteTo(std::shared_ptr<Piece>,PieceType t);
-        void rock(Coordinates to);
 
-        //Pièces choisies
+        //Pièce Choisie
+        bool isNull();
+        bool isChosen();
         void choosePiece(Coordinates);
         void unChoosePiece();
-        bool isChosen();
         std::vector<Coordinates> movesOfPieceChosen();
+
+
+        //Déplacements
+        void eatPiece(std::shared_ptr<Piece>s);
+        bool movePiece(Coordinates, Coordinates);
         void unMove();
 
-        int CountMovesOfPiece(std::shared_ptr<Piece>);
-
-        //detection
-        bool isPawnPromoted(Coordinates,bool);
-        bool promotionPending();
-        bool isMoveRock(Coordinates, Coordinates);
-        bool canRock(Coordinates, Coordinates);
-        bool pieceInBetween(Coordinates, Coordinates);
-        bool isLegalMove(Coordinates, Coordinates);
+        //Vérifications & Détections
         bool isEmpty(Coordinates);
+        bool pieceInBetween(Coordinates, Coordinates);
         bool pieceAllyDetection(Coordinates);
         bool pieceEnemyDetection(Coordinates);
         bool pieceDectection(Coordinates);
+        
+        bool isLegalMove(Coordinates, Coordinates);
+        int countLegalMovesOfPiece(std::shared_ptr<Piece>);
+
         int isThreaten(Coordinates);
         int isChecked();
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
         bool isCheckmate();
+
+        //Règles Spéciales
+        bool isPawnPromoted(Coordinates,bool);
+        bool promotionPending();
+        void promoteTo(std::shared_ptr<Piece>,PieceType);
+        
+        bool isMoveRock(Coordinates, Coordinates);
+        bool canRock(Coordinates, Coordinates);
+        void rock(Coordinates);
+
+        bool isMoveEnPassant(Coordinates, Coordinates);
+        bool canEnPassant(Coordinates, Coordinates);
+        void enPassant(Coordinates, Coordinates);
+
 };
 
 

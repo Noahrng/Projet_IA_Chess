@@ -23,9 +23,6 @@ class TerminalDisplay : public Display{
         //Conversions de String
         Coordinates convertStringIntoCoords(std::string);
         PieceType convertStringIntoType(std::string);
-
-
-        
         
         //Affichage du terminal
         void printBoard();
