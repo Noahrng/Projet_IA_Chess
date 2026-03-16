@@ -4,10 +4,13 @@
 #include "coordinates.hpp"
 #include <string>
 #include "piece_type.hpp"
+#include <vector>
 
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
     friend bool operator!=(const Piece&,const Piece&);
+    friend bool operator<(const Piece&,const Piece&);
+    
     protected:
         bool color; //0: blanc, 1: noir
         int nb_of_moves; //Nombre de mouvements de la pièce

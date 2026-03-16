@@ -78,6 +78,13 @@ Player::Player(bool color):color{color},sum_point{39.0}
         Coordinates c(4,0);
         addPiece(std::make_shared<King>(color, c));
     }
+
+    std::sort(pieces.begin(), pieces.end(),
+        [](const std::shared_ptr<Piece> &a, const std::shared_ptr<Piece> &b)
+        {
+            return a->getValue() > b->getValue(); // décroissant : Dame en premier
+        }
+    );
 }
 
 std::shared_ptr<Piece> Player::getPiece(int x, int y)
@@ -89,16 +96,15 @@ std::shared_ptr<Piece> Player::getPiece(int x, int y)
 std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;
-    size_t  i = 0;
-    size_t  i_max=pieces.size();
-    while(i < i_max && pieces[i]->getCoordinates()!=c){
-        i++;
-    }
-    if(i < i_max){
-        return pieces[i];
+    size_t i=pieces.size()-1;
+    while(i<=16){
+        if(pieces[i]->getCoordinates()==c)
+            return pieces[i];
+        i--;
     }
     return nullptr;
 }
+
 std::shared_ptr<Piece> Player::getPiece(size_t i)
 {
     if(i < pieces.size())
@@ -170,6 +176,13 @@ void Player::addPiece(std::shared_ptr<Piece> p)
 {
     sum_point+=p->getValue();
     pieces.push_back(std::move(p));
+
+    size_t i=pieces.size()-1;
+    while(i>0 && pieces[i]->getValue() > pieces[i-1]->getValue())
+    {
+        std::swap(pieces[i],pieces[i-1]);
+        i--;
+    }
 }
 
 void Player::removePiece(Coordinates c){

@@ -5,8 +5,13 @@
 #include "evaluator.hpp"
 
 #include <chrono>
+#include <random>
 
 int main(){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0,7);
+
     GameController play;
     Evaluator evalt(play);
 
@@ -21,6 +26,47 @@ int main(){
     }
 
     std::cout << "evaluate() appelé " << count << " fois en 1 seconde\n";
+
+    count=0;
+    start=std::chrono::high_resolution_clock::now();
+    end=start+std::chrono::seconds(1);
+
+    while(std::chrono::high_resolution_clock::now() < end)
+    {
+        play.movePiece(Coordinates(4,6),Coordinates(4,4));
+        play.switchTurn();
+        play.unMove();
+        count++;
+    }
+
+    std::cout << "move -> unmove effectué " << count << " fois en 1 seconde\n";
+
+    count=0;
+    start=std::chrono::high_resolution_clock::now();
+    end=start+std::chrono::seconds(1);
+
+    while(std::chrono::high_resolution_clock::now() < end)
+    {
+        play.isCheckmate();
+        count++;
+    }
+
+    std::cout << "ischeckmate " << count << " fois en 1 seconde\n";
+
+    count=0;
+    start=std::chrono::high_resolution_clock::now();
+    end=start+std::chrono::seconds(1);
+    Coordinates c_testget;
+    std::shared_ptr<Piece> get_test;
+
+    while(std::chrono::high_resolution_clock::now() < end)
+    {
+        c_testget.setXY(distrib(gen),distrib(gen));
+        get_test=play.getCurrentPlayer().getPiece(c_testget);
+        count++;
+    }
+
+    std::cout << "getPiece " << count << " fois en 1 seconde\n";
 
 
 

@@ -52,9 +52,7 @@ Coordinates GameController::getCoordsPieceChosen()
 /*---------------------------Tours Des Joueurs----------------------------*/
 void GameController::switchTurn()
 {
-    auto tmp = current_player;
-    current_player = waiting_player;
-    waiting_player = tmp;
+    std::swap(current_player,waiting_player);
 }
 
 bool GameController::whiteTurn()
@@ -394,8 +392,7 @@ bool GameController::isCheckmate()
     {
         p = current_player->getPiece(piece_i);
 
-        Coordinates c_piece = p->getCoordinates();
-
+        Coordinates c_piece = p->getCoordinates();        
         for(int x = 0 ; x < 8 ; x++)
         {
             for(int y = 0 ; y < 8 ; ++y)

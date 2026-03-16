@@ -4,6 +4,8 @@
 #include "pieces.hpp"
 #include <vector>
 #include <memory>
+#include <iterator>
+#include <algorithm>
 
 class Player
 {
