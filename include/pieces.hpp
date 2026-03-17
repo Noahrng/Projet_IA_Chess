@@ -30,6 +30,7 @@ class Piece  {
         virtual bool canMovePattern(Coordinates) = 0;
         virtual bool canEatPattern(Coordinates) = 0;
         virtual PieceType getType()const=0;
+        virtual std::vector<Coordinates>& getVectMove()=0;
 
         //virtual void onBeforeMove(Coordinates, Coordinates, Player*, Player*); Potentiellement utiles pour le futur
         //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);

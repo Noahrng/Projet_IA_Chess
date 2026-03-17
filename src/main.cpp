@@ -3,6 +3,7 @@
 #include "terminal_display.hpp"
 #include "graphic_display.hpp"
 #include "evaluator.hpp"
+#include "minimax.hpp"
 
 #include <chrono>
 #include <random>
@@ -11,6 +12,8 @@ int main(){
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0,7);
+
+    std::uniform_int_distribution<> distrib_choice(0,15);
 
     GameController play;
     Evaluator evalt(play);
@@ -68,6 +71,29 @@ int main(){
 
     std::cout << "getPiece " << count << " fois en 1 seconde\n";
 
+    count=0;
+    start=std::chrono::high_resolution_clock::now();
+    end=start+std::chrono::seconds(1);
+
+    while(std::chrono::high_resolution_clock::now() < end)
+    {
+        play.choosePiece(distrib_choice(gen));
+        auto list_move=play.movesOfPieceChosen();
+        play.unChoosePiece();
+
+        count++;
+    }
+
+    std::cout << "choosePiece random " << count << " fois en 1 seconde\n";
+
+    Minimax robot(play,evalt);
+    start = std::chrono::high_resolution_clock::now();
+    std::cout<<robot.minimax(2*2,true)<<std::endl;
+    end=std::chrono::high_resolution_clock::now();
+    auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    std::cout << "Temps : " << duration.count() << " ms" << std::endl;
+    
+    std::cout<<evalt.evaluate()<<"\n";
 
 
     std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";

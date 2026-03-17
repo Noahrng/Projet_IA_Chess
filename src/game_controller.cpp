@@ -79,7 +79,14 @@ void GameController::choosePiece(Coordinates c)
 {
     this->piece_chosen=current_player->getPiece(c);
     if(piece_chosen != nullptr)
-        this->cell_chosen = current_player->getPiece(c)->getCoordinates();
+        this->cell_chosen =piece_chosen->getCoordinates();
+}
+
+void GameController::choosePiece(int i)
+{
+    this->piece_chosen=current_player->getPiece(i);
+    if(piece_chosen != nullptr)
+        this->cell_chosen = piece_chosen->getCoordinates();
 }
 
 void GameController::unChoosePiece()
@@ -91,6 +98,9 @@ void GameController::unChoosePiece()
 std::vector<Coordinates> GameController::movesOfPieceChosen()
 {
     std::vector<Coordinates> v;
+    v.reserve(16);
+    std::shared_ptr<Piece> p=current_player->getPiece(cell_chosen);
+    Coordinates to;
     if(isChosen())
     {
         int i; 
@@ -99,7 +109,7 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
         {
             for(j = 0 ; j < 8 ; ++j)
             {
-                Coordinates to(j,i);
+                to.setXY(j,i);
                 if(isLegalMove(cell_chosen, to))
                 {
                     v.push_back(to);
@@ -109,6 +119,28 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
     }
     return v;
 }   
+
+void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
+{
+    v.clear();
+    std::shared_ptr<Piece> p=current_player->getPiece(cell_chosen);
+    std::vector<Coordinates>& list_move=p->getVectMove();
+    Coordinates to;
+    if(isChosen())
+    {
+        size_t i;
+        size_t i_max=list_move.size();
+
+        for(i=0;i<i_max;i++)
+        {
+            to=cell_chosen+list_move[i];
+            if(to.onBoard() && p->canMovePattern(to) && isLegalMove(cell_chosen,to))
+            {
+                v.push_back(to);
+            }
+        }
+    }
+}  
 
 /*------------------------------Déplacements------------------------------*/
 

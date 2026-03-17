@@ -57,8 +57,10 @@ class GameController
         bool isNull();
         bool isChosen();
         void choosePiece(Coordinates);
+        void choosePiece(int);
         void unChoosePiece();
         std::vector<Coordinates> movesOfPieceChosen();
+        void movesOfPieceChosen(std::vector<Coordinates> &v);
 
 
         //Déplacements
