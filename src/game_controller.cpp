@@ -134,7 +134,7 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
         for(i=0;i<i_max;i++)
         {
             to=cell_chosen+list_move[i];
-            if(to.onBoard() && p->canMovePattern(to) && isLegalMove(cell_chosen,to))
+            if(isLegalMove(cell_chosen,to))
             {
                 v.push_back(to);
             }
@@ -272,12 +272,11 @@ bool GameController::pieceDectection(Coordinates c)
 /*------------------------------Déplacements------------------------------*/
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
-
-    std::shared_ptr<Piece> p = current_player->getPiece(from);
-    
     if(!from.onBoard() || !to.onBoard()) return false;  
 
     if(from == to) return false;
+
+    std::shared_ptr<Piece> p = current_player->getPiece(from);
 
     if(p == nullptr) return false;
 

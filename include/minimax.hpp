@@ -17,7 +17,7 @@ class Minimax
     public:
         Minimax(GameController&,Evaluator&);
 
-        double minimax(int,bool);
+        double minimax(int,bool,double,double);
 };
 
 #endif

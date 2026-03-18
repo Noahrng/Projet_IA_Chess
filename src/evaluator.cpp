@@ -13,13 +13,12 @@ double Evaluator::evaluateMaterial()
     Player &white = current.isWhite() ? current : waiting;
     Player &black = current.isBlack() ? current : waiting;
     return white.getPoint() - black.getPoint();
-
-
 }
 
 double Evaluator::evaluate()
 {
     double material = evaluateMaterial()/MAX_MATERIAL;
+
     double score = material;
 
     return std::clamp(score,-0.99,0.99);

@@ -88,7 +88,7 @@ int main(){
 
     Minimax robot(play,evalt);
     start = std::chrono::high_resolution_clock::now();
-    std::cout<<robot.minimax(2*2,true)<<std::endl;
+    std::cout<<robot.minimax(5*2,true,-2.0,2.0)<<std::endl;
     end=std::chrono::high_resolution_clock::now();
     auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
     std::cout << "Temps : " << duration.count() << " ms" << std::endl;
