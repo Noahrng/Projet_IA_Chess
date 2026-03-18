@@ -114,6 +114,11 @@ std::shared_ptr<Piece> Player::getPiece(size_t i)
     return nullptr;
 }
 
+std::vector<std::shared_ptr<Piece>>& Player::getPieces()
+{
+    return pieces;
+}
+
 double Player::getPoint()
 {
     return sum_point;

@@ -58,6 +58,7 @@ class GameController
         bool isChosen();
         void choosePiece(Coordinates);
         void choosePiece(int);
+        void choosePiece(std::shared_ptr<Piece>);
         void unChoosePiece();
         std::vector<Coordinates> movesOfPieceChosen();
         void movesOfPieceChosen(std::vector<Coordinates> &v);

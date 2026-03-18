@@ -28,6 +28,7 @@ class Player
         std::shared_ptr<Piece> getPiece(int, int);
         std::shared_ptr<Piece> getPiece(Coordinates);
         std::shared_ptr<Piece> getPiece(size_t);
+        std::vector<std::shared_ptr<Piece>>& getPieces();
         double getPoint();
 
         bool isPiece(std::shared_ptr<Piece>, size_t);

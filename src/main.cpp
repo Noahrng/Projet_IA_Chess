@@ -7,8 +7,9 @@
 
 #include <chrono>
 #include <random>
+#include <cstdlib>
 
-int main(){
+int main(int argc,char*argv[]){
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0,7);
@@ -88,7 +89,8 @@ int main(){
 
     Minimax robot(play,evalt);
     start = std::chrono::high_resolution_clock::now();
-    std::cout<<robot.minimax(5*2,true,-2.0,2.0)<<std::endl;
+    if(argc==2) std::cout<<robot.minimax(std::atoi(argv[1])*2,true,-2.0,2.0)<<std::endl;
+    
     end=std::chrono::high_resolution_clock::now();
     auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
     std::cout << "Temps : " << duration.count() << " ms" << std::endl;

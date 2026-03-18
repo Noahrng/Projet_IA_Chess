@@ -89,6 +89,13 @@ void GameController::choosePiece(int i)
         this->cell_chosen = piece_chosen->getCoordinates();
 }
 
+void GameController::choosePiece(std::shared_ptr<Piece> p)
+{
+    this->piece_chosen=p;
+    if(this->piece_chosen != nullptr)
+        this->cell_chosen = piece_chosen->getCoordinates();
+}
+
 void GameController::unChoosePiece()
 {
     this->piece_chosen=nullptr;
@@ -321,16 +328,17 @@ int GameController::isThreaten(Coordinates c)
 {
     int nb_threats = 0;
 
-    size_t i = 0;
-    while(i < waiting_player->nbOfPieces())
+    size_t i;
+    std::vector<std::shared_ptr<Piece>>& wait_piece=waiting_player->getPieces();
+    size_t wait_nb_piece=wait_piece.size();
+    for(i=0;i<wait_nb_piece;i++)
     {
-        std::shared_ptr<Piece> p = waiting_player->getPiece(i);
-        if(p->canEatPattern(c) && 
-        !pieceInBetween(p->getCoordinates(),c)) 
+        if(wait_piece[i]->canEatPattern(c) 
+        && !pieceInBetween(wait_piece[i]->getCoordinates(),c))
         {
             nb_threats++;
         }
-        i++;
+
     }
     return nb_threats;
 }
@@ -345,24 +353,7 @@ int GameController::isChecked()
     {
         return 0;
     }
-
-    size_t i = 0;
-    std::shared_ptr<Piece> king = nullptr;
-    bool is_king = false;
-    
-    while(i < n && !is_king)
-    {
-        king = current_player->getPiece(i);
-        is_king = king->getType() == PieceType::King;
-        i++;
-    }
-
-    if(!is_king)
-    {
-        return 0;
-    }
-
-    Coordinates c = king->getCoordinates();
+    Coordinates c = current_player->getPiece(0)->getCoordinates();
     return isThreaten(c);
 }
 

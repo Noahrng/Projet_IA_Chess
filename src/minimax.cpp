@@ -9,7 +9,7 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 {
     nb_node++;
 
-    if(nb_node%1000==0)
+    if(nb_node%10000==0)
     {
         auto now = std::chrono::high_resolution_clock::now();
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
@@ -50,15 +50,15 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
-                //if(game.movePiece(cell_choose,list_move[j]))
-                //{
+                if(game.movePiece(cell_choose,list_move[j]))
+                {
                     game.switchTurn();
                     best=std::max(best,minimax(depth-1,!maximizing,alpha,beta));
+                    game.unMove();
                     if(best>=beta)
                         return best;
                     alpha=std::max(alpha,best);
-                    game.unMove();
-                //}
+                }
             }
         }
     }
@@ -78,15 +78,15 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
-                //if(game.movePiece(cell_choose,list_move[j]))
-                //{
+                if(game.movePiece(cell_choose,list_move[j]))
+                {
                     game.switchTurn();
                     best=std::min(best,minimax(depth-1,!maximizing,alpha,beta));
+                    game.unMove();
                     if(alpha>=best)
                         return best;
                     beta=std::min(beta,best);
-                    game.unMove();
-                //}
+                }
             }
         }
 
