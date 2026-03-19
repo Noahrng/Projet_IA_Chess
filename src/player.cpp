@@ -246,3 +246,16 @@ void Player::update(std::shared_ptr<Piece> from,Coordinates to)
     board[from->getCoordinates().getX()][from->getCoordinates().getY()]=nullptr;
     board[to.getX()][to.getY()]=tmp;
 }
+void Player::removePiece(std::shared_ptr<Piece> p){
+    size_t i = 0;
+    size_t n = nbOfPieces();
+
+    while(i < n)
+    {
+        if(pieces[i] == p)
+        {
+            removePiece(i);
+        }
+        i++;    
+    }
+}

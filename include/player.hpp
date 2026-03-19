@@ -42,6 +42,7 @@ class Player
 
         void update(Coordinates,Coordinates);
         void update(std::shared_ptr<Piece>,Coordinates);
+        void removePiece(std::shared_ptr<Piece>);
         
 
 

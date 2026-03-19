@@ -280,6 +280,13 @@ void ChessScreen::draw()
 
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
+
+    if(game.isDraw())
+    {
+        DrawText("ÉGALITÉ",10,height/8+200,200,RED);
+
+        DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
+    }
     
     EndDrawing();
 

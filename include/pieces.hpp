@@ -5,6 +5,7 @@
 #include <string>
 #include "piece_type.hpp"
 #include <vector>
+#include <memory>
 
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
