@@ -273,7 +273,6 @@ bool GameController::pieceDectection(Coordinates c)
 
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 {
-
     std::shared_ptr<Piece> p = current_player->getPiece(from);
     
     if(!from.onBoard() || !to.onBoard()) return false;  
@@ -282,8 +281,13 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 
     if(p == nullptr) return false;
 
-    if(pieceInBetween(from,to)) return false;
-
+    if(p->getType() == PieceType::Bishop ||
+        p->getType() == PieceType::Rook ||
+        p->getType() == PieceType::Queen ||
+        p->getType() == PieceType::King)
+    {
+        if(pieceInBetween(from,to)) return false;
+    }
     if(isMoveRock(from,to)){
         if(!canRock(from,to)) return false;
     }
@@ -340,6 +344,8 @@ int GameController::isThreaten(Coordinates c)
     et renvoie le nombre de pièces qui la menace
     */    
 {
+    if(!c.onBoard()) return 0;
+    
     int nb_threats = 0;
 
     size_t i = 0;
@@ -406,17 +412,15 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     //Si on mange une pièce, on la sauvegarde aussi
     if(pieceEnemyDetection(to))
     {
-        int saved_enemy_x, saved_enemy_y;
         std::shared_ptr<Piece> enemy = waiting_player->getPiece(to);
-        
-        //on sauvegarde les coordonnées de la pièce ennemie
-        saved_enemy_x = enemy->getCoordinates().getX();
-        saved_enemy_y = enemy->getCoordinates().getY();
+        Coordinates saved_enemy_c = enemy->getCoordinates();
+        waiting_player->removePiece(enemy);
 
-        enemy->moveTo(-1,-1); //En dehors du board pour pas qu'on la prenne en compte
 
         checked = isChecked();
-        enemy->moveTo(saved_enemy_x,saved_enemy_y);
+
+        enemy->moveTo(saved_enemy_c);
+        waiting_player->addPiece(enemy);
     }
     else
     {
@@ -425,6 +429,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     p->moveTo(saved_x,saved_y);
     return checked;
 }
+
 bool GameController::isDraw()
 {
     //Matériel insuffisant :
@@ -442,9 +447,21 @@ bool GameController::isDraw()
     if(n1 == 1 && n2 == 2)
     {
         std::shared_ptr<Piece> p;
-        for(int i = 0 ; i  < n2 ; ++i) 
+        for(size_t i = 0 ; i  < n2 ; ++i) 
         {
             p = waiting_player->getPiece(i);
+            if(p->getType() == PieceType::Bishop || p->getType() == PieceType::Knight)
+            {
+                return true;
+            }
+        }
+    }
+    if(n1 == 2 && n2 == 1)
+    {
+        std::shared_ptr<Piece> p;
+        for(size_t i = 0 ; i  < n2 ; ++i) 
+        {
+            p = current_player->getPiece(i);
             if(p->getType() == PieceType::Bishop || p->getType() == PieceType::Knight)
             {
                 return true;
@@ -455,24 +472,32 @@ bool GameController::isDraw()
     //Cas 3 : Roi et Fou contre Roi et Fou (les deux de la même couleur)
     if(n1 == 2 && n2 == 2)
     {
-        std::shared_ptr<Piece> bishop_ally;
-        std::shared_ptr<Piece> bishop_enemy;
-        int i1 = 0;
-        int i2 = 0;
-        while(i1 < n1 && i2 < n2 && 
-            (bishop_ally->getType() != PieceType::Bishop || bishop_enemy->getType() != PieceType::Bishop) )
+        std::shared_ptr<Piece> bishop_ally = nullptr;
+        std::shared_ptr<Piece> bishop_enemy = nullptr;
+        
+        for(size_t i  = 0 ; i < n1 ; ++i)
         {
-            bishop_ally = current_player->getPiece(i1);
-            bishop_enemy = waiting_player->getPiece(i2);
-            i1++;
-            i2++;
+            auto p = current_player->getPiece(i);
+            if(p && p->getType() == PieceType::Bishop)
+            {
+                bishop_ally = p;
+            }
         }
 
-        if(bishop_ally->getType() == PieceType::Bishop && bishop_enemy->getType() == PieceType::Bishop)
+        for(size_t i  = 0 ; i < n2 ; ++i)
+        {
+            auto p = waiting_player->getPiece(i);
+            if(p && p->getType() == PieceType::Bishop)
+            {
+                bishop_enemy = p;
+            }
+        }
+
+        if(bishop_ally && bishop_enemy)
         {
             Coordinates ally_coords = bishop_ally->getCoordinates();
             Coordinates enemy_coords = bishop_enemy->getCoordinates();
-            if(ally_coords.getX() + ally_coords.getY() == enemy_coords.getX() + enemy_coords.getY())
+            if( (ally_coords.getX() + ally_coords.getY()) % 2 == (enemy_coords.getX() + enemy_coords.getY()) % 2)
             //On vérifie si les deux fous sont sur les cases de même couleur
             //Case blanche  : x + y est pair
             //Case noire    : x + y est impair
@@ -491,8 +516,20 @@ bool GameController::isDraw()
 
 bool GameController::isPat()
 {
-    
-
+    if(!isChecked()){
+        size_t n = current_player->nbOfPieces();
+        std::shared_ptr<Piece> p;
+        for(size_t i = 0 ; i < n ; ++i)
+        {
+            p = current_player->getPiece(i);
+            if(countLegalMovesOfPiece(p) > 0)
+            {
+                return false;
+            }
+        } 
+        return true;
+    }
+    return false;
 }
 
 bool GameController::isCheckmate()
@@ -622,18 +659,32 @@ bool GameController::canRock(Coordinates from, Coordinates to)
     if(!king) return false;
 
     std::shared_ptr<Piece> rook;
+    Coordinates rook_coords;
     if(from.getX() < to.getX()) //tour droite
     {
-        if(color) rook = current_player->getPiece(7,0);
-        else rook = current_player->getPiece(7,7);
+        if(color){
+            rook = current_player->getPiece(7,0);
+            rook_coords.setXY(7,0);
+        }
+        else{
+            rook = current_player->getPiece(7,7);
+            rook_coords.setXY(7,7);
+        }
     }
     else
     {
-        if(color) rook = current_player->getPiece(0,0);
-        else rook = current_player->getPiece(0,7);
+        if(color) {
+            rook = current_player->getPiece(0,0);
+            rook_coords.setXY(0,0);
+        }
+        else {
+            rook = current_player->getPiece(0,7);
+            rook_coords.setXY(0,7);
+        }
     }
 
     if(!rook) return false;
+    if(pieceInBetween(from,rook_coords)) return false;
 
     if(king->howManyMoves() == 0 && rook->howManyMoves() == 0)
     {

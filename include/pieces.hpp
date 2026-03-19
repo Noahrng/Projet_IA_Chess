@@ -4,6 +4,7 @@
 #include "coordinates.hpp"
 #include <string>
 #include "piece_type.hpp"
+#include <memory>
 
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
