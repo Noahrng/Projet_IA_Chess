@@ -69,6 +69,8 @@ class GameController
         int isThreaten(Coordinates);
         int isChecked();
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
+        bool isDraw();
+        bool isPat();
         bool isCheckmate();
 
         //Règles Spéciales

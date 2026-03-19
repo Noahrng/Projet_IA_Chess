@@ -11,7 +11,6 @@ double Evaluator::evaluateMaterial()
     Player &waiting = game.getWaitingPlayer();
 
     return (current.isWhite() ? current.getPoint() : waiting.getPoint()) - (current.isBlack() ? current.getPoint() : waiting.getPoint());
-
 }
 
 double Evaluator::evaluate()

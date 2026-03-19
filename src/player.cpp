@@ -194,3 +194,17 @@ void Player::removePiece(size_t i){
         pieces.erase(pieces.begin()+i);
     }
 }
+
+void Player::removePiece(std::shared_ptr<Piece> p){
+    size_t i = 0;
+    size_t n = nbOfPieces();
+
+    while(i < n)
+    {
+        if(pieces[i] == p)
+        {
+            removePiece(i);
+        }
+        i++;    
+    }
+}

@@ -34,6 +34,7 @@ class Player
         void addPiece(std::shared_ptr<Piece>);
         void removePiece(Coordinates);
         void removePiece(size_t);
+        void removePiece(std::shared_ptr<Piece>);
         
 
 
