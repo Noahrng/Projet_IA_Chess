@@ -283,11 +283,11 @@ void ChessScreen::draw()
     
     EndDrawing();
 
-    if(game.whiteTurn()){
+    /*if(game.whiteTurn()){
         ChessMove bestm=robot.getBestMove();
         if(game.movePiece(bestm.from,bestm.to)) game.switchTurn();
 
-    }
+    }*/
 }
 
 bool ChessScreen::isFinished()
