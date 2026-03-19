@@ -1,10 +1,26 @@
-#include <game_controller.hpp>
-#include <pawn.hpp>
+#include "game_controller.hpp"
+#include "pawn.hpp"
 #include "terminal_display.hpp"
-#include <graphic_display.hpp>
+#include "graphic_display.hpp"
+#include "evaluator.hpp"
+
+#include <chrono>
 
 int main(){
     GameController play;
+    Evaluator evalt(play);
+
+    int count=0;
+    auto start=std::chrono::high_resolution_clock::now();
+    auto end =start+std::chrono::seconds(1);
+
+    while(std::chrono::high_resolution_clock::now() < end)
+    {
+        evalt.evaluate();
+        count++;
+    }
+
+    std::cout << "evaluate() appelé " << count << " fois en 1 seconde\n";
 
 
 

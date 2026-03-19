@@ -6,7 +6,7 @@
 #include "queen.hpp"
 #include "king.hpp"
 
-Player::Player(bool color):color{color}
+Player::Player(bool color):color{color},sum_point{39.0}
 {
     //Création de chaque pieces
     int i,j;
@@ -90,10 +90,11 @@ std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;
     size_t  i = 0;
-    while(i < pieces.size() && pieces[i]->getCoordinates()!=c){
+    size_t  i_max=pieces.size();
+    while(i < i_max && pieces[i]->getCoordinates()!=c){
         i++;
     }
-    if(i < pieces.size()){
+    if(i < i_max){
         return pieces[i];
     }
     return nullptr;
@@ -107,15 +108,24 @@ std::shared_ptr<Piece> Player::getPiece(size_t i)
     return nullptr;
 }
 
+double Player::getPoint()
+{
+    return sum_point;
+}
+
 bool operator==(const Player &a,const Player &b)
 {
     if(a.color!=b.color) return false;
     if(a.pieces.size()!=b.pieces.size()) return false;
-    for(std::size_t i=0;i<a.pieces.size();i++)
+    size_t i_max,j_max;
+
+    i_max=a.pieces.size();
+    for(std::size_t i=0;i<i_max;i++)
     {
         bool found=false;
         std::size_t j=0;
-        while(j<b.pieces.size())
+        j_max=b.pieces.size();
+        while(j<j_max)
         {
             if(*(a.pieces[i].get()) == *(b.pieces[j].get()))
             {
@@ -158,24 +168,29 @@ size_t Player::nbOfPieces()
 
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
+    sum_point+=p->getValue();
     pieces.push_back(std::move(p));
 }
 
 void Player::removePiece(Coordinates c){
     size_t i=0;
-    while(i<pieces.size() && pieces[i].get()->getCoordinates()!=c){
+    size_t i_max=pieces.size();
+    while(i<i_max && pieces[i]->getCoordinates()!=c){
         i++;
     }
-    if(i<pieces.size()) 
+    if(i<i_max) 
     {
         pieces[i]->moveTo(Coordinates(-1,-1));
+        sum_point-=pieces[i]->getValue();
         pieces.erase(pieces.begin()+i);
+        
     }
 }
 
 void Player::removePiece(size_t i){
     if(i < nbOfPieces()){
         pieces[i]->moveTo(Coordinates(-1,-1));
+        sum_point-=pieces[i]->getValue();
         pieces.erase(pieces.begin()+i);
     }
 }
