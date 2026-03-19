@@ -66,7 +66,7 @@ class GameController
 
         //Déplacements
         void eatPiece(std::shared_ptr<Piece>s);
-        bool movePiece(Coordinates, Coordinates);
+        bool movePiece(Coordinates, Coordinates,bool=false);
         void unMove();
 
         //Vérifications & Détections

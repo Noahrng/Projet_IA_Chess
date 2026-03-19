@@ -7,12 +7,31 @@ Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0},MAX_MO
 
 double Evaluator::evaluateMaterial()
 {
+    double white_score=0.0;
+    double black_score=0.0;
     Player &current = game.getCurrentPlayer();
     Player &waiting = game.getWaitingPlayer();
-
     Player &white = current.isWhite() ? current : waiting;
     Player &black = current.isBlack() ? current : waiting;
-    return white.getPoint() - black.getPoint();
+
+    for(size_t i = 0; i < white.nbOfPieces();i++)
+    {
+        std::shared_ptr<Piece> p = white.getPiece(i);
+        if(p!=nullptr && p->getType()!=PieceType::King)
+        {
+            white_score+=p->getValue();
+        }
+    }
+    for(size_t i = 0; i < black.nbOfPieces();i++)
+    {
+        std::shared_ptr<Piece> p = black.getPiece(i);
+        if(p!=nullptr && p->getType()!=PieceType::King)
+        {
+            black_score+=p->getValue();
+        }
+    }
+
+    return white_score-black_score;
 }
 
 double Evaluator::getPieceTableValue(Piece &p, bool isWhite)
@@ -67,7 +86,7 @@ double Evaluator::evaluate()
     double material = evaluateMaterial()/MAX_MATERIAL;
     double position = evaluatePosition()/MAX_POSITION;
 
-    double score = 0.9*material+0.1*position;
+    double score = 0.95*material+0.05*position;
 
     //if(position!=0.0) std::cout<<"Material ="<<material << "| Position ="<<position<<std::endl;
 

@@ -9,7 +9,7 @@ class TerminalDisplay : public Display{
     private: 
     public:
         //Constructeur
-        TerminalDisplay(GameController&, bool);
+        TerminalDisplay(GameController&,Minimax&,bool);
         
         //Entrée Joueur
         std::string playerEntryString(); 

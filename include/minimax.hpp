@@ -7,6 +7,23 @@
 #include <algorithm>
 #include <chrono>
 
+struct ChessMove
+{
+    Coordinates from;
+    Coordinates to;
+    double score;
+
+    ChessMove():
+        from{Coordinates(-1,-1)},
+        to{Coordinates(-1,-1)},
+        score{0.0}
+    {}
+
+    ChessMove(Coordinates from,Coordinates to,double s):
+        from{from},to{to},score{s}
+    {}
+};
+
 class Minimax
 {
     private:
@@ -18,6 +35,7 @@ class Minimax
         Minimax(GameController&,Evaluator&);
 
         double minimax(int,bool,double,double);
+        ChessMove getBestMove();
 };
 
 #endif

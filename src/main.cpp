@@ -89,8 +89,9 @@ int main(int argc,char*argv[]){
 
     Minimax robot(play,evalt);
     start = std::chrono::high_resolution_clock::now();
-    if(argc==2) std::cout<<robot.minimax(std::atoi(argv[1])*2,true,-2.0,2.0)<<std::endl;
     
+    robot.getBestMove();
+
     end=std::chrono::high_resolution_clock::now();
     auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
     std::cout << "Temps : " << duration.count() << " ms" << std::endl;
@@ -106,13 +107,13 @@ int main(int argc,char*argv[]){
 
     if(!affichage)
     {
-        TerminalDisplay t(play,0);
+        TerminalDisplay t(play,robot,0);
         t.run();
     }
 
     else
     {
-        GraphicDisplay gp1(900,900,"CHESS",play,0);
+        GraphicDisplay gp1(900,900,"CHESS",play,robot,0);
         gp1.run();
     }   
     

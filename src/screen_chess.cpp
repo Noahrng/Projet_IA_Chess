@@ -2,7 +2,7 @@
 #include "screen_main_menu.hpp"
 #include "evaluator.hpp"
 
-ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
+ChessScreen::ChessScreen(GameController &game,Minimax &robot):Screen(game,robot),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
     srand(0);
@@ -270,6 +270,8 @@ void ChessScreen::draw()
         switchSide();
     }   
 
+    
+    
     if(game.isCheckmate())
     {
         DrawText("ECHEC",10,height/8,200,RED);
@@ -280,6 +282,12 @@ void ChessScreen::draw()
     }
     
     EndDrawing();
+
+    if(game.whiteTurn()){
+        ChessMove bestm=robot.getBestMove();
+        if(game.movePiece(bestm.from,bestm.to)) game.switchTurn();
+
+    }
 }
 
 bool ChessScreen::isFinished()
@@ -289,5 +297,5 @@ bool ChessScreen::isFinished()
 
 std::unique_ptr<Screen> ChessScreen::nextScreen()
 {
-    return std::make_unique<MainMenuScreen>(game,1000,1000);
+    return std::make_unique<MainMenuScreen>(game,robot,1000,1000);
 }
