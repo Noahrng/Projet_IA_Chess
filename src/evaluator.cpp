@@ -44,11 +44,11 @@ double Evaluator::evaluateMobility()
     {
         if(current.isWhite())
         {
-            white_score+=game.CountMovesOfPiece(current.getPiece(i));
+            white_score+=game.countLegalMovesOfPiece(current.getPiece(i));
         }
         else
         {
-            black_score+=game.CountMovesOfPiece(current.getPiece(i));
+            black_score+=game.countLegalMovesOfPiece(current.getPiece(i));
         }
     }
 
@@ -58,11 +58,11 @@ double Evaluator::evaluateMobility()
     {
         if(waiting.isWhite())
         {
-            white_score+=game.CountMovesOfPiece(waiting.getPiece(i));
+            white_score+=game.countLegalMovesOfPiece(waiting.getPiece(i));
         }
         else
         {
-            black_score+=game.CountMovesOfPiece(waiting.getPiece(i));
+            black_score+=game.countLegalMovesOfPiece(waiting.getPiece(i));
         }
     }
     game.switchTurn();
