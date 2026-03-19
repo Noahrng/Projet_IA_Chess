@@ -141,11 +141,21 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
         for(i=0;i<i_max;i++)
         {
             to=cell_chosen+list_move[i];
-            if(isLegalMove(cell_chosen,to))
-            {
+
+            if(!to.onBoard()) continue;
+            if(pieceAllyDetection(to)) continue;
+            if(pieceInBetween(cell_chosen,to)) continue;
+
+            bool pseudo_legal = false;
+            if(isEmpty(to) && p->canMovePattern(to)) pseudo_legal = true;
+            else if(pieceEnemyDetection(to) && p->canEatPattern(to)) pseudo_legal = true;
+            else if(isMoveRock(cell_chosen, to) && canRock(cell_chosen, to)) pseudo_legal = true;
+            else if(isMoveEnPassant(cell_chosen, to) && canEnPassant(cell_chosen, to)) pseudo_legal = true;
+
+            // isKingCheckedAfterMove seulement si pseudo-légal
+            if(pseudo_legal && !isKingCheckedAfterMove(cell_chosen, to))
                 v.push_back(to);
             }
-        }
     }
 }  
 
@@ -204,12 +214,13 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
             if(isPawnPromoted(to,current_player->isBlack()))
             {
                 unitMove.promotedPiece=p;
-                waiting_promotion = true;
+                promotion_color = current_player->isBlack();
 
                 if(autoPromote)
-                {
                     promoteTo(p,PieceType::Queen);
-                }
+                else    
+                    waiting_promotion = true;
+                
             }
             moves.push(unitMove);
 
@@ -665,40 +676,38 @@ bool GameController::promotionPending()
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 {
     if(waiting_promotion){
+        Player &promoter = (current_player->isBlack() == promotion_color) ? *current_player : *waiting_player;
+
         if(t == PieceType::Bishop)
         {
-            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            current_player->removePiece(c);
+            promoter.removePiece(c);
 
-            std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
-            current_player->addPiece(std::move(b));
+            std::shared_ptr<Bishop> b = std::make_shared<Bishop>(promotion_color, c);
+            promoter.addPiece(std::move(b));
         }
         else if(t == PieceType::Knight)
         {
-            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            current_player->removePiece(c);
+            promoter.removePiece(c);
 
-            std::shared_ptr<Knight> k = std::make_shared<Knight>(color, c);
-            current_player->addPiece(std::move(k));
+            std::shared_ptr<Knight> k = std::make_shared<Knight>(promotion_color, c);
+            promoter.addPiece(std::move(k));
         }
         else if(t == PieceType::Rook)
         {
-            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            current_player->removePiece(c);
+            promoter.removePiece(c);
 
-            std::shared_ptr<Rook> r = std::make_shared<Rook>(color, c);
-            current_player->addPiece(std::move(r));       
+            std::shared_ptr<Rook> r = std::make_shared<Rook>(promotion_color, c);
+            promoter.addPiece(std::move(r));       
         }else if(t == PieceType::Queen)
         {
-            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            current_player->removePiece(c);
+            promoter.removePiece(c);
 
-            std::shared_ptr<Queen> q = std::make_shared<Queen>(color, c);
-            current_player->addPiece(std::move(q));
+            std::shared_ptr<Queen> q = std::make_shared<Queen>(promotion_color, c);
+            promoter.addPiece(std::move(q));
         }
         waiting_promotion=false;
     }

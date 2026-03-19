@@ -85,7 +85,7 @@ int main(int argc,char*argv[]){
         count++;
     }
 
-    std::cout << "choosePiece random " << count << " fois en 1 seconde\n";
+    std::cout << "get random moves of pieces " << count << " fois en 1 seconde\n";
 
     Minimax robot(play,evalt);
     start = std::chrono::high_resolution_clock::now();

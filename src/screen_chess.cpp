@@ -250,6 +250,7 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
+                promoted = c;
                 color=game.getCurrentPlayer().isWhite();
                 if(!game.promotionPending()) game.switchTurn();
                 //this->switchSide();
@@ -257,7 +258,6 @@ void ChessScreen::draw()
             
             game.unChoosePiece();
 
-            promoted=c;
             
             
             
@@ -290,11 +290,11 @@ void ChessScreen::draw()
     
     EndDrawing();
 
-    /*if(game.whiteTurn()){
+    if(game.whiteTurn()){
         ChessMove bestm=robot.getBestMove();
         if(game.movePiece(bestm.from,bestm.to)) game.switchTurn();
 
-    }*/
+    }
 }
 
 bool ChessScreen::isFinished()

@@ -34,7 +34,10 @@ class Minimax
     public:
         Minimax(GameController&,Evaluator&);
 
+        void sortMoves(std::vector<Coordinates>&,Coordinates);
+
         double minimax(int,bool,double,double);
+        double quiescence(double,double,bool,int);
         ChessMove getBestMove();
 };
 

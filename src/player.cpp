@@ -101,7 +101,14 @@ std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;
 
-    return board[c.getX()][c.getY()];
+    for(size_t i=0;i<pieces.size();i++)
+    {
+        if(pieces[i]->getCoordinates()==c)
+        {
+            return pieces[i];
+        }
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Piece> Player::getPieceBoard(Coordinates c)

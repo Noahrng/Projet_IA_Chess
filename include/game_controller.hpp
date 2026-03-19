@@ -35,6 +35,7 @@ class GameController
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
         bool waiting_promotion;
+        bool promotion_color;
         std::stack<MoveHistory> moves;
 
     public:
