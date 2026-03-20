@@ -31,13 +31,18 @@ class Minimax
         Evaluator &eval;
         size_t nb_node;
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+        int minimax_depth;
+        int quiescence_depth;
+
+        void update_depth();
     public:
-        Minimax(GameController&,Evaluator&);
+        Minimax(GameController&,Evaluator&,int,int);
 
         void sortMoves(std::vector<Coordinates>&,Coordinates);
 
         double minimax(int,bool,double,double);
         double quiescence(double,double,bool,int);
+
         ChessMove getBestMove();
 };
 

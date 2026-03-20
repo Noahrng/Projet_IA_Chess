@@ -86,7 +86,7 @@ double Evaluator::evaluate()
     double material = evaluateMaterial()/MAX_MATERIAL;
     double position = evaluatePosition()/MAX_POSITION;
 
-    double score = 0.95*material+0.05*position;
+    double score = 0.85*material+0.15*position;
 
     //if(position!=0.0) std::cout<<"Material ="<<material << "| Position ="<<position<<std::endl;
 

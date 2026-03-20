@@ -14,7 +14,6 @@ class Player
     private:
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
-        std::shared_ptr<Piece> board[8][8];
         double sum_point;
     
     public:
@@ -28,7 +27,6 @@ class Player
         size_t nbOfPieces();
         std::shared_ptr<Piece> getPiece(int, int);
         std::shared_ptr<Piece> getPiece(Coordinates);
-        std::shared_ptr<Piece> getPieceBoard(Coordinates);
         std::shared_ptr<Piece> getPiece(size_t);
         std::vector<std::shared_ptr<Piece>>& getPieces();
         double getPoint();
@@ -40,8 +38,6 @@ class Player
         void removePiece(Coordinates);
         void removePiece(size_t);
 
-        void update(Coordinates,Coordinates);
-        void update(std::shared_ptr<Piece>,Coordinates);
         void removePiece(std::shared_ptr<Piece>);
         
 

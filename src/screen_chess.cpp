@@ -232,6 +232,7 @@ void ChessScreen::draw()
     {
         std::cout<<"Annulation\n";
         game.unMove();
+        game.unMove();
     }
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())

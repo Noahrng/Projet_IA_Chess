@@ -8,10 +8,6 @@
 
 Player::Player(bool color):color{color},sum_point{39.0}
 {
-    for(int i=0;i<8;i++)
-        for(int j=0;j<8;j++)
-            board[i][j]=nullptr;
-
     //Création de chaque pieces
     int i,j;
     //Pions:
@@ -110,14 +106,6 @@ std::shared_ptr<Piece> Player::getPiece(Coordinates c)
     }
     return nullptr;
 }
-
-std::shared_ptr<Piece> Player::getPieceBoard(Coordinates c)
-{
-    if(!c.onBoard()) return nullptr;
-
-    return board[c.getX()][c.getY()];
-}
-
 std::shared_ptr<Piece> Player::getPiece(size_t i)
 {
     if(i < pieces.size())
@@ -192,9 +180,8 @@ size_t Player::nbOfPieces()
 
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
-    sum_point+=p->getValue();
+    if(p->getType()!=PieceType::King) sum_point+=p->getValue();
     Coordinates c=p->getCoordinates();
-    board[c.getX()][c.getY()]=p;
     pieces.push_back(std::move(p));
     size_t i=pieces.size()-1;
     while(i>0 && pieces[i]->getValue() > pieces[i-1]->getValue())
@@ -206,7 +193,6 @@ void Player::addPiece(std::shared_ptr<Piece> p)
 }
 
 void Player::removePiece(Coordinates c){
-    board[c.getX()][c.getY()]=nullptr;
     size_t i=0;
     size_t i_max=pieces.size();
     while(i<i_max && pieces[i]->getCoordinates()!=c){
@@ -223,35 +209,10 @@ void Player::removePiece(Coordinates c){
 
 void Player::removePiece(size_t i){
     if(i < nbOfPieces()){
-        board[pieces[i]->getCoordinates().getX()][pieces[i]->getCoordinates().getY()]=nullptr;
         pieces[i]->moveTo(Coordinates(-1,-1));
         sum_point-=pieces[i]->getValue();
         pieces.erase(pieces.begin()+i);
     }
-}
-
-void Player::update(Coordinates from,Coordinates to)
-{
-    if(!to.onBoard())
-    {
-        board[from.getX()][from.getY()]=nullptr;
-        return;
-    }
-    std::shared_ptr<Piece> tmp=board[from.getX()][from.getY()];
-    board[from.getX()][from.getY()]=nullptr;
-    board[to.getX()][to.getY()]=tmp;
-}
-
-void Player::update(std::shared_ptr<Piece> from,Coordinates to)
-{
-    if(!to.onBoard())
-    {
-        board[from->getCoordinates().getX()][from->getCoordinates().getY()]=nullptr;
-        return;
-    }
-    std::shared_ptr<Piece> tmp=board[from->getCoordinates().getX()][from->getCoordinates().getY()]; 
-    board[from->getCoordinates().getX()][from->getCoordinates().getY()]=nullptr;
-    board[to.getX()][to.getY()]=tmp;
 }
 void Player::removePiece(std::shared_ptr<Piece> p){
     size_t i = 0;

@@ -1,8 +1,16 @@
 #include "minimax.hpp"
 
-Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval},nb_node{0}
+Minimax::Minimax(GameController &game,Evaluator &eval,int minimax_depth,int quiescence_depth):game{game},eval{eval},nb_node{0},minimax_depth{minimax_depth},quiescence_depth{quiescence_depth}
 {
     start_time=std::chrono::high_resolution_clock::now();
+}
+
+void Minimax::update_depth()
+{
+    if(game.getCurrentPlayer().nbOfPieces()==1 || game.getWaitingPlayer().nbOfPieces() == 1)
+    {
+        minimax_depth=7;
+    }
 }
 
 void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
@@ -54,7 +62,7 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
     }
     if(depth==0)
     {
-        return quiescence(alpha,beta,maximizing,2);
+        return quiescence(alpha,beta,maximizing,quiescence_depth);
     }
     
 
@@ -136,7 +144,7 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
     if(maximizing)
     {
         if(stand_pat >= beta) return stand_pat;
-        if(stand_pat < alpha) alpha = stand_pat;
+        if(stand_pat > alpha) alpha = stand_pat;
 
         Player &current = game.getCurrentPlayer();
         size_t nb_piece = current.nbOfPieces();
@@ -155,6 +163,8 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
             {
                 // Seulement les captures !
                 if(!game.pieceEnemyDetection(list_move[j])) continue;
+
+                
 
                 if(game.movePiece(cell_choose, list_move[j], true))
                 {
@@ -241,22 +251,46 @@ ChessMove Minimax::getBestMove()
             if(game.movePiece(cell_choose,list_move[j],true))
             {
                 game.switchTurn();
-                double score = minimax(3,!maximizing,alpha,beta);
+                double score = minimax(minimax_depth,!maximizing,alpha,beta);
                 game.unMove();
 
-                if(maximizing && score > best.score)
+                if(maximizing)
                 {
-                    best.score=score;
-                    best.from=cell_choose;
-                    best.to=list_move[j];
-                    alpha=std::max(alpha,best.score);
+                    if(score > best.score)
+                    {
+                        best.score=score;
+                        best.from=cell_choose;
+                        best.to=list_move[j];
+                        alpha=std::max(alpha,best.score);
+                    }
+                    else if(score == best.score)
+                    {
+                        if(game.pieceEnemyDetection(list_move[j]) && !game.pieceEnemyDetection(best.to))
+                        {
+                            best.from=cell_choose;
+                            best.to=list_move[j];
+                        }
+                    }
+                    
                 }
                 else if(!maximizing && score < best.score)
                 {
-                    best.score=score;
-                    best.from=cell_choose;
-                    best.to=list_move[j];
-                    beta=std::min(beta,best.score);
+                    if(score < best.score)
+                    {
+                        best.score=score;
+                        best.from=cell_choose;
+                        best.to=list_move[j];
+                        beta=std::min(beta,best.score);
+                    }
+                    else if(score == best.score)
+                    {
+                        if(game.pieceEnemyDetection(list_move[j]) && !game.pieceEnemyDetection(best.to))
+                        {
+                            best.from = cell_choose;
+                            best.to   = list_move[j];
+                        }
+                    }
+                    
                 }
             }
         }
@@ -265,5 +299,6 @@ ChessMove Minimax::getBestMove()
     std::cout << "Meilleur coup : " << best.from << " -> " << best.to
               << " score=" << best.score << std::endl;
 
+    update_depth();
     return best;
 }
