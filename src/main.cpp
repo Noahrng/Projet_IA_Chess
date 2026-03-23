@@ -9,7 +9,7 @@
 #include <random>
 #include <cstdlib>
 
-int main(int argc,char*argv[]){
+int main(){
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0,7);
@@ -18,7 +18,7 @@ int main(int argc,char*argv[]){
 
     GameController play;
     Evaluator evalt(play);
-    Minimax robot(play,evalt,argc==3 ? atoi(argv[1]) : 3,argc==3 ? atoi(argv[2]) : 6);
+    Minimax robot(play,evalt,5,2);
     auto start = std::chrono::high_resolution_clock::now();
     
     robot.getBestMove();
