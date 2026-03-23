@@ -18,6 +18,12 @@ RUN apt update && apt install -y \
     libudev-dev \
     libxinerama-dev
 
+# Installer Raylib
+RUN git clone https://github.com/raysan5/raylib.git \
+    && cd raylib/src \
+    && make PLATFORM=PLATFORM_DESKTOP \
+    && make install
+
 # Dossier de travail
 WORKDIR /app
 
@@ -25,6 +31,7 @@ WORKDIR /app
 COPY . .
 
 # Compiler
+RUN make clean
 RUN make
 
 CMD ["./build/AICHESS"]
