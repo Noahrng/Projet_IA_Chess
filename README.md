@@ -14,13 +14,10 @@ Dans le répertoire du projet, exécutez la commande suivante pour construire l'
 docker build -t aichess .
 
 Pour lancer l'image, exécutez les deux commandes suivantes :
-\begin{tcolorbox}[colback=black!5!white, colframe=black, title=Code Bash]
-\begin{verbatim}
+```bash
 xhost +local:docker
 docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess
-\end{verbatim}
-\end{tcolorbox}
-
+```
 ## Instructions Pour exécuter les tests
 
 
