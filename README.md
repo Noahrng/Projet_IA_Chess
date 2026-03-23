@@ -6,12 +6,16 @@ Notre projet consiste à développer une IA capable de jouer aux échecs de mani
 
 ## Prérequis Système
 
+Le seul prérequis système est d'avoir docker d'installé sur votre machine.
+
 ## Instructions d'installations détaillées
 
-## Instructions pour lancer l'application
-
 Dans le répertoire du projet, exécutez la commande suivante pour construire l'image docker :
+```bash
 docker build -t aichess .
+```
+
+## Instructions pour lancer l'application
 
 Pour lancer l'image, exécutez les deux commandes suivantes :
 ```bash
@@ -20,5 +24,20 @@ docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess
 ```
 ## Instructions Pour exécuter les tests
 
+Si docker n'est pas utilisé :
+```bash
+./build/AICHESS
+```
+dans le répertoire du projet.
+
+
 
 ## Structure du Projet
+
+.
+├── src/                # Code source (.cpp)
+├── include/            # Headers (.hpp)
+├── build/              # Fichiers compilés
+├── Dockerfile          # Configuration Docker
+├── Makefile            # Script de compilation
+└── README.md
