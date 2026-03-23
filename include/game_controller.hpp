@@ -23,6 +23,13 @@ struct MoveHistory
                                                 eatenPiece{nullptr},
                                                 promotedPiece{nullptr},
                                                 enPassantInfo{nullptr,Coordinates(-1,-1)}{}
+
+    friend bool operator==(const MoveHistory &a,const MoveHistory &b)
+    {
+        if(a.from!=b.from) return false;
+        if(a.to!=b.to) return false;
+        return true;
+    }
 };
 
 class GameController 
@@ -35,8 +42,7 @@ class GameController
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
         bool waiting_promotion;
-        bool promotion_color;
-        std::stack<MoveHistory> moves;
+        std::vector<MoveHistory> moves;
 
     public:
         //Constructeurs / Destructeurs
@@ -83,6 +89,7 @@ class GameController
         int isThreaten(Coordinates);
         int isChecked();
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
+        bool isRepeat();
         bool isDraw();
         bool isPat();
         bool isCheckmate();

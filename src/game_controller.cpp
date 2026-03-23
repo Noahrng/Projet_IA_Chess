@@ -135,15 +135,76 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
     Coordinates to;
     if(isChosen())
     {
-        size_t i;
-        size_t i_max=list_move.size();
-
-        for(i=0;i<i_max;i++)
+        switch (p->getType())
         {
-            to=cell_chosen+list_move[i];
+            case PieceType::Bishop:
+            {
+                int dx[]={1,1,-1,-1};
+                int dy[]={1,-1,1,-1};
+                for(int d = 0; d < 4; d++)
+                {
+                    to = cell_chosen;
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    while(to.onBoard())
+                    {
+                        if(isLegalMove(cell_chosen, to))
+                            v.push_back(to);
+                        if(pieceDectection(to)) break;
+                        to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    }
+                }
+                break;
+            }
 
-            if(isLegalMove(cell_chosen,to))
-                v.push_back(to);
+            case PieceType::Rook:
+            {
+                int dx[] = {1, -1, 0, 0};
+                int dy[] = {0, 0, 1, -1};
+                for(int d = 0; d < 4; d++)
+                {
+                    to = cell_chosen;
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    while(to.onBoard())
+                    {
+                        if(isLegalMove(cell_chosen, to))
+                            v.push_back(to);
+                        if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
+                        to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    }
+                }
+                break;
+            }
+
+            case PieceType::Queen:
+            {
+                int dx[] = {1, 1, -1, -1, 1, -1, 0, 0};
+                int dy[] = {1, -1, 1, -1, 0, 0, 1, -1};
+                for(int d = 0; d < 8; d++)
+                {
+                    to = cell_chosen;
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    while(to.onBoard())
+                    {
+                        if(isLegalMove(cell_chosen, to))
+                            v.push_back(to);
+                        if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
+                        to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                    }
+                }
+                break;
+            }
+            
+            default:
+            {
+                for(auto it = list_move.begin(); it != list_move.end(); ++it)
+                {
+                    to = cell_chosen + *it; // ← cell_chosen + *it, pas juste *it
+                    if(isLegalMove(cell_chosen, to))
+                        v.push_back(to);
+                }
+                break;
+            }
+            
         }
     }
 }  
@@ -207,15 +268,12 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
             if(isPawnPromoted(to,current_player->isBlack()))
             {
                 unitMove.promotedPiece=p;
-                promotion_color = current_player->isBlack();
+                waiting_promotion=true;
 
                 if(autoPromote)
-                    promoteTo(p,PieceType::Queen);
-                else    
-                    waiting_promotion = true;
-                
+                    promoteTo(p,PieceType::Queen);      
             }
-            moves.push(unitMove);
+            moves.push_back(unitMove);
 
             return true;
         }
@@ -228,14 +286,17 @@ void GameController::unMove()
     if(!moves.empty())
     {
         this->switchTurn();
-        MoveHistory h=moves.top();
-        moves.pop();
+        MoveHistory h=moves.back();
+        moves.pop_back();
 
         if(h.promotedPiece!=nullptr)
         {
             current_player->removePiece(h.to);
             h.promotedPiece->moveTo(h.from);
+            h.promotedPiece->decrementNbOfMoves();
             current_player->addPiece(h.promotedPiece);
+
+            waiting_promotion = false;
         }
         else{
             std::shared_ptr<Piece> p = current_player->getPiece(h.to);
@@ -363,7 +424,8 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
     if(p->getType() == PieceType::Bishop ||
         p->getType() == PieceType::Rook ||
         p->getType() == PieceType::Queen ||
-        p->getType() == PieceType::King)
+        p->getType() == PieceType::King ||
+        p->getType() == PieceType::Pawn)
     {
         if(pieceInBetween(from,to)) return false;
     }
@@ -509,8 +571,19 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     return checked;
 }
 
+bool GameController::isRepeat()
+{
+    size_t n = moves.size();
+    if(n<8) return false;
+    return moves[n-1] == moves[n-5] &&
+           moves[n-2] == moves[n-6] &&
+           moves[n-3] == moves[n-7] &&
+           moves[n-4] == moves[n-8];
+}
+
 bool GameController::isDraw()
 {
+    if(isRepeat()) return true;
     //Matériel insuffisant :
     size_t n1 = current_player->nbOfPieces();
     size_t n2 = waiting_player->nbOfPieces();
@@ -671,39 +744,42 @@ bool GameController::promotionPending()
 
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 {
+    std::cout<<"promotion !!!!!!!!!!!!!!!!!!!!!!!!!!\n";
     if(waiting_promotion){
-        Player &promoter = (current_player->isBlack() == promotion_color) ? *current_player : *waiting_player;
-
         if(t == PieceType::Bishop)
         {
+            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            promoter.removePiece(c);
+            current_player->removePiece(c);
 
-            std::shared_ptr<Bishop> b = std::make_shared<Bishop>(promotion_color, c);
-            promoter.addPiece(std::move(b));
+            std::shared_ptr<Bishop> b = std::make_shared<Bishop>(color, c);
+            current_player->addPiece(std::move(b));
         }
         else if(t == PieceType::Knight)
         {
+            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            promoter.removePiece(c);
+            current_player->removePiece(c);
 
-            std::shared_ptr<Knight> k = std::make_shared<Knight>(promotion_color, c);
-            promoter.addPiece(std::move(k));
+            std::shared_ptr<Knight> b = std::make_shared<Knight>(color, c);
+            current_player->addPiece(std::move(b));
         }
         else if(t == PieceType::Rook)
         {
+            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            promoter.removePiece(c);
+            current_player->removePiece(c);
 
-            std::shared_ptr<Rook> r = std::make_shared<Rook>(promotion_color, c);
-            promoter.addPiece(std::move(r));       
+            std::shared_ptr<Rook> b = std::make_shared<Rook>(color, c);
+            current_player->addPiece(std::move(b));  
         }else if(t == PieceType::Queen)
         {
+            bool color = current_player->isBlack();
             Coordinates c = p->getCoordinates();
-            promoter.removePiece(c);
+            current_player->removePiece(c);
 
-            std::shared_ptr<Queen> q = std::make_shared<Queen>(promotion_color, c);
-            promoter.addPiece(std::move(q));
+            std::shared_ptr<Queen> b = std::make_shared<Queen>(color, c);
+            current_player->addPiece(std::move(b));
         }
         waiting_promotion=false;
     }
@@ -836,7 +912,7 @@ bool GameController::isMoveEnPassant(Coordinates from, Coordinates to)
             else c_enemy.setXY(to.getX(),from.getY());
             
             std::shared_ptr<Piece> enemy = waiting_player->getPiece(c_enemy);
-            if(enemy && enemy->getType() == PieceType::Pawn) return true;
+            if(enemy && enemy->howManyMoves()==1 && enemy->getType() == PieceType::Pawn) return true;
         }
     }
     return false;
@@ -856,7 +932,7 @@ bool GameController::canEnPassant(Coordinates from, Coordinates to)
     if(enemy && enemy->howManyMoves() == 1)
     {
         if(!moves.empty()){
-            MoveHistory last = moves.top();
+            MoveHistory last = moves.back();
             Coordinates cell_necessary;
             if(color) cell_necessary.setXY(c_enemy.getX(),c_enemy.getY()+2);
             else cell_necessary.setXY(c_enemy.getX(),c_enemy.getY()-2);

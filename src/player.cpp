@@ -9,6 +9,7 @@
 Player::Player(bool color):color{color},sum_point{39.0}
 {
     //Création de chaque pieces
+    pieces.reserve(20);
     int i,j;
     //Pions:
     for(j = 0 ; j < 8 ; ++j){
@@ -217,11 +218,11 @@ void Player::removePiece(size_t i){
 void Player::removePiece(std::shared_ptr<Piece> p){
     size_t i = 0;
     size_t n = nbOfPieces();
-
     while(i < n)
     {
         if(pieces[i] == p)
         {
+            sum_point-=p->getValue();
             removePiece(i);
         }
         i++;    

@@ -199,8 +199,8 @@ void ChessScreen::draw()
     int boardSize = width < height ? width:height;
     int squareSize = boardSize/8;
 
-    Evaluator eval(game);
-    //std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    bool checkmate = game.isCheckmate();
+    bool draw = !checkmate && game.isDraw();
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -235,7 +235,7 @@ void ChessScreen::draw()
         game.unMove();
     }
 
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !checkmate && !draw)
     {
         Coordinates c=getCoords(squareSize);
 
@@ -251,6 +251,11 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
+                if(game.isRepeat())
+                {
+                    std::cout << "REPETITION DETECTEE" << std::endl;
+                    // afficher nulle ou forcer un autre coup
+                }
                 promoted = c;
                 color=game.getCurrentPlayer().isWhite();
                 if(!game.promotionPending()) game.switchTurn();
@@ -273,7 +278,7 @@ void ChessScreen::draw()
 
     
     
-    if(game.isCheckmate())
+    if(checkmate)
     {
         DrawText("ECHEC",10,height/8,200,RED);
         DrawText("ET",10,height/8+200,200,RED);
@@ -282,20 +287,23 @@ void ChessScreen::draw()
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
 
-    if(game.isDraw())
+    else if(draw)
     {
         DrawText("ÉGALITÉ",10,height/8+200,200,RED);
 
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
     
-    EndDrawing();
 
     if(game.whiteTurn()){
         ChessMove bestm=robot.getBestMove();
-        if(game.movePiece(bestm.from,bestm.to)) game.switchTurn();
-
+        if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
     }
+
+    EndDrawing();
+
+    
+
 }
 
 bool ChessScreen::isFinished()

@@ -11,6 +11,33 @@ void Minimax::update_depth()
     {
         minimax_depth=7;
     }
+    else
+    {
+        minimax_depth=3;
+    }
+}
+
+bool Minimax::isLosingCapture(Coordinates from, Coordinates to)
+{
+    std::shared_ptr<Piece> attacker = game.getCurrentPlayer().getPiece(from);
+    std::shared_ptr<Piece> victim   = game.getWaitingPlayer().getPiece(to);
+
+    if(!attacker || !victim) return false;
+    if(attacker->getValue() <= victim->getValue()) return false;
+
+    // Vérifier si la case est défendue par une pièce adverse
+    size_t nb = game.getWaitingPlayer().nbOfPieces();
+    for(size_t k = 0; k < nb; k++)
+    {
+        std::shared_ptr<Piece> defender = game.getWaitingPlayer().getPiece(k);
+        if(defender == victim) continue;
+        if(defender->canEatPattern(to) &&
+           !game.pieceInBetween(defender->getCoordinates(), to))
+        {
+            return true; // capture perdante
+        }
+    }
+    return false;
 }
 
 void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
@@ -40,6 +67,35 @@ void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
     );
 }
 
+void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,
+                                     Coordinates from,
+                                     const ChessMove &prev_best)
+{
+    std::sort(moves.begin(), moves.end(),
+        [this, from, &prev_best](Coordinates &a, Coordinates &b)
+        {
+            bool a_is_best = (from == prev_best.from && a == prev_best.to);
+            bool b_is_best = (from == prev_best.from && b == prev_best.to);
+            if(a_is_best != b_is_best) return a_is_best > b_is_best;
+
+            bool a_capture = game.pieceEnemyDetection(a);
+            bool b_capture = game.pieceEnemyDetection(b);
+            if(a_capture != b_capture) return a_capture > b_capture;
+
+            if(a_capture && b_capture)
+            {
+                std::shared_ptr<Piece> victim_a = game.getWaitingPlayer().getPiece(a);
+                std::shared_ptr<Piece> victim_b = game.getWaitingPlayer().getPiece(b);
+                return victim_a->getValue() > victim_b->getValue();
+            }
+
+            int a_dist = a.distX(3) + a.distY(3);
+            int b_dist = b.distX(3) + b.distY(3);
+            return a_dist < b_dist;
+        }
+    );
+}
+
 double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 {
     nb_node++;
@@ -60,6 +116,9 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
         }
         
     }
+
+    if(game.isRepeat()) return 0.0;
+
     if(depth==0)
     {
         return quiescence(alpha,beta,maximizing,quiescence_depth);
@@ -67,6 +126,7 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
     
 
     double best;
+    bool has_move=false;
 
     if(maximizing)
     {
@@ -87,8 +147,10 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
+                if(isLosingCapture(cell_choose,list_move[j])) continue;
                 if(game.movePiece(cell_choose,list_move[j],true))
                 {
+                    has_move=true;
                     game.switchTurn();
                     best=std::max(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
@@ -117,8 +179,10 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
+                if(isLosingCapture(cell_choose,list_move[j])) continue;
                 if(game.movePiece(cell_choose,list_move[j],true))
                 {
+                    has_move=true;
                     game.switchTurn();
                     best=std::min(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
@@ -128,7 +192,14 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
                 }
             }
         }
+    }
 
+    if(!has_move)
+    {
+        if(game.isChecked())
+            return maximizing ? -1.0 : 1.0;
+        else
+            return 0.0;
     }
     return best;
 }
@@ -163,8 +234,7 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
             {
                 // Seulement les captures !
                 if(!game.pieceEnemyDetection(list_move[j])) continue;
-
-                
+                if(isLosingCapture(cell_choose,list_move[j])) continue;
 
                 if(game.movePiece(cell_choose, list_move[j], true))
                 {
@@ -201,6 +271,7 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
             {
                 // Seulement les captures !
                 if(!game.pieceEnemyDetection(list_move[j])) continue;
+                if(isLosingCapture(cell_choose,list_move[j])) continue;
 
                 if(game.movePiece(cell_choose, list_move[j], true))
                 {
@@ -217,17 +288,13 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
     }
 }
 
-ChessMove Minimax::getBestMove()
+ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
 {
-    nb_node=0;
-    start_time=std::chrono::high_resolution_clock::now();
-
+    std::cout << "debut getBestMoveAtDepth depth=" << depth << std::endl;
+    std::cout << "blanc=" << game.whiteTurn() << std::endl; // ← crash ici ?
     ChessMove best;
-    bool maximizing=game.whiteTurn();
+    bool maximizing = game.whiteTurn();
     best.score = maximizing ? -100.0 : 100.0;
-
-    double alpha = -2.0;
-    double beta = 2.0;
 
     Player &current = game.getCurrentPlayer();
     size_t nb_piece = current.nbOfPieces();
@@ -235,69 +302,114 @@ ChessMove Minimax::getBestMove()
     std::vector<Coordinates> list_move;
     list_move.reserve(28);
 
-    for(size_t i=0;i<nb_piece;i++)
+    for(size_t i = 0; i < nb_piece; i++)
     {
-        std::cout<<"i="<<i<<std::endl;
         game.choosePiece(i);
-        Coordinates cell_choose=game.getCoordsPieceChosen();
+        Coordinates cell_choose = game.getCoordsPieceChosen();
         game.movesOfPieceChosen(list_move);
         game.unChoosePiece();
 
-        sortMoves(list_move,cell_choose);
+        // Tri avec le meilleur coup de la profondeur précédente
+        sortMovesWithPrevious(list_move, cell_choose, previous_best);
 
-        size_t size_move=list_move.size();
-        for(size_t j=0;j<size_move;j++)
+        size_t size_move = list_move.size();
+        for(size_t j = 0; j < size_move; j++)
         {
-            if(game.movePiece(cell_choose,list_move[j],true))
+            if(isLosingCapture(cell_choose,list_move[j])) continue;
+            if(game.movePiece(cell_choose, list_move[j], true))
             {
                 game.switchTurn();
-                double score = minimax(minimax_depth,!maximizing,alpha,beta);
+                double score;
+                if(game.isRepeat())
+                    score=0.0;
+                else 
+                    score=minimax(depth - 1, !maximizing, alpha, beta);
                 game.unMove();
 
                 if(maximizing)
                 {
                     if(score > best.score)
                     {
-                        best.score=score;
-                        best.from=cell_choose;
-                        best.to=list_move[j];
-                        alpha=std::max(alpha,best.score);
+                        best.score = score;
+                        best.from  = cell_choose;
+                        best.to    = list_move[j];
+                        alpha      = std::max(alpha, best.score);
+
+                        if(best.score >= 1.0) return best;
                     }
                     else if(score == best.score)
                     {
-                        if(game.pieceEnemyDetection(list_move[j]) && !game.pieceEnemyDetection(best.to))
-                        {
-                            best.from=cell_choose;
-                            best.to=list_move[j];
-                        }
-                    }
-                    
-                }
-                else if(!maximizing && score < best.score)
-                {
-                    if(score < best.score)
-                    {
-                        best.score=score;
-                        best.from=cell_choose;
-                        best.to=list_move[j];
-                        beta=std::min(beta,best.score);
-                    }
-                    else if(score == best.score)
-                    {
-                        if(game.pieceEnemyDetection(list_move[j]) && !game.pieceEnemyDetection(best.to))
+                        if(game.pieceEnemyDetection(list_move[j]) &&
+                           !game.pieceEnemyDetection(best.to))
                         {
                             best.from = cell_choose;
                             best.to   = list_move[j];
                         }
                     }
-                    
+                }
+                else
+                {
+                    if(score < best.score)
+                    {
+                        best.score = score;
+                        best.from  = cell_choose;
+                        best.to    = list_move[j];
+                        beta       = std::min(beta, best.score);
+
+                        if(best.score <= -1.0) return best;
+                    }
+                    else if(score == best.score)
+                    {
+                        if(game.pieceEnemyDetection(list_move[j]) &&
+                           !game.pieceEnemyDetection(best.to))
+                        {
+                            best.from = cell_choose;
+                            best.to   = list_move[j];
+                        }
+                    }
                 }
             }
         }
     }
+    return best;
+}
 
-    std::cout << "Meilleur coup : " << best.from << " -> " << best.to
-              << " score=" << best.score << std::endl;
+ChessMove Minimax::getBestMove()
+{
+    nb_node = 0;
+    start_time = std::chrono::high_resolution_clock::now();
+
+    // Réinitialiser le meilleur coup précédent
+    previous_best = ChessMove();
+
+    ChessMove best;
+
+    for(int d = 1; d <= minimax_depth; d++)
+    {
+        double alpha = -2.0;
+        double beta  =  2.0;
+
+        ChessMove result = getBestMoveAtDepth(d, alpha, beta);
+
+        // Mettre à jour le meilleur coup pour trier à la prochaine profondeur
+        previous_best = result;
+        best = result;
+
+        if(best.score>=1.0 || best.score <=-1.0)
+        {
+            std::cout << "Mat trouvé a depth=" << d << std::endl;
+            break;
+        }
+
+        auto now = std::chrono::high_resolution_clock::now();
+        auto ms  = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
+
+        std::cout << "depth=" << d
+                  << " score=" << best.score
+                  << " coup=" << best.from << "->" << best.to
+                  << " nb_node=" << nb_node
+                  << " temps=" << ms << "ms" << std::endl;
+    }
 
     update_depth();
     return best;
