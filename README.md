@@ -34,10 +34,10 @@ dans le répertoire du projet.
 
 ## Structure du Projet
 
-.
-├── src/                # Code source (.cpp)
-├── include/            # Headers (.hpp)
-├── build/              # Fichiers compilés
-├── Dockerfile          # Configuration Docker
-├── Makefile            # Script de compilation
-└── README.md
+.<br>
+├── src/                # Code source (.cpp)<br>
+├── include/            # Headers (.hpp) <br>
+├── build/              # Fichiers compilés <br>
+├── Dockerfile          # Configuration Docker <br>
+├── Makefile            # Script de compilation <br>
+└── README.md <br>
