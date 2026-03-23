@@ -14,6 +14,11 @@ bool operator!=(const Piece &a,const Piece &b)
     return !(a==b);
 }
 
+bool operator<(const Piece &a,const Piece &b)
+{
+    return a.coords<b.coords;
+}
+
 std::string Piece::getTerminalSprite(){
     return terminal_sprite;
 }

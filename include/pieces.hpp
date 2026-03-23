@@ -4,11 +4,14 @@
 #include "coordinates.hpp"
 #include <string>
 #include "piece_type.hpp"
+#include <vector>
 #include <memory>
 
 class Piece  {
     friend bool operator==(const Piece&,const Piece&);
     friend bool operator!=(const Piece&,const Piece&);
+    friend bool operator<(const Piece&,const Piece&);
+    
     protected:
         bool color; //0: blanc, 1: noir
         int nb_of_moves; //Nombre de mouvements de la pièce
@@ -28,6 +31,7 @@ class Piece  {
         virtual bool canMovePattern(Coordinates) = 0;
         virtual bool canEatPattern(Coordinates) = 0;
         virtual PieceType getType()const=0;
+        virtual std::vector<Coordinates>& getVectMove()=0;
 
         //virtual void onBeforeMove(Coordinates, Coordinates, Player*, Player*); Potentiellement utiles pour le futur
         //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);

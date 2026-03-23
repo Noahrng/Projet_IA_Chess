@@ -24,6 +24,12 @@ bool operator!=(const Coordinates &a,const Coordinates &b)
     return !(a==b);
 }
 
+bool operator<(const Coordinates &a,const Coordinates &b)
+{
+    if(a.x!=b.x) return a.x<b.x;
+    return a.y<b.y;
+}
+
 Coordinates operator+(const Coordinates &a,const Coordinates &b)
 {
     return Coordinates(a.x+b.x,a.y+b.y);

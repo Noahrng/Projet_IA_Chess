@@ -11,8 +11,25 @@ struct MoveHistory
 {
     Coordinates from;
     Coordinates to;
+    Coordinates rookRockFrom;
     std::shared_ptr<Piece> eatenPiece;
     std::shared_ptr<Piece> promotedPiece;
+    std::pair<std::shared_ptr<Piece>,Coordinates> enPassantInfo;
+
+
+    MoveHistory(Coordinates from,Coordinates to):from{from},
+                                                to{to},
+                                                rookRockFrom(Coordinates(-1,-1)),
+                                                eatenPiece{nullptr},
+                                                promotedPiece{nullptr},
+                                                enPassantInfo{nullptr,Coordinates(-1,-1)}{}
+
+    friend bool operator==(const MoveHistory &a,const MoveHistory &b)
+    {
+        if(a.from!=b.from) return false;
+        if(a.to!=b.to) return false;
+        return true;
+    }
 };
 
 class GameController 
@@ -25,7 +42,7 @@ class GameController
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
         bool waiting_promotion;
-        std::stack<MoveHistory> moves;
+        std::vector<MoveHistory> moves;
 
     public:
         //Constructeurs / Destructeurs
@@ -47,13 +64,16 @@ class GameController
         bool isNull();
         bool isChosen();
         void choosePiece(Coordinates);
+        void choosePiece(int);
+        void choosePiece(std::shared_ptr<Piece>);
         void unChoosePiece();
         std::vector<Coordinates> movesOfPieceChosen();
+        void movesOfPieceChosen(std::vector<Coordinates> &v);
 
 
         //Déplacements
         void eatPiece(std::shared_ptr<Piece>s);
-        bool movePiece(Coordinates, Coordinates);
+        bool movePiece(Coordinates, Coordinates,bool=false);
         void unMove();
 
         //Vérifications & Détections
@@ -69,6 +89,7 @@ class GameController
         int isThreaten(Coordinates);
         int isChecked();
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
+        bool isRepeat();
         bool isDraw();
         bool isPat();
         bool isCheckmate();
@@ -80,7 +101,7 @@ class GameController
         
         bool isMoveRock(Coordinates, Coordinates);
         bool canRock(Coordinates, Coordinates);
-        void rock(Coordinates);
+        Coordinates rock(Coordinates);
 
         bool isMoveEnPassant(Coordinates, Coordinates);
         bool canEnPassant(Coordinates, Coordinates);

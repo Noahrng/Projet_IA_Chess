@@ -9,6 +9,7 @@
 Player::Player(bool color):color{color},sum_point{39.0}
 {
     //Création de chaque pieces
+    pieces.reserve(20);
     int i,j;
     //Pions:
     for(j = 0 ; j < 8 ; ++j){
@@ -78,6 +79,13 @@ Player::Player(bool color):color{color},sum_point{39.0}
         Coordinates c(4,0);
         addPiece(std::make_shared<King>(color, c));
     }
+
+    std::sort(pieces.begin(), pieces.end(),
+        [](const std::shared_ptr<Piece> &a, const std::shared_ptr<Piece> &b)
+        {
+            return a->getValue() > b->getValue(); // décroissant : Dame en premier
+        }
+    );
 }
 
 std::shared_ptr<Piece> Player::getPiece(int x, int y)
@@ -89,13 +97,13 @@ std::shared_ptr<Piece> Player::getPiece(int x, int y)
 std::shared_ptr<Piece> Player::getPiece(Coordinates c)
 {
     if(!c.onBoard()) return nullptr;
-    size_t  i = 0;
-    size_t  i_max=pieces.size();
-    while(i < i_max && pieces[i]->getCoordinates()!=c){
-        i++;
-    }
-    if(i < i_max){
-        return pieces[i];
+
+    for(size_t i=0;i<pieces.size();i++)
+    {
+        if(pieces[i]->getCoordinates()==c)
+        {
+            return pieces[i];
+        }
     }
     return nullptr;
 }
@@ -106,6 +114,11 @@ std::shared_ptr<Piece> Player::getPiece(size_t i)
         return pieces[i];
     }
     return nullptr;
+}
+
+std::vector<std::shared_ptr<Piece>>& Player::getPieces()
+{
+    return pieces;
 }
 
 double Player::getPoint()
@@ -168,8 +181,16 @@ size_t Player::nbOfPieces()
 
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
-    sum_point+=p->getValue();
+    if(p->getType()!=PieceType::King) sum_point+=p->getValue();
+    Coordinates c=p->getCoordinates();
     pieces.push_back(std::move(p));
+    size_t i=pieces.size()-1;
+    while(i>0 && pieces[i]->getValue() > pieces[i-1]->getValue())
+    {
+        std::swap(pieces[i],pieces[i-1]);
+        i--;
+    }
+    
 }
 
 void Player::removePiece(Coordinates c){
@@ -194,15 +215,14 @@ void Player::removePiece(size_t i){
         pieces.erase(pieces.begin()+i);
     }
 }
-
 void Player::removePiece(std::shared_ptr<Piece> p){
     size_t i = 0;
     size_t n = nbOfPieces();
-
     while(i < n)
     {
         if(pieces[i] == p)
         {
+            sum_point-=p->getValue();
             removePiece(i);
         }
         i++;    

@@ -5,6 +5,16 @@ Knight::Knight(bool col,Coordinates c):Piece(col,c,3.0,"♞")
 
 }
 
+std::vector<Coordinates> Knight::vect_move={
+    Coordinates(1,2),Coordinates(1,-2),Coordinates(-1,2),Coordinates(-1,-2),
+    Coordinates(2,1),Coordinates(2,-1),Coordinates(-2,1),Coordinates(-2,-1)
+};
+
+std::vector<Coordinates>& Knight::getVectMove()
+{
+    return vect_move;
+}
+
 bool Knight::canMovePattern(Coordinates new_coords)
 {
     if(!new_coords.onBoard()) return false;

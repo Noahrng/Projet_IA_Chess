@@ -1,10 +1,10 @@
 #include <graphic_display.hpp>
-GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& game,bool s):
-    Display(game,s),
+GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& game,Minimax &robot,bool s):
+    Display(game,robot,s),
     width{w},
     height{h},
     title{t},
-    currentScreen{std::make_unique<MainMenuScreen>(game,width,height)}
+    currentScreen{std::make_unique<MainMenuScreen>(game,robot,width,height)}
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width,height,title.c_str());
