@@ -31,6 +31,7 @@ WORKDIR /app
 COPY . .
 
 # Compiler
+RUN make clean
 RUN make
 
 CMD ["./build/AICHESS"]
