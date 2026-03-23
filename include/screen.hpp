@@ -4,14 +4,17 @@
 #include <raylib.h>
 #include <memory>
 #include "game_controller.hpp"
+#include "minimax.hpp"
 
 class Screen
 {
     protected:
         GameController& game;
+        Minimax& robot;
             
     public:
-        Screen(GameController &g):game(g){}
+        Screen(GameController &g,Minimax &r):game(g),robot{r}
+        {}
         virtual ~Screen()=default;
 
         virtual void update()=0;

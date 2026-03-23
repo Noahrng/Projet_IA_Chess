@@ -6,6 +6,7 @@
 class Coordinates{
     friend bool operator==(const Coordinates&,const Coordinates&);
     friend bool operator!=(const Coordinates&,const Coordinates&);
+    friend bool operator<(const Coordinates&,const Coordinates&);
 
     friend Coordinates operator+(const Coordinates&,const Coordinates&);
     friend Coordinates operator+(const Coordinates&,const int&);

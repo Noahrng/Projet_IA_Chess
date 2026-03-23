@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-TerminalDisplay::TerminalDisplay(GameController &game,bool s): Display(game,s){
+TerminalDisplay::TerminalDisplay(GameController &game,Minimax &robot,bool s): Display(game,robot,s){
 
 }
 

@@ -2,7 +2,7 @@
 #include "screen_main_menu.hpp"
 #include "evaluator.hpp"
 
-ChessScreen::ChessScreen(GameController &game):Screen(game),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
+ChessScreen::ChessScreen(GameController &game,Minimax &robot):Screen(game,robot),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
     srand(0);
@@ -199,8 +199,8 @@ void ChessScreen::draw()
     int boardSize = width < height ? width:height;
     int squareSize = boardSize/8;
 
-    Evaluator eval(game);
-    std::cout<<"evaluation joueur: "<<eval.evaluate()<<std::endl;
+    bool checkmate = game.isCheckmate();
+    bool draw = !checkmate && game.isDraw();
 
     BeginDrawing();
     ClearBackground(BLACK);
@@ -232,9 +232,10 @@ void ChessScreen::draw()
     {
         std::cout<<"Annulation\n";
         game.unMove();
+        game.unMove();
     }
 
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !game.isCheckmate())
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !checkmate && !draw)
     {
         Coordinates c=getCoords(squareSize);
 
@@ -250,6 +251,12 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
+                if(game.isRepeat())
+                {
+                    std::cout << "REPETITION DETECTEE" << std::endl;
+                    // afficher nulle ou forcer un autre coup
+                }
+                promoted = c;
                 color=game.getCurrentPlayer().isWhite();
                 if(!game.promotionPending()) game.switchTurn();
                 //this->switchSide();
@@ -257,7 +264,6 @@ void ChessScreen::draw()
             
             game.unChoosePiece();
 
-            promoted=c;
             
             
             
@@ -270,7 +276,9 @@ void ChessScreen::draw()
         switchSide();
     }   
 
-    if(game.isCheckmate())
+    
+    
+    if(checkmate)
     {
         DrawText("ECHEC",10,height/8,200,RED);
         DrawText("ET",10,height/8+200,200,RED);
@@ -279,14 +287,23 @@ void ChessScreen::draw()
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
 
-    if(game.isDraw())
+    else if(draw)
     {
         DrawText("ÉGALITÉ",10,height/8+200,200,RED);
 
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
     
+
+    if(game.whiteTurn()){
+        ChessMove bestm=robot.getBestMove();
+        if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
+    }
+
     EndDrawing();
+
+    
+
 }
 
 bool ChessScreen::isFinished()
@@ -296,5 +313,5 @@ bool ChessScreen::isFinished()
 
 std::unique_ptr<Screen> ChessScreen::nextScreen()
 {
-    return std::make_unique<MainMenuScreen>(game,1000,1000);
+    return std::make_unique<MainMenuScreen>(game,robot,1000,1000);
 }

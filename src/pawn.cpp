@@ -5,6 +5,16 @@ Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1.0,"♟")
     
 }
 
+std::vector<Coordinates> Pawn::vect_move={
+    Coordinates(0,1),Coordinates(0,2),Coordinates(1,1),Coordinates(-1,1),
+    Coordinates(0,-1),Coordinates(0,-2),Coordinates(1,-1),Coordinates(-1,-1),
+};
+
+std::vector<Coordinates>& Pawn::getVectMove()
+{
+    return vect_move;
+}
+
 bool Pawn::canMovePattern(Coordinates new_coords)
 {
     if(!new_coords.onBoard()) return false;

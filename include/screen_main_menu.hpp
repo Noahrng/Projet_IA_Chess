@@ -16,7 +16,7 @@ class MainMenuScreen : public Screen
         std::unique_ptr<TextShape> title;
         bool finished;
     public:
-        MainMenuScreen(GameController&,int width,int height);
+        MainMenuScreen(GameController&,Minimax&,int width,int height);
 
         void update() override;
         void draw() override;

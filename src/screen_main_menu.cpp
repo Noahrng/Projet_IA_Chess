@@ -1,7 +1,7 @@
 #include "screen_main_menu.hpp"
 #include "screen_chess.hpp"
 
-MainMenuScreen::MainMenuScreen(GameController &game,int width,int height):Screen(game)
+MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int height):Screen(game,robot)
 {
 
     playButton=std::make_unique<Button>(
@@ -38,7 +38,7 @@ void MainMenuScreen::draw()
 
 std::unique_ptr<Screen> MainMenuScreen::nextScreen()
 {
-    return std::make_unique<ChessScreen>(game);
+    return std::make_unique<ChessScreen>(game,robot);
 }
 
 bool MainMenuScreen::isFinished()

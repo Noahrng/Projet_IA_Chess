@@ -35,7 +35,7 @@ class ChessScreen : public Screen
         bool color;
 
     public:
-        ChessScreen(GameController&);
+        ChessScreen(GameController&,Minimax&);
         ~ChessScreen();
 
         void scrollPiece(Coordinates,int);

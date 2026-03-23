@@ -16,7 +16,7 @@ class GraphicDisplay : public Display{
         std::string title; 
         std::unique_ptr<Screen> currentScreen;
     public:
-        GraphicDisplay(int,int,const std::string&,GameController&,bool);
+        GraphicDisplay(int,int,const std::string&,GameController&,Minimax&,bool);
         ~GraphicDisplay();
         GraphicDisplay(const GraphicDisplay&)=delete;
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;
