@@ -1,27 +1,16 @@
 # Projet_IA_Chess
 
-# ♟️ IA d’Échecs en C++
+## Description du Projet
 
-Ce projet montre vise à créer une **IA capable de jouer aux échecs** , dont l'objectif serait de battre un joueur débutant
+Notre projet consiste à développer une IA capable de jouer aux échecs de manière autonome. L'objectif est de simuler un joueur qui est capable d'analyser un plateau, anticiper les coups adverses et calculer le meilleur coup possible pour prendre l'avantage sur l'adversaire.
 
-## 🧠 Principe général
-L’IA repose sur trois éléments fondamentaux :
-- **La représentation du plateau** et des pièces
-- **La génération des coups légaux**
-- **Un algorithme de recherche**
+## Prérequis Système
 
-À chaque tour, l’IA explore plusieurs coups possibles, anticipe les réponses de l’adversaire et choisit le coup qui maximise ses chances de gain selon une **fonction d’évaluation**.
+## Instructions d'installations détaillées
 
-## ⚙️ Technologies
-- Langage : **C++**
-- Paradigmes : algorithmique, récursivité, optimisation
+## Instructions pour lancer l'application
 
-## 🎯 Objectif
-Le but n’est pas de rivaliser avec des moteurs professionnels comme Stockfish, ou deepblue mais de démontrer :
-- qu’une IA d’échecs est **accessible à implémenter**
-- qu’elle constitue un **excellent projet pédagogique**
-- qu’elle permet de mettre en pratique des notions clés (recherche, heuristiques, performance)
+## Instructions Pour exécuter les tests
 
-## 📚 Inspirations
-- 
--
+
+## Structure du Projet
