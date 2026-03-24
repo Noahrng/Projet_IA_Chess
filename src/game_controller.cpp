@@ -49,6 +49,13 @@ Coordinates GameController::getCoordsPieceChosen()
     return cell_chosen;
 }
 
+std::pair<Coordinates,Coordinates> GameController::getLastMove()
+{
+    MoveHistory h=moves.back();
+    std::pair<Coordinates,Coordinates> lastMove={h.from,h.to};
+    return lastMove
+}
+
 /*---------------------------Tours Des Joueurs----------------------------*/
 void GameController::switchTurn()
 {
