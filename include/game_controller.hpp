@@ -41,8 +41,8 @@ class GameController
         std::shared_ptr<Player> waiting_player;
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
-        bool waiting_promotion;
         std::vector<MoveHistory> moves;
+        bool waiting_promotion;
 
     public:
         //Constructeurs / Destructeurs

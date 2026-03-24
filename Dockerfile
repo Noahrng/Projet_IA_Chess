@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Installer dépendances
 RUN apt update && apt install -y \
     build-essential \
+    valgrind \
     cmake \
     git \
     libgl1-mesa-dev \

@@ -6,22 +6,22 @@ Button::Button(std::unique_ptr<Drawable> d,const std::string& text)
 
 }
 
-void Button::SetnormalColor(Color c)
+void Button::setNormalColor(Color c)
 {
     normalColor=c;
 }
 
-void Button::SetHoverColor(Color c)
+void Button::setHoverColor(Color c)
 {
     hoverColor = c;
 }
 
-void Button::SetTextColor(Color c)
+void Button::setTextColor(Color c)
 {
     textColor = c;
 }
 
-void Button::SetFontSize(int s)
+void Button::setFontSize(int s)
 {
     fontSize=s;
 }

@@ -8,10 +8,14 @@ class Bishop : public Piece{
         static std::vector<Coordinates> vect_move;
     public:
         Bishop(bool, Coordinates);
-        bool canMovePattern(Coordinates) override;
-        bool canEatPattern(Coordinates) override;
+        
+        //Getters
         PieceType getType() const override;
         std::vector<Coordinates>& getVectMove() override;
+        
+        //Modèles de mouvement/capture
+        bool canMovePattern(Coordinates) override;
+        bool canEatPattern(Coordinates) override;
 };
 
 #endif
