@@ -17,6 +17,7 @@ class Player
         double sum_point;
     
     public:
+        //Constructeurs / Destructeurs
         Player(bool color);
         ~Player()=default;
         Player(const Player&) = delete;            
@@ -24,24 +25,24 @@ class Player
         Player(Player&&) = default;              
         Player& operator=(Player&&) = default;
 
-        size_t nbOfPieces();
+        //Getters
         std::shared_ptr<Piece> getPiece(int, int);
         std::shared_ptr<Piece> getPiece(Coordinates);
         std::shared_ptr<Piece> getPiece(size_t);
         std::vector<std::shared_ptr<Piece>>& getPieces();
         double getPoint();
+        size_t nbOfPieces();
 
+        //Vérification d'état
         bool isPiece(std::shared_ptr<Piece>, size_t);
         bool isWhite();
         bool isBlack();
+
+        //Pièces du Joueur
         void addPiece(std::shared_ptr<Piece>);
         void removePiece(Coordinates);
         void removePiece(size_t);
-
         void removePiece(std::shared_ptr<Piece>);
-        
-
-
 };
 
 #endif

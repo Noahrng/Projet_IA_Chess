@@ -1,7 +1,12 @@
 #include "../include/rook.hpp"
 
-Rook::Rook(bool col,Coordinates c): Piece(col,c,5.0,"♜"){}
+/*----------------------Constructeurs / Destructeurs----------------------*/
+Rook::Rook(bool col,Coordinates c): Piece(col,c,5.0,"♜")
+{
 
+}
+
+/*--------------Vecteur Statique des Déplacements de la Tour--------------*/
 std::vector<Coordinates> Rook::vect_move={
     Coordinates(0,1),Coordinates(0,2),Coordinates(0,3),Coordinates(0,4),Coordinates(0,5),Coordinates(0,6),Coordinates(0,7),
     Coordinates(0,-1),Coordinates(0,-2),Coordinates(0,-3),Coordinates(0,-4),Coordinates(0,-5),Coordinates(0,-6),Coordinates(0,-7),
@@ -9,11 +14,18 @@ std::vector<Coordinates> Rook::vect_move={
     Coordinates(-1,0),Coordinates(-2,0),Coordinates(-3,0),Coordinates(-4,0),Coordinates(-5,0),Coordinates(-6,0),Coordinates(-7,0)
 };
 
+/*--------------------------------Getters---------------------------------*/
+PieceType Rook::getType() const
+{
+    return PieceType::Rook;
+};
+
 std::vector<Coordinates>& Rook::getVectMove()
 {
     return vect_move;
 }
 
+/*---------------------Modèles de mouvement/capture-----------------------*/
 bool Rook::canMovePattern(Coordinates new_coords)
 {
     if(!new_coords.onBoard()) return false;
@@ -24,8 +36,3 @@ bool Rook::canEatPattern(Coordinates new_coords)
 {
     return canMovePattern(new_coords);
 }
-
-PieceType Rook::getType() const
-{
-    return PieceType::Rook;
-};

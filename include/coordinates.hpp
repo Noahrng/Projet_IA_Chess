@@ -28,11 +28,12 @@ class Coordinates{
         int x;
         int y;
     public:
+        //Constructeurs / Destructeurs
         Coordinates();
         Coordinates(int,int);
         ~Coordinates()=default;
 
-        //operator
+        //Surcharge d'Opérateurs
         Coordinates& operator+=(const Coordinates&);
         Coordinates& operator+=(const int&);
         Coordinates& operator-=(const Coordinates&);
@@ -50,19 +51,17 @@ class Coordinates{
         void setY(int);
         void setXY(int, int);
 
-        //
+        //Comparaisons
         bool onBoard();
-
-        //Equivalences
         bool lowerThanX(Coordinates);
         bool lowerThanY(Coordinates);
         bool greaterThanX(Coordinates);
         bool greaterThanY(Coordinates);
 
-        //Distances entre coordonnées
+        //Distances Entre Coordonnées
         int distX(const Coordinates&);
-        int distY(const Coordinates&);
         int distX(const int);
+        int distY(const Coordinates&);
         int distY(const int);
 
         //Affichage

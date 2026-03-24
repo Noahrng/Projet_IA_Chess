@@ -1,10 +1,12 @@
 #include "../include/coordinates.hpp"
 
+/*------------------------Fonctions Additionnelles------------------------*/
 int abs(int n){
     if(n<0) return -n;
     return n;
 }
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 Coordinates::Coordinates(){
     
 }
@@ -14,6 +16,7 @@ Coordinates::Coordinates(int x,int y): x{x},y{y}
 
 }
 
+/*------------------------Surcharge d'Opérateurs--------------------------*/
 bool operator==(const Coordinates &a,const Coordinates &b)
 {
     return a.x==b.x && a.y==b.y;
@@ -141,6 +144,7 @@ std::ostream& operator<<(std::ostream& os, Coordinates &a)
     return os;
 }
 
+/*--------------------------------Getters---------------------------------*/
 int Coordinates::getX()
 /*
     Arguments:
@@ -171,6 +175,7 @@ int Coordinates::getY()
     return this->y;
 }
 
+/*--------------------------------Setters---------------------------------*/
 void Coordinates::setX(int new_x){
     x = new_x;
 }
@@ -184,13 +189,13 @@ void Coordinates::setXY(int new_x,int new_y){
     y = new_y;
 }
 
+/*------------------------------Comparaisons------------------------------*/
 bool Coordinates::onBoard()
 {
     if(x>=0 && x<8 && y>=0 && y<8) return true;
     return false;
 }
 
-//Equivalences
 bool Coordinates::lowerThanX(Coordinates c){
     if(c.x < x) return false;
     return true;
@@ -208,10 +213,15 @@ bool Coordinates::greaterThanY(Coordinates c){
     return false;
 }
 
-//Distances
+/*----------------------Distances Entre Coordonnées-----------------------*/
 int Coordinates::distX(const Coordinates &other)
 {
     return abs(this->x-other.x);
+}
+
+int Coordinates::distX(const int X)
+{
+    return abs(this->x-X);
 }
 
 int Coordinates::distY(const Coordinates &other)
@@ -219,16 +229,12 @@ int Coordinates::distY(const Coordinates &other)
     return abs(this->y-other.y);
 }
 
-int Coordinates::distX(const int X)
-{
-    return abs(this->x-X);
-}
 int Coordinates::distY(const int Y)
 {
     return abs(this->y-Y);
 }
 
-//Affichage
+/*-------------------------------Affichage--------------------------------*/
 void Coordinates::print(){
     std::cout<< this;
 }

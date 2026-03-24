@@ -18,10 +18,10 @@ class Button
         Button(std::unique_ptr<Drawable>,const std::string&);
         ~Button();
 
-        void SetnormalColor(Color);
-        void SetHoverColor(Color);
-        void SetTextColor(Color);
-        void SetFontSize(int);
+        void setNormalColor(Color);
+        void setHoverColor(Color);
+        void setTextColor(Color);
+        void setFontSize(int);
     
 
         bool isClicked();

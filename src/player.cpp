@@ -6,6 +6,7 @@
 #include "queen.hpp"
 #include "king.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 Player::Player(bool color):color{color},sum_point{39.0}
 {
     //Création de chaque pieces
@@ -88,6 +89,42 @@ Player::Player(bool color):color{color},sum_point{39.0}
     );
 }
 
+/*------------------------Surcharge d'Opérateurs--------------------------*/
+bool operator==(const Player &a,const Player &b)
+{
+    if(a.color!=b.color) return false;
+    if(a.pieces.size()!=b.pieces.size()) return false;
+    size_t i_max,j_max;
+
+    i_max=a.pieces.size();
+    for(std::size_t i=0;i<i_max;i++)
+    {
+        bool found=false;
+        std::size_t j=0;
+        j_max=b.pieces.size();
+        while(j<j_max)
+        {
+            if(*(a.pieces[i].get()) == *(b.pieces[j].get()))
+            {
+                found=true;
+            }
+            j++;
+        }
+        if(!found)  
+            return false;
+
+
+    }
+    return true;
+}
+
+bool operator!=(const Player &a,const Player &b)
+{
+    return !(a==b);
+}
+
+
+/*--------------------------------Getters---------------------------------*/
 std::shared_ptr<Piece> Player::getPiece(int x, int y)
 {
     Coordinates c(x,y);
@@ -126,39 +163,12 @@ double Player::getPoint()
     return sum_point;
 }
 
-bool operator==(const Player &a,const Player &b)
+size_t Player::nbOfPieces()
 {
-    if(a.color!=b.color) return false;
-    if(a.pieces.size()!=b.pieces.size()) return false;
-    size_t i_max,j_max;
-
-    i_max=a.pieces.size();
-    for(std::size_t i=0;i<i_max;i++)
-    {
-        bool found=false;
-        std::size_t j=0;
-        j_max=b.pieces.size();
-        while(j<j_max)
-        {
-            if(*(a.pieces[i].get()) == *(b.pieces[j].get()))
-            {
-                found=true;
-            }
-            j++;
-        }
-        if(!found)  
-            return false;
-
-
-    }
-    return true;
+    return pieces.size();
 }
 
-bool operator!=(const Player &a,const Player &b)
-{
-    return !(a==b);
-}
-
+/*--------------------------Vérification d'État---------------------------*/
 bool Player::isPiece(std::shared_ptr<Piece> p, size_t i)
 {
     return p == pieces[i];
@@ -174,11 +184,7 @@ bool Player::isBlack()
     return color;
 }
 
-size_t Player::nbOfPieces()
-{
-    return pieces.size();
-}
-
+/*----------------------------Pièces du Joueur----------------------------*/
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
     if(p->getType()!=PieceType::King) sum_point+=p->getValue();
