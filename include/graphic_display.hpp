@@ -16,12 +16,16 @@ class GraphicDisplay : public Display{
         std::string title; 
         std::unique_ptr<Screen> currentScreen;
     public:
+        //Constructeurs / Destructeurs
         GraphicDisplay(int,int,const std::string&,GameController&,Minimax&,bool);
         ~GraphicDisplay();
         GraphicDisplay(const GraphicDisplay&)=delete;
         GraphicDisplay& operator=(const GraphicDisplay&)=delete;
 
+        //Mise à Jour
         void updateDimensions();
+
+        //Exécution
         void run();
 };
 

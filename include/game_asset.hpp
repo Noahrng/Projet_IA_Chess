@@ -13,21 +13,28 @@ class GameAsset : public Drawable
         int x,y,size;
         Color tint;
     public:
+        //Constructeurs / Destructeurs
         GameAsset(const std::string&,int,int,int);
         ~GameAsset();
 
-        void setPosition(int,int);
-        void setSize(int);
-        void setTint(Color);
-        void resetTint();
-
-        void draw() override;
-        bool isHovered(Vector2 mouse) override;
+        //Getters
         float getCenterX() override;
         float getCenterY() override;
         float getWidth() override;
         float getHeight() override;
+
+        //Setters
+        void setPosition(int,int);
+        void setSize(int);
+        void setTint(Color);
+        void resetTint();
         void setBackgroundColor(Color) override;   
+
+        //Vérification d'État
+        bool isHovered(Vector2 mouse) override;
+
+        //Dessiner Asset
+        void draw() override;
 
 
 };
