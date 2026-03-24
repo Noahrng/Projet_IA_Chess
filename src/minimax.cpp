@@ -99,23 +99,10 @@ void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,
 double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 {
     nb_node++;
-
-    if(nb_node%10000==0)
-    {
-        auto now = std::chrono::high_resolution_clock::now();
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
-
-        if(ms>0)
-        {
-            std::cout<<"nb_node="<<nb_node<<std::endl;
-            size_t nodes_per_sec=nb_node * 1000/ms;
-            std::cout << "nb_node=" << nb_node 
-                      << " | " << nodes_per_sec << " noeuds/s"
-                      << " | " << ms << " ms"
-                      << std::endl;
-        }
-        
-    }
+    auto now = std::chrono::high_resolution_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
+    std::cout << " | " << ms << " ms"
+              << std::endl;
 
     if(game.isRepeat()) return 0.0;
 
@@ -207,6 +194,10 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
 {
     nb_node++;
+    auto now = std::chrono::high_resolution_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
+    std::cout << " | " << ms << " ms"
+              << std::endl;
     if(depth == 0)
         return eval.evaluate();
 
