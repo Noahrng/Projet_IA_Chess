@@ -1,20 +1,29 @@
 #include "../include/pawn.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1.0,"♟")
 {
     
 }
 
+/*---------------Vecteur Statique des Déplacements du Pion----------------*/
 std::vector<Coordinates> Pawn::vect_move={
     Coordinates(0,1),Coordinates(0,2),Coordinates(1,1),Coordinates(-1,1),
     Coordinates(0,-1),Coordinates(0,-2),Coordinates(1,-1),Coordinates(-1,-1),
 };
 
+/*--------------------------------Getters---------------------------------*/
 std::vector<Coordinates>& Pawn::getVectMove()
 {
     return vect_move;
 }
 
+PieceType Pawn::getType() const
+{
+    return PieceType::Pawn;
+};
+
+/*---------------------Modèles de mouvement/capture-----------------------*/
 bool Pawn::canMovePattern(Coordinates new_coords)
 {
     if(!new_coords.onBoard()) return false;
@@ -69,10 +78,5 @@ bool Pawn::canEatPattern(Coordinates new_coords)
 
     return false;
 }
-
-PieceType Pawn::getType() const
-{
-    return PieceType::Pawn;
-};
 
 

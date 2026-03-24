@@ -9,7 +9,7 @@ MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int
         "PLAY"
     );
 
-    playButton->SetnormalColor(YELLOW);
+    playButton->setNormalColor(YELLOW);
 
     title = std::make_unique<TextShape>(
         std::make_unique<RectangleShape>(width/2-300,50,400,120),

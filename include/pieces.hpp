@@ -19,26 +19,28 @@ class Piece  {
         double value; //La valeur d'une pièce par rapport à une autre
         std::string terminal_sprite;
     public:
+        //Constructeurs/Destructeurs
         Piece(bool, Coordinates, int, std::string);
         Piece(bool, int, Coordinates, int, std::string);
         virtual ~Piece() = default;
 
+        //Getters
         std::string getTerminalSprite();
         Coordinates getCoordinates();
         double getValue();
-
-
-        virtual bool canMovePattern(Coordinates) = 0;
-        virtual bool canEatPattern(Coordinates) = 0;
         virtual PieceType getType()const=0;
         virtual std::vector<Coordinates>& getVectMove()=0;
 
-        //virtual void onBeforeMove(Coordinates, Coordinates, Player*, Player*); Potentiellement utiles pour le futur
-        //virtual void onAfterMove(Coordinates, Coordinates, Player*, Player*);
+        //Modèles de mouvement/capture
+        virtual bool canMovePattern(Coordinates) = 0;
+        virtual bool canEatPattern(Coordinates) = 0;
 
+        //Nombre de Mouvements
         int howManyMoves();
         void incrementNbOfMoves();
         void decrementNbOfMoves();
+
+        //Déplacement
         void moveTo(int, int);
         void moveTo(Coordinates);
 };
