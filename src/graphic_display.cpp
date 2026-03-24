@@ -1,4 +1,6 @@
 #include <graphic_display.hpp>
+
+/*----------------------Constructeurs / Destructeurs----------------------*/
 GraphicDisplay::GraphicDisplay(int w,int h,const std::string &t,GameController& game,Minimax &robot,bool s):
     Display(game,robot,s),
     width{w},
@@ -18,12 +20,14 @@ GraphicDisplay::~GraphicDisplay(){
     CloseWindow();
 }
 
+/*------------------------------Mise à Jour-------------------------------*/
 void GraphicDisplay::updateDimensions()
 {
     width=GetScreenWidth();
     height=GetScreenHeight();
 }
 
+/*-------------------------------Exécution--------------------------------*/
 void GraphicDisplay::run()
 {
     while(!WindowShouldClose())

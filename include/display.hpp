@@ -10,6 +10,7 @@ class Display{
         Minimax &robot;
         bool side; //0: blancs en bas, 1: noir en bas
     public:
+        //Constructeurs / Destructeurs
         Display(GameController&,Minimax&,bool);
 };
 

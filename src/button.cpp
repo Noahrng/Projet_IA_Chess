@@ -1,11 +1,18 @@
 #include "button.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 Button::Button(std::unique_ptr<Drawable> d,const std::string& text)
     :drawable{std::move(d)},text{text},normalColor{DARKGRAY},hoverColor{LIGHTGRAY},textColor{BLACK},fontSize{25}
 {
 
 }
 
+Button::~Button()
+{
+
+}
+
+/*--------------------------------Setters---------------------------------*/
 void Button::setNormalColor(Color c)
 {
     normalColor=c;
@@ -26,6 +33,18 @@ void Button::setFontSize(int s)
     fontSize=s;
 }
 
+/*--------------------------Vérification d'État---------------------------*/
+bool Button::isHovered()
+{
+    return drawable->isHovered(GetMousePosition());
+}
+
+bool Button::isClicked()
+{
+    return isHovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+}
+
+/*--------------------------Dessiner le Bouton----------------------------*/
 void Button::draw()
 {
     if(this->isHovered())
@@ -40,18 +59,4 @@ void Button::draw()
 
     int textWidth = MeasureText(text.c_str(),fontSize);
     DrawText(text.c_str(),(int)drawable->getCenterX()-textWidth/2,(int)drawable->getCenterY()-fontSize/2,fontSize,textColor);
-}
-
-bool Button::isHovered()
-{
-    return drawable->isHovered(GetMousePosition());
-}
-
-bool Button::isClicked()
-{
-    return isHovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-}
-
-Button::~Button()
-{
 }

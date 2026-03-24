@@ -8,13 +8,20 @@ class CircleShape : public Shape
     protected:
         float radius;
     public:
+        //Constructeurs / Destructeurs
         CircleShape(float,float,float);
-        void draw() override;
-        bool isHovered(Vector2 mouse) override;
+
+        //Getters
         float getCenterX() override;
         float getCenterY() override;
         float getWidth() override;
         float getHeight() override;
+
+        //Vérification d'État
+        bool isHovered(Vector2 mouse) override;
+        
+        //Dessiner le Cercle
+        void draw() override;
 };
 
 #endif
