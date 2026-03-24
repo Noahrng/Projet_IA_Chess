@@ -296,7 +296,7 @@ void ChessScreen::draw()
 
     else
     {
-        if(game.blackTurn())
+        if(game.getCurrentPlayer().isBot())
         {
             ChessMove bestm=robot.getBestMove();
             if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();

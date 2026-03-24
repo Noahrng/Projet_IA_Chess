@@ -18,7 +18,7 @@ int main(){
 
     GameController play;
     Evaluator evalt(play);
-    Minimax robot(play,evalt,5,2);
+    Minimax robot(play,evalt,4,2);
     auto start = std::chrono::high_resolution_clock::now();
     
     robot.getBestMove();
