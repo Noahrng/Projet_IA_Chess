@@ -19,7 +19,11 @@ docker build -t aichess .
 Pour lancer l'image, exécutez les deux commandes suivantes :
 ```bash
 xhost +local:docker
-docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess
+docker run --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess
+```
+Si vous voulez utiliser valgrind, faites la commande suivante :
+```bash
+docker run --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess valgrind ./build/AICHESS
 ```
 ## Instructions pour exécuter les tests
 
