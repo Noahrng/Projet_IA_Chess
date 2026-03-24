@@ -1,11 +1,13 @@
 #include "text_shape.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 TextShape::TextShape(std::unique_ptr<Shape> s,const std::string &text)
     :shape{std::move(s)},text{text},textColor{BLACK},fontSize{20},centered{true}
 {
 
 }
 
+/*--------------------------------Setters---------------------------------*/
 void TextShape::setText(const std::string& newText)
 {
     text=newText;
@@ -25,6 +27,7 @@ void TextShape::setCentered(bool value)
     centered=value;
 }
 
+/*---------------------------Dessiner le Texte----------------------------*/
 void TextShape::draw()
 {
     shape->draw();

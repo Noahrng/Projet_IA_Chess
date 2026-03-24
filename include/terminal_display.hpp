@@ -5,16 +5,17 @@
 #include "player.hpp"
 #include "piece_type.hpp"
 
-class TerminalDisplay : public Display{
+class TerminalDisplay : public Display
+{
     private: 
     public:
-        //Constructeur
+        //Constructeurs / Destructeurs
         TerminalDisplay(GameController&,Minimax&,bool);
         
-        //Entrée Joueur
+        //Entrées Joueur
         std::string playerEntryString(); 
 
-        //Test sur entrée du joueur
+        //Vérification d'état
         bool isLetter(char);
         bool isNumber(char);
         bool isGameQuitted(std::string);
@@ -25,11 +26,11 @@ class TerminalDisplay : public Display{
         PieceType convertStringIntoType(std::string);
         
         //Affichage du terminal
-        void printBoard();
         void clearTerminal();
+        void printBoard();
         void printInfosPromote();
 
-        //Exécution du jeu
+        //Exécution
         void run();
 };
 

@@ -2,6 +2,7 @@
 #include "screen_main_menu.hpp"
 #include "evaluator.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 ChessScreen::ChessScreen(GameController &game,Minimax &robot):Screen(game,robot),side{false},finished{false},promoted{Coordinates(-1,-1)},color{false}
 {
     const std::string basePath = "assets/";
@@ -33,6 +34,64 @@ ChessScreen::~ChessScreen()
     
 }
 
+/*--------------------------------Getters---------------------------------*/
+AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
+{
+    int base=static_cast<int>(piece.getType())*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
+{
+    int base=static_cast<int>(piece)*2;
+    int colorOffset=color ? 0 : 1;
+
+    return static_cast<AssetID>(base+colorOffset);
+}
+
+Coordinates ChessScreen::getCoords(int squareSize)
+{
+    int x=GetMouseX()/squareSize;
+    int y=GetMouseY()/squareSize;
+
+    x=x>0 ? x:0;
+    x=x<8 ? x:7;
+
+    y=y>0 ? y:0;
+    y=y<8 ? y:7;
+
+    if(side)
+    {
+       y=7-y;
+       x=7-x;
+    }
+
+    return Coordinates{x,y};
+}
+
+/*--------------------------Vérification d'État---------------------------*/
+bool ChessScreen::isFinished()
+{
+    return finished;
+}
+
+/*------------------------------Mise à Jour-------------------------------*/
+void ChessScreen::update()
+{
+    if(IsKeyPressed(KEY_TAB))
+    {
+        finished=true;
+    }
+} 
+
+std::unique_ptr<Screen> ChessScreen::nextScreen()
+{
+    return std::make_unique<MainMenuScreen>(game,robot,1000,1000);
+}
+
+/*----------------------------Action du Joueur----------------------------*/
 void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 {
     std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
@@ -69,22 +128,18 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 
 }
 
-AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
+void ChessScreen::switchSide()
 {
-    int base=static_cast<int>(piece.getType())*2;
-    int colorOffset=color ? 0 : 1;
-
-    return static_cast<AssetID>(base+colorOffset);
+    side=!side;
 }
 
-AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
+/*--------------------------------Texture---------------------------------*/
+void ChessScreen::addImage(AssetID id,const std::string &path)
 {
-    int base=static_cast<int>(piece)*2;
-    int colorOffset=color ? 0 : 1;
-
-    return static_cast<AssetID>(base+colorOffset);
+    images[id]=std::make_unique<GameAsset>(path,0,0,0);
 }
 
+/*----------------------------Dessiner le Jeu-----------------------------*/
 void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
 {
     images.at(id)->setPosition(x,y);
@@ -92,26 +147,6 @@ void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
     images.at(id)->setTint(tint);
     images.at(id)->draw();
     images.at(id)->resetTint();
-}
-
-Coordinates ChessScreen::getCoords(int squareSize)
-{
-    int x=GetMouseX()/squareSize;
-    int y=GetMouseY()/squareSize;
-
-    x=x>0 ? x:0;
-    x=x<8 ? x:7;
-
-    y=y>0 ? y:0;
-    y=y<8 ? y:7;
-
-    if(side)
-    {
-       y=7-y;
-       x=7-x;
-    }
-
-    return Coordinates{x,y};
 }
 
 void ChessScreen::drawPieces(int squareSize,Coordinates choose)
@@ -173,25 +208,6 @@ void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
     }
 }
 
-void ChessScreen::addImage(AssetID id,const std::string &path)
-{
-    images[id]=std::make_unique<GameAsset>(path,0,0,0);
-}
-
-void ChessScreen::switchSide()
-{
-    side=!side;
-    std::cout<<"switchside side ="<<side<<std::endl;
-    
-}
-
-void ChessScreen::update()
-{
-    if(IsKeyPressed(KEY_TAB))
-    {
-        finished=true;
-    }
-} 
 void ChessScreen::draw()
 {
     int width=GetScreenWidth();
@@ -220,13 +236,6 @@ void ChessScreen::draw()
     {
         scrollPiece(promoted,squareSize);
     }
-    /*
-    std::vector<Coordinates> c;
-    c.push_back(Coordinates{4,4});
-    c.push_back(Coordinates{5,5});
-    c.push_back(Coordinates{6,6});
-    drawCircles(squareSize,c);
-    */
     
     if((IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) && !game.promotionPending())
     {
@@ -251,15 +260,9 @@ void ChessScreen::draw()
             Coordinates from=game.getCoordsPieceChosen();
             if(game.movePiece(from,c))
             {
-                if(game.isRepeat())
-                {
-                    std::cout << "REPETITION DETECTEE" << std::endl;
-                    // afficher nulle ou forcer un autre coup
-                }
                 promoted = c;
                 color=game.getCurrentPlayer().isWhite();
                 if(!game.promotionPending()) game.switchTurn();
-                //this->switchSide();
             }
             
             game.unChoosePiece();
@@ -310,14 +313,4 @@ void ChessScreen::draw()
 
     
 
-}
-
-bool ChessScreen::isFinished()
-{
-    return finished;
-}
-
-std::unique_ptr<Screen> ChessScreen::nextScreen()
-{
-    return std::make_unique<MainMenuScreen>(game,robot,1000,1000);
 }

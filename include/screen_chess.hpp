@@ -36,28 +36,34 @@ class ChessScreen : public Screen
         bool color;
 
     public:
+        //Constructeurs / Destructeurs
         ChessScreen(GameController&,Minimax&);
         ~ChessScreen();
 
-        void scrollPiece(Coordinates,int);
-        
-        void drawAsset(AssetID,int,int,int,Color=WHITE);
-        void drawPieces(int,Coordinates={-1,-1});
-        void drawCircles(int,std::vector<Coordinates>);
-
-        void addImage(AssetID,const std::string&);
-
+        //Getters
         AssetID getAssetForPiece(const Piece&,bool);
         AssetID getAssetForPiece(const PieceType&,bool);
         Coordinates getCoords(int);
 
+        //Vérification d'État
+        bool isFinished() override;
+
+        //Mise à Jour
+        void update() override;
+        std::unique_ptr<Screen> nextScreen() override;
+
+        //Action du Joueur
+        void scrollPiece(Coordinates,int);
         void switchSide();
 
-        void update() override;
+        //Texture
+        void addImage(AssetID,const std::string&);
+        
+        //Dessiner le Jeu
+        void drawAsset(AssetID,int,int,int,Color=WHITE);
+        void drawPieces(int,Coordinates={-1,-1});
+        void drawCircles(int,std::vector<Coordinates>);
         void draw() override;
-
-        bool isFinished() override;
-        std::unique_ptr<Screen> nextScreen() override;
 };
 
 #endif

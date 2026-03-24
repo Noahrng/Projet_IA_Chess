@@ -13,15 +13,19 @@ class Screen
         Minimax& robot;
             
     public:
-        Screen(GameController &g,Minimax &r):game(g),robot{r}
-        {}
+        //Constructeurs / Destructeurs
+        Screen(GameController&,Minimax&);
         virtual ~Screen()=default;
 
-        virtual void update()=0;
-        virtual void draw()=0;
-
+        //Vérification d'État
         virtual bool isFinished()=0;
+        
+        //Mise à Jour
+        virtual void update()=0;
         virtual std::unique_ptr<Screen> nextScreen()=0;
+
+        //Dessiner l'Écran
+        virtual void draw()=0;
 };
 
 #endif

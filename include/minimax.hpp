@@ -34,21 +34,28 @@ class Minimax
         Evaluator &eval;
         int minimax_depth;
         int quiescence_depth;
-
         ChessMove previous_best;
-
-        
     public:
+        //Constructeurs / Destructeurs
         Minimax(GameController&,Evaluator&);
-        void update_depth();
 
-        bool isLosingCapture(Coordinates from, Coordinates to);
-        double minimax(int,bool,double,double);
-        double quiescence(double,double,bool,int);
-        void sortMoves(std::vector<Coordinates>&,Coordinates);
-        void sortMovesWithPrevious(std::vector<Coordinates>&,Coordinates,const ChessMove&);
+        //Getters
         ChessMove getBestMoveAtDepth(int,double,double);
         ChessMove getBestMove();
+        
+        //Mise à Jour
+        void update_depth();
+
+        //Vérification d'état
+        bool isLosingCapture(Coordinates from, Coordinates to);
+
+        //Tris
+        void sortMoves(std::vector<Coordinates>&,Coordinates);
+        void sortMovesWithPrevious(std::vector<Coordinates>&,Coordinates,const ChessMove&);
+
+        //Algorithmes d'IA
+        double minimax(int,bool,double,double);
+        double quiescence(double,double,bool,int);
 };
 
 #endif

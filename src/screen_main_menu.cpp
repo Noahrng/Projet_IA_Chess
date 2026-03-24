@@ -1,6 +1,7 @@
 #include "screen_main_menu.hpp"
 #include "screen_chess.hpp"
 
+/*----------------------Constructeurs / Destructeurs----------------------*/
 MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int height):Screen(game,robot)
 {
 
@@ -20,6 +21,13 @@ MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int
     finished=false;
 }
 
+/*--------------------------Vérification d'État---------------------------*/
+bool MainMenuScreen::isFinished()
+{
+    return finished;
+}
+
+/*------------------------------Mise à Jour-------------------------------*/
 void MainMenuScreen::update()
 {
     if(playButton->isClicked())
@@ -27,6 +35,13 @@ void MainMenuScreen::update()
         finished=true;
     }
 }
+
+std::unique_ptr<Screen> MainMenuScreen::nextScreen()
+{
+    return std::make_unique<ChessScreen>(game,robot);
+}
+
+/*-------------------------Dessiner le Main Menu--------------------------*/
 void MainMenuScreen::draw()
 {
     BeginDrawing();
@@ -34,14 +49,4 @@ void MainMenuScreen::draw()
     playButton->draw();
     title->draw();
     EndDrawing();
-}
-
-std::unique_ptr<Screen> MainMenuScreen::nextScreen()
-{
-    return std::make_unique<ChessScreen>(game,robot);
-}
-
-bool MainMenuScreen::isFinished()
-{
-    return finished;
 }
