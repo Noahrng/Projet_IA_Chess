@@ -12,6 +12,7 @@ class Player
     friend bool operator==(const Player&,const Player&);
     friend bool operator!=(const Player&,const Player&);
     private:
+        bool bot;
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
         double sum_point;
@@ -32,6 +33,10 @@ class Player
         std::vector<std::shared_ptr<Piece>>& getPieces();
         double getPoint();
         size_t nbOfPieces();
+        bool isBot();
+
+        //Setters
+        void setBot(bool);
 
         //Vérification d'état
         bool isPiece(std::shared_ptr<Piece>, size_t);

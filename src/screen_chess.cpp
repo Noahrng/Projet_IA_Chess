@@ -293,12 +293,18 @@ void ChessScreen::draw()
 
         DrawText("Echap pour quitter",10,height/8 +600,50,BLACK);
     }
+
+    else
+    {
+        if(game.getCurrentPlayer().isBot())
+        {
+            ChessMove bestm=robot.getBestMove();
+            if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
+        }
+    }
     
 
-    if(game.whiteTurn()){
-        ChessMove bestm=robot.getBestMove();
-        if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
-    }
+    
 
     EndDrawing();
 

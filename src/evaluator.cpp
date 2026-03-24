@@ -91,7 +91,8 @@ double Evaluator::evaluate()
 {
     double material = evaluateMaterial()/MAX_MATERIAL;
     double position = evaluatePosition()/MAX_POSITION;
-    double score = 0.85*material+0.15*position;
+
+    double score = 0.95*material+0.05*position;
 
     return std::clamp(score,-0.99,0.99);
 }

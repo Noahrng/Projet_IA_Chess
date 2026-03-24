@@ -14,6 +14,21 @@ GameController::GameController(): current_player{std::make_shared<Player>(false)
     waiting_promotion{false}
 {
     cell_chosen.setXY(-1,-1);
+
+    std::cout<<"Voulez vous jouez contre une IA (0:non) (1:oui)"<<std::endl;
+    int isAI;
+    std::cin>>isAI;
+
+    if(isAI)
+    {
+        std::cout<<"Voulez vous jouez les blanc ? (0:non) (1:oui)"<<std::endl;
+        int white;
+        std::cin>>white;
+        if(white)
+            waiting_player->setBot(true);
+        else
+            current_player->setBot(true);
+    }
 }
 
 GameController::~GameController()
@@ -744,7 +759,6 @@ bool GameController::promotionPending()
 
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 {
-    std::cout<<"promotion !!!!!!!!!!!!!!!!!!!!!!!!!!\n";
     if(waiting_promotion){
         if(t == PieceType::Bishop)
         {
