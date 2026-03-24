@@ -1,19 +1,23 @@
 #include "minimax.hpp"
 
-Minimax::Minimax(GameController &game,Evaluator &eval,int minimax_depth,int quiescence_depth):game{game},eval{eval},nb_node{0},minimax_depth{minimax_depth},quiescence_depth{quiescence_depth}
+Minimax::Minimax(GameController &game,Evaluator &eval,int minimax_depth,int quiescence_depth):game{game},eval{eval},minimax_depth{minimax_depth},quiescence_depth{quiescence_depth}
 {
-    start_time=std::chrono::high_resolution_clock::now();
+  
 }
 
 void Minimax::update_depth()
 {
     if(game.getCurrentPlayer().nbOfPieces()==1 || game.getWaitingPlayer().nbOfPieces() == 1)
     {
-        minimax_depth=7;
+        minimax_depth=8;
+    }
+    else if(game.getCurrentPlayer().nbOfPieces()<=4 || game.getWaitingPlayer().nbOfPieces()<=4)
+    {
+        minimax_depth=6;
     }
     else
     {
-        minimax_depth=3;
+        minimax_depth=4;
     }
 }
 
@@ -98,25 +102,6 @@ void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,
 
 double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 {
-    nb_node++;
-
-    if(nb_node%10000==0)
-    {
-        auto now = std::chrono::high_resolution_clock::now();
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
-
-        if(ms>0)
-        {
-            std::cout<<"nb_node="<<nb_node<<std::endl;
-            size_t nodes_per_sec=nb_node * 1000/ms;
-            std::cout << "nb_node=" << nb_node 
-                      << " | " << nodes_per_sec << " noeuds/s"
-                      << " | " << ms << " ms"
-                      << std::endl;
-        }
-        
-    }
-
     if(game.isRepeat()) return 0.0;
 
     if(depth==0)
@@ -206,7 +191,6 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
 
 double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
 {
-    nb_node++;
     if(depth == 0)
         return eval.evaluate();
 
@@ -376,9 +360,6 @@ ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
 
 ChessMove Minimax::getBestMove()
 {
-    nb_node = 0;
-    start_time = std::chrono::high_resolution_clock::now();
-
     // Réinitialiser le meilleur coup précédent
     previous_best = ChessMove();
 
@@ -400,15 +381,6 @@ ChessMove Minimax::getBestMove()
             std::cout << "Mat trouvé a depth=" << d << std::endl;
             break;
         }
-
-        auto now = std::chrono::high_resolution_clock::now();
-        auto ms  = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time).count();
-
-        std::cout << "depth=" << d
-                  << " score=" << best.score
-                  << " coup=" << best.from << "->" << best.to
-                  << " nb_node=" << nb_node
-                  << " temps=" << ms << "ms" << std::endl;
     }
 
     update_depth();

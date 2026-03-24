@@ -168,6 +168,17 @@ size_t Player::nbOfPieces()
     return pieces.size();
 }
 
+bool Player::isBot()
+{
+    return bot;
+}
+
+/*----------------------------Setters-------------------------------------*/
+void Player::setBot(bool bot)
+{
+    this->bot=bot;
+}
+
 /*--------------------------Vérification d'État---------------------------*/
 bool Player::isPiece(std::shared_ptr<Piece> p, size_t i)
 {
