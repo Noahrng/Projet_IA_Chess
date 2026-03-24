@@ -56,6 +56,7 @@ class GameController
         Player& getCurrentPlayer();
         Player& getWaitingPlayer();
         Coordinates getCoordsPieceChosen();
+        std::pair<Coordinates,Coordinates> getLastMove();
 
         //Tours Des Joueurs
         void switchTurn();
