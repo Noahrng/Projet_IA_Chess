@@ -1,7 +1,7 @@
 #include "minimax.hpp"
 
 /*----------------------Constructeurs / Destructeurs----------------------*/
-Minimax::Minimax(GameController &game,Evaluator &eval,int minimax_depth,int quiescence_depth):game{game},eval{eval},minimax_depth{minimax_depth},quiescence_depth{quiescence_depth}
+Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 {
   
 }
@@ -391,4 +391,118 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
         }
         return beta;
     }
+}
+
+ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
+{
+    std::cout << "debut getBestMoveAtDepth depth=" << depth << std::endl;
+    std::cout << "blanc=" << game.whiteTurn() << std::endl; // ← crash ici ?
+    ChessMove best;
+    bool maximizing = game.whiteTurn();
+    best.score = maximizing ? -100.0 : 100.0;
+
+    Player &current = game.getCurrentPlayer();
+    size_t nb_piece = current.nbOfPieces();
+
+    std::vector<Coordinates> list_move;
+    list_move.reserve(28);
+
+    for(size_t i = 0; i < nb_piece; i++)
+    {
+        game.choosePiece(i);
+        Coordinates cell_choose = game.getCoordsPieceChosen();
+        game.movesOfPieceChosen(list_move);
+        game.unChoosePiece();
+
+        // Tri avec le meilleur coup de la profondeur précédente
+        sortMovesWithPrevious(list_move, cell_choose, previous_best);
+
+        size_t size_move = list_move.size();
+        for(size_t j = 0; j < size_move; j++)
+        {
+            if(isLosingCapture(cell_choose,list_move[j])) continue;
+            if(game.movePiece(cell_choose, list_move[j], true))
+            {
+                game.switchTurn();
+                double score;
+                if(game.isRepeat())
+                    score=0.0;
+                else 
+                    score=minimax(depth - 1, !maximizing, alpha, beta);
+                game.unMove();
+
+                if(maximizing)
+                {
+                    if(score > best.score)
+                    {
+                        best.score = score;
+                        best.from  = cell_choose;
+                        best.to    = list_move[j];
+                        alpha      = std::max(alpha, best.score);
+
+                        if(best.score >= 1.0) return best;
+                    }
+                    else if(score == best.score)
+                    {
+                        if(game.pieceEnemyDetection(list_move[j]) &&
+                           !game.pieceEnemyDetection(best.to))
+                        {
+                            best.from = cell_choose;
+                            best.to   = list_move[j];
+                        }
+                    }
+                }
+                else
+                {
+                    if(score < best.score)
+                    {
+                        best.score = score;
+                        best.from  = cell_choose;
+                        best.to    = list_move[j];
+                        beta       = std::min(beta, best.score);
+
+                        if(best.score <= -1.0) return best;
+                    }
+                    else if(score == best.score)
+                    {
+                        if(game.pieceEnemyDetection(list_move[j]) &&
+                           !game.pieceEnemyDetection(best.to))
+                        {
+                            best.from = cell_choose;
+                            best.to   = list_move[j];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return best;
+}
+
+ChessMove Minimax::getBestMove()
+{
+    update_depth();
+    // Réinitialiser le meilleur coup précédent
+    previous_best = ChessMove();
+
+    ChessMove best;
+
+    for(int d = 1; d <= minimax_depth; d++)
+    {
+        double alpha = -2.0;
+        double beta  =  2.0;
+
+        ChessMove result = getBestMoveAtDepth(d, alpha, beta);
+
+        // Mettre à jour le meilleur coup pour trier à la prochaine profondeur
+        previous_best = result;
+        best = result;
+
+        if(best.score>=1.0 || best.score <=-1.0)
+        {
+            std::cout << "Mat trouvé a depth=" << d << std::endl;
+            break;
+        }
+    }
+    return best;
 }

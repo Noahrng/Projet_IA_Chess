@@ -37,7 +37,7 @@ class Minimax
         ChessMove previous_best;
     public:
         //Constructeurs / Destructeurs
-        Minimax(GameController&,Evaluator&,int,int);
+        Minimax(GameController&,Evaluator&);
 
         //Getters
         ChessMove getBestMoveAtDepth(int,double,double);

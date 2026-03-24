@@ -18,7 +18,7 @@ int main(){
 
     GameController play;
     Evaluator evalt(play);
-    Minimax robot(play,evalt,4,2);
+    Minimax robot(play,evalt);
     auto start = std::chrono::high_resolution_clock::now();
     
     robot.getBestMove();
@@ -33,6 +33,26 @@ int main(){
     std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";
     bool affichage;
     std::cin >> affichage;
+
+    std::cout<<"Voulez vous jouez contre une IA (0:non) (1:oui) (2:2 IA)"<<std::endl;
+    int isAI;
+    std::cin>>isAI;
+
+    if(isAI==2)
+    {
+        play.getWaitingPlayer().setBot(true);
+        play.getCurrentPlayer().setBot(true);
+    }
+    else if(isAI)
+    {
+        std::cout<<"Voulez vous jouez les blanc ? (0:non) (1:oui)"<<std::endl;
+        int white;
+        std::cin>>white;
+        if(white)
+            play.getWaitingPlayer().setBot(true);
+        else
+            play.getCurrentPlayer().setBot(true);
+    }
 
     
 

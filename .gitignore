@@ -29,6 +29,8 @@
 # debug information files
 *.dwo
 
+*.json
+
 AICHESS
 /test
 c_cpp_properties.json
