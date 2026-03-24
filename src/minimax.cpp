@@ -1,6 +1,6 @@
 #include "minimax.hpp"
 
-Minimax::Minimax(GameController &game,Evaluator &eval,int minimax_depth,int quiescence_depth):game{game},eval{eval},minimax_depth{minimax_depth},quiescence_depth{quiescence_depth}
+Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 {
   
 }
@@ -360,6 +360,7 @@ ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
 
 ChessMove Minimax::getBestMove()
 {
+    update_depth();
     // Réinitialiser le meilleur coup précédent
     previous_best = ChessMove();
 
@@ -382,7 +383,5 @@ ChessMove Minimax::getBestMove()
             break;
         }
     }
-
-    update_depth();
     return best;
 }

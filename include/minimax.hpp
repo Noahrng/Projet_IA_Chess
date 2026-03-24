@@ -35,7 +35,7 @@ class Minimax
 
         
     public:
-        Minimax(GameController&,Evaluator&,int,int);
+        Minimax(GameController&,Evaluator&);
         void update_depth();
 
         bool isLosingCapture(Coordinates from, Coordinates to);
