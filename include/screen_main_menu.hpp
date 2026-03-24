@@ -16,13 +16,19 @@ class MainMenuScreen : public Screen
         std::unique_ptr<TextShape> title;
         bool finished;
     public:
+        //Constructeurs / Destructeurs
         MainMenuScreen(GameController&,Minimax&,int width,int height);
 
+        //Vérification d'État
+        bool isFinished() override;
+
+        //Mise à Jour
         void update() override;
+        std::unique_ptr<Screen> nextScreen() override;
+
+        //Dessiner le Main Menu
         void draw() override;
 
-        bool isFinished() override;
-        std::unique_ptr<Screen> nextScreen() override;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "terminal_display.hpp"
 #include <iostream>
 
-
+/*----------------------Constructeurs / Destructeurs----------------------*/
 TerminalDisplay::TerminalDisplay(GameController &game,Minimax &robot,bool s): Display(game,robot,s){
 
 }
@@ -14,7 +14,7 @@ std::string TerminalDisplay::playerEntryString()
     return entry;
 } 
 
-/*---------------------Test  sur   entrée  du  joueur---------------------*/
+/*--------------------------Vérification d'état---------------------------*/
 bool TerminalDisplay::isGameQuitted(std::string s)
 {
     if(s == "quit") return true;
@@ -187,7 +187,7 @@ void TerminalDisplay::printInfosPromote()
     std::cout << "Promotion : queen, rook, bishop, knight" << "\n";
 }
 
-/*----------------------------Exécution du jeu----------------------------*/
+/*-------------------------------Exécution--------------------------------*/
 void TerminalDisplay::run()
 {
     bool quit = false;

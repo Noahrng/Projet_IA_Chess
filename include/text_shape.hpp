@@ -15,13 +15,16 @@ class TextShape{
         bool centered;
 
     public:
+        //Constructeurs / Destructeurs
         TextShape(std::unique_ptr<Shape>,const std::string&);
 
+        //Setters
         void setText(const std::string&);
         void setTextColor(Color);
         void setFontSize(int);
         void setCentered(bool);
 
+        //Dessiner le Texte
         void draw();
 };
 
