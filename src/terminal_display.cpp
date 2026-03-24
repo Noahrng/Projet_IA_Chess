@@ -80,8 +80,8 @@ void TerminalDisplay::printBoard()
 {
     bool color_turn = game.blackTurn();
     std::string colored_cell;
+    std::string last_move_cell_color="\033[43m";
     std::string end_color = "\033[0m";
-
     std::string legal_moves = "\033[93m";
 
     if(!color_turn)

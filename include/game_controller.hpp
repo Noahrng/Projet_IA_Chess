@@ -22,7 +22,10 @@ struct MoveHistory
                                                 rookRockFrom(Coordinates(-1,-1)),
                                                 eatenPiece{nullptr},
                                                 promotedPiece{nullptr},
-                                                enPassantInfo{nullptr,Coordinates(-1,-1)}{}
+                                                enPassantInfo{nullptr,Coordinates(-1,-1)}
+    {
+
+    }
 
     friend bool operator==(const MoveHistory &a,const MoveHistory &b)
     {
