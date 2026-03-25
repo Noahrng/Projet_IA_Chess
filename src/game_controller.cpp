@@ -16,17 +16,6 @@ GameController::GameController(): current_player{std::make_shared<Player>(false)
     cell_chosen.setXY(-1,-1);
 }
 
-GameController::GameController(const GameController &other):
-    current_player(std::make_shared<Player>(*other.current_player)),
-    waiting_player(std::make_shared<Player>(*other.waiting_player)),
-    piece_chosen{nullptr},
-    cell_chosen(Coordinates(-1,-1)),
-    moves{},
-    waiting_promotion(other.waiting_promotion)
-{
-
-}
-
 GameController::~GameController()
 {
     

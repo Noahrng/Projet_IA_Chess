@@ -182,7 +182,6 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
                 }
                 else
                 {
-                    std::cout<<lastMove.second<<"\n";
                     drawAsset(id,x,y,squareSize,c == choose ? YELLOW : WHITE);
                 }
             }
@@ -263,9 +262,6 @@ void ChessScreen::draw()
     {
         Coordinates c=getCoords(squareSize);
 
-
-        std::cout<<c<<"\n";
-
         if(!game.isChosen())
         {
             game.choosePiece(c);
@@ -316,7 +312,7 @@ void ChessScreen::draw()
     {
         if(game.getCurrentPlayer().isBot())
         {
-            ChessMove bestm=robot.getBestMove();
+            ChessMove bestm=robot.getBestMoveFork();
             if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
         }
     }
