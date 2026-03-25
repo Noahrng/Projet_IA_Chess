@@ -35,6 +35,11 @@ float GameAsset::getHeight()
     return (float)size;
 }
 
+Image* GameAsset::getImage()
+{
+    return &image;
+}
+
 /*--------------------------------Setters---------------------------------*/
 void GameAsset::setPosition(int newX,int newY)
 {

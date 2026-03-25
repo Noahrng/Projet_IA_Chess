@@ -16,6 +16,17 @@ GameController::GameController(): current_player{std::make_shared<Player>(false)
     cell_chosen.setXY(-1,-1);
 }
 
+GameController::GameController(const GameController &other):
+    current_player(std::make_shared<Player>(*other.current_player)),
+    waiting_player(std::make_shared<Player>(*other.waiting_player)),
+    piece_chosen{nullptr},
+    cell_chosen(Coordinates(-1,-1)),
+    moves{},
+    waiting_promotion(other.waiting_promotion)
+{
+
+}
+
 GameController::~GameController()
 {
     
@@ -51,9 +62,14 @@ Coordinates GameController::getCoordsPieceChosen()
 
 std::pair<Coordinates,Coordinates> GameController::getLastMove()
 {
-    MoveHistory h=moves.back();
-    std::pair<Coordinates,Coordinates> lastMove={h.from,h.to};
-    return lastMove
+    std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
+    if(!moves.empty())
+    {
+        MoveHistory h=moves.back();
+        lastMove.first=h.from;
+        lastMove.second=h.to;
+    }
+    return lastMove;
 }
 
 /*---------------------------Tours Des Joueurs----------------------------*/
