@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <array>
 
 struct ChessMove
 {
@@ -49,9 +50,9 @@ class Minimax
         Minimax(GameController&,Evaluator&);
 
         //Getters
+        ChessMove getBestMoveFork();
         ChessMove getBestMoveAtDepth(int,double,double);
         ChessMove getBestMove();
-        ChessMove getBestMoveFork();
         
         //Mise à Jour
         void update_depth();

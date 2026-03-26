@@ -7,6 +7,101 @@ Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 }
 
 /*--------------------------------Getters---------------------------------*/
+ChessMove Minimax::getBestMoveFork()
+{
+    update_depth();
+
+    std::vector<std::pair<Coordinates,Coordinates>> rootMoves;
+
+    Player& current = game.getCurrentPlayer();
+    for(size_t i = 0;i<current.nbOfPieces();i++)
+    {
+        game.choosePiece(i);
+        Coordinates from = game.getCoordsPieceChosen();
+        std::vector<Coordinates> moves;
+        game.movesOfPieceChosen(moves);
+        game.unChoosePiece();
+
+        for(auto& to : moves)
+        {
+            rootMoves.push_back({from,to});
+        }
+    }
+
+    int N = (int)rootMoves.size();
+
+    std::vector<std::array<int,2>> pipes(N);
+    for(int i=0;i<N;i++)
+    {
+        pipe(pipes[i].data());
+    }
+
+    bool maximizing = game.whiteTurn();
+
+    for(int i = 0;i<N;i++)
+    {
+        pid_t pid=fork();
+        if(pid==0)
+        {
+            for(int j=0;j<N;j++)
+            {
+                if(j!=i){
+                    close(pipes[j][0]);
+                    close(pipes[j][1]);
+                }
+            }
+            close(pipes[i][0]);
+
+            auto [from,to] = rootMoves[i];
+            double score = -100.0;
+
+            if(game.movePiece(from,to,true)){
+                game.switchTurn();
+                score=minimax(minimax_depth-1,!maximizing,-2.0,2.0);
+                game.unMove();
+            }
+
+            struct {double score; int fx,fy,tx,ty;} result;
+            result.score=score;
+            result.fx=from.getX();
+            result.fy=from.getY();
+            result.tx=to.getX();
+            result.ty=to.getY();
+
+            write(pipes[i][1],&result,sizeof(result));
+            close(pipes[i][1]);
+            exit(0);
+        }
+        else{
+            close(pipes[i][1]);
+        }
+    }
+
+    ChessMove best;
+    best.score=maximizing ? -100.0 : 100.0;
+
+    for(int i=0;i<N;i++)
+    {
+        struct { double score; int fx,fy,tx,ty; } result;
+        read(pipes[i][0],&result,sizeof(result));
+        close(pipes[i][0]);
+
+        if(maximizing ? result.score > best.score : result.score < best.score)
+        {
+            best.score=result.score;
+            best.from=Coordinates(result.fx,result.fy);
+            best.to=Coordinates(result.tx,result.ty);
+        }
+    }
+
+    for(int i=0;i<N;i++)
+    {
+        wait(nullptr);
+    }
+
+    return best;
+}
+
 ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
 {
     std::cout << "debut getBestMoveAtDepth depth=" << depth << std::endl;
@@ -135,104 +230,9 @@ void Minimax::update_depth()
     }
     else
     {
-        minimax_depth=4;
-        quiescence_depth=4;
+        minimax_depth=10;
+        quiescence_depth=2;
     }
-}
-
-ChessMove Minimax::getBestMoveFork()
-{
-    update_depth();
-
-    std::vector<std::pair<Coordinates,Coordinates>> rootMoves;
-
-    Player& current = game.getCurrentPlayer();
-    for(size_t i = 0;i<current.nbOfPieces();i++)
-    {
-        game.choosePiece(i);
-        Coordinates from = game.getCoordsPieceChosen();
-        std::vector<Coordinates> moves;
-        game.movesOfPieceChosen(moves);
-        game.unChoosePiece();
-
-        for(auto& to : moves)
-        {
-            rootMoves.push_back({from,to});
-        }
-    }
-
-    int N = (int)rootMoves.size();
-
-    std::vector<std::array<int,2>> pipes(N);
-    for(int i=0;i<N;i++)
-    {
-        pipe(pipes[i].data());
-    }
-
-    bool maximizing = game.whiteTurn();
-
-    for(int i = 0;i<N;i++)
-    {
-        pid_t pid=fork();
-        if(pid==0)
-        {
-            for(int j=0;j<N;j++)
-            {
-                if(j!=i){
-                    close(pipes[j][0]);
-                    close(pipes[j][1]);
-                }
-            }
-            close(pipes[i][0]);
-
-            auto [from,to] = rootMoves[i];
-            double score = -100.0;
-
-            if(game.movePiece(from,to,true)){
-                game.switchTurn();
-                score=minimax(minimax_depth-1,!maximizing,-2.0,2.0);
-                game.unMove();
-            }
-
-            struct {double score; int fx,fy,tx,ty;} result;
-            result.score=score;
-            result.fx=from.getX();
-            result.fy=from.getY();
-            result.tx=to.getX();
-            result.ty=to.getY();
-
-            write(pipes[i][1],&result,sizeof(result));
-            close(pipes[i][1]);
-            exit(0);
-        }
-        else{
-            close(pipes[i][1]);
-        }
-    }
-
-    ChessMove best;
-    best.score=maximizing ? -100.0 : 100.0;
-
-    for(int i=0;i<N;i++)
-    {
-        struct { double score; int fx,fy,tx,ty; } result;
-        read(pipes[i][0],&result,sizeof(result));
-        close(pipes[i][0]);
-
-        if(maximizing ? result.score > best.score : result.score < best.score)
-        {
-            best.score=result.score;
-            best.from=Coordinates(result.fx,result.fy);
-            best.to=Coordinates(result.tx,result.ty);
-        }
-    }
-
-    for(int i=0;i<N;i++)
-    {
-        wait(nullptr);
-    }
-
-    return best;
 }
 
 /*--------------------------Vérification d'État---------------------------*/

@@ -1,11 +1,5 @@
 #include "../include/coordinates.hpp"
 
-/*------------------------Fonctions Additionnelles------------------------*/
-int abs(int n){
-    if(n<0) return -n;
-    return n;
-}
-
 /*----------------------Constructeurs / Destructeurs----------------------*/
 Coordinates::Coordinates(){
     
@@ -216,22 +210,22 @@ bool Coordinates::greaterThanY(Coordinates c){
 /*----------------------Distances Entre Coordonnées-----------------------*/
 int Coordinates::distX(const Coordinates &other)
 {
-    return abs(this->x-other.x);
+    return std::abs(this->x-other.x);
 }
 
 int Coordinates::distX(const int X)
 {
-    return abs(this->x-X);
+    return std::abs(this->x-X);
 }
 
 int Coordinates::distY(const Coordinates &other)
 {
-    return abs(this->y-other.y);
+    return std::abs(this->y-other.y);
 }
 
 int Coordinates::distY(const int Y)
 {
-    return abs(this->y-Y);
+    return std::abs(this->y-Y);
 }
 
 /*-------------------------------Affichage--------------------------------*/
