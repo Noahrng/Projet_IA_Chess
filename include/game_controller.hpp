@@ -9,6 +9,7 @@
 
 struct MoveHistory
 {
+    int old_nomwe;
     Coordinates from;
     Coordinates to;
     Coordinates rookRockFrom;
@@ -17,12 +18,13 @@ struct MoveHistory
     std::pair<std::shared_ptr<Piece>,Coordinates> enPassantInfo;
 
 
-    MoveHistory(Coordinates from,Coordinates to):from{from},
-                                                to{to},
-                                                rookRockFrom(Coordinates(-1,-1)),
-                                                eatenPiece{nullptr},
-                                                promotedPiece{nullptr},
-                                                enPassantInfo{nullptr,Coordinates(-1,-1)}
+    MoveHistory(Coordinates from,Coordinates to): old_nomwe{0},
+        from{from},
+        to{to},
+        rookRockFrom(Coordinates(-1,-1)),
+        eatenPiece{nullptr},
+        promotedPiece{nullptr},
+        enPassantInfo{nullptr,Coordinates(-1,-1)}
     {
 
     }
@@ -46,6 +48,7 @@ class GameController
         Coordinates cell_chosen;
         std::vector<MoveHistory> moves;
         bool waiting_promotion;
+        int nb_of_moves_without_eating;
 
     public:
         //Constructeurs / Destructeurs
@@ -57,6 +60,12 @@ class GameController
         Player& getWaitingPlayer();
         Coordinates getCoordsPieceChosen();
         std::pair<Coordinates,Coordinates> getLastMove();
+        int getNOMWE();
+
+        //Setters
+        void incrementNOMWE();
+        void decrementNOMWE();
+        void resetNOMWE();
 
         //Tours Des Joueurs
         void switchTurn();
@@ -110,6 +119,7 @@ class GameController
         bool isMoveEnPassant(Coordinates, Coordinates);
         bool canEnPassant(Coordinates, Coordinates);
         void enPassant(Coordinates, Coordinates);
+
 
 };
 

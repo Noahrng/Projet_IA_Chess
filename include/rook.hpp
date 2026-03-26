@@ -10,9 +10,11 @@ class Rook : public Piece{
         //Constructeurs/Destructeurs
         Rook(bool, Coordinates);
         
+        //Getters
         PieceType getType() const override;
         std::vector<Coordinates>& getVectMove() override;
         
+        //Modèles de mouvement/capture
         bool canMovePattern(Coordinates) override;
         bool canEatPattern(Coordinates) override;
 };
