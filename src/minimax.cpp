@@ -230,7 +230,7 @@ void Minimax::update_depth()
     }
     else
     {
-        minimax_depth=10;
+        minimax_depth=4;
         quiescence_depth=2;
     }
 }
