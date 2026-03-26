@@ -8,7 +8,7 @@ ChessScreen::ChessScreen(GameController &game,Minimax &robot):Screen(game,robot)
     const std::string basePath = "assets/";
     srand(0);
 
-    this->addImage(AssetID::chessBoard,basePath+"Board.png");
+    this->addImage(AssetID::chessBoard,basePath+"Board1.png");
 
     this->addImage(AssetID::pawnWhite,basePath+"WhitePawn.png");
     this->addImage(AssetID::pawnBlack,basePath+"BlackPawn.png");
@@ -153,6 +153,7 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
 {
     Player &p1=game.getCurrentPlayer();
     Player &p2=game.getWaitingPlayer();
+    auto lastMove=game.getLastMove();
     for(int i = 0; i < 8 ; ++i)
     {
         for(int j = 0 ; j < 8 ; ++j)
@@ -190,6 +191,19 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
             {
                 bool isWhite=p2.isWhite();
                 AssetID id=getAssetForPiece(*p,isWhite);
+                if(p->getCoordinates()==lastMove.second)
+                {
+        
+                    DrawRectangle(side ? (7-lastMove.first.getX())*squareSize+3 : lastMove.first.getX()*squareSize+3,
+                                  side ? (7-lastMove.first.getY())*squareSize+3 : lastMove.first.getY()*squareSize+3,
+                                  squareSize,squareSize,
+                                  {255,255,0,80});
+
+                    DrawRectangle(side ? (7-lastMove.second.getX())*squareSize+3 : lastMove.second.getX()*squareSize+3,
+                                  side ? (7-lastMove.second.getY())*squareSize+3 : lastMove.second.getY()*squareSize+3,
+                                  squareSize,squareSize,
+                                  {255,255,0,80});
+                }
                 drawAsset(id,x,y,squareSize,c == choose ? YELLOW : WHITE);
             }
 
@@ -248,9 +262,6 @@ void ChessScreen::draw()
     {
         Coordinates c=getCoords(squareSize);
 
-
-        std::cout<<c<<"\n";
-
         if(!game.isChosen())
         {
             game.choosePiece(c);
@@ -301,7 +312,7 @@ void ChessScreen::draw()
     {
         if(game.getCurrentPlayer().isBot())
         {
-            ChessMove bestm=robot.getBestMove();
+            ChessMove bestm=robot.getBestMoveFork();
             if(game.movePiece(bestm.from,bestm.to,true)) game.switchTurn();
         }
     }
