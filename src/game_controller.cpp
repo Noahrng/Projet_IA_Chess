@@ -53,7 +53,13 @@ Coordinates GameController::getCoordsPieceChosen()
 std::pair<Coordinates,Coordinates> GameController::getLastMove()
 {
     MoveHistory h=moves.back();
-    std::pair<Coordinates,Coordinates> lastMove={h.from,h.to};
+    std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
+    if(!moves.empty())
+    {
+        MoveHistory h=moves.back();
+        lastMove.first=h.from;
+        lastMove.second=h.to;
+    }
     return lastMove;
 }
 
@@ -339,11 +345,6 @@ void GameController::unMove()
         }
         else{
             std::shared_ptr<Piece> p = current_player->getPiece(h.to);
-            if(p == nullptr)
-            {
-                std::cout << "unMove ERROR: h.from=" << h.from 
-                        << " h.to=" << h.to << std::endl;
-            }
             p->moveTo(h.from); 
             p->decrementNbOfMoves();
         }
@@ -587,6 +588,21 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     saved_x = from.getX();
     saved_y = from.getY();
 
+    bool isEP = (p->getType() == PieceType::Pawn)
+             && (from.distX(to) == 1)
+             && (from.distY(to) == 1)
+             && isEmpty(to);  // ← détection manuelle, sans appeler isMoveEnPassant
+
+    Coordinates epCoords(-1,-1);
+    std::shared_ptr<Piece> epEnemy = nullptr;
+
+    if(isEP)
+    {
+        epCoords.setXY(to.getX(), from.getY());  // le pion ennemi est sur la même rangée que from
+        epEnemy = waiting_player->getPiece(epCoords);
+    }
+
+    
     p->moveTo(to);  // On simule le coup
     
     //Si on mange une pièce, on la sauvegarde aussi
@@ -601,6 +617,13 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 
         enemy->moveTo(saved_enemy_c);
         waiting_player->addPiece(enemy);
+    }
+    else if(isEP && epEnemy != nullptr)
+    {
+        waiting_player->removePiece(epEnemy);
+        checked = isChecked();
+        epEnemy->moveTo(epCoords);
+        waiting_player->addPiece(epEnemy);
     }
     else
     {

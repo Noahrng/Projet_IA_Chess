@@ -5,6 +5,9 @@
 #include "evaluator.hpp"
 #include <iostream>
 #include <algorithm>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <array>
 
 struct ChessMove
 {
@@ -27,6 +30,13 @@ struct ChessMove
     }
 };
 
+struct PipeResult
+{
+    double score;
+    int from_x,from_y;
+    int to_x,to_y;
+};
+
 class Minimax
 {
     private:
@@ -40,6 +50,7 @@ class Minimax
         Minimax(GameController&,Evaluator&);
 
         //Getters
+        ChessMove getBestMoveFork();
         ChessMove getBestMoveAtDepth(int,double,double);
         ChessMove getBestMove();
         
