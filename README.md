@@ -6,16 +6,32 @@ Notre projet consiste à développer une IA capable de jouer aux échecs de mani
 
 ## Prérequis Système
 
-Le seul prérequis système est d'avoir docker d'installé sur votre machine.
+### Avec Docker
+- Docker installé sur votre machine
+
+### Avec Guix
+- Guix installé sur votre machine
+- Pour installer Guix :
+```bash
+sudo apt install guix
+```
 
 ## Instructions d'installations détaillées
 
+### Avec Docker
 ```bash
 docker build -t aichess .
 ```
 
+### Avec Guix
+```bash
+guix shell --manifest=guix.scm
+make clean && make
+```
+
 ## Instructions pour lancer l'application
 
+### Avec Docker
 Pour lancer l'image, exécutez les deux commandes suivantes :
 ```bash
 xhost +local:docker
@@ -25,6 +41,11 @@ Si vous voulez utiliser valgrind, faites la commande suivante :
 ```bash
 docker run --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix aichess valgrind ./build/AICHESS
 ```
+### Avec Guix
+```bash
+./build/AICHESS
+```
+
 ## Instructions pour exécuter les tests
 
 Si docker n'est pas utilisé :
@@ -42,6 +63,7 @@ dans le répertoire du projet.
 ├── include/            # Headers (.hpp) 
 ├── build/              # Fichiers compilés 
 ├── Dockerfile          # Configuration Docker 
+├── guix.scm            # Configuration guix
 ├── Makefile            # Script de compilation 
 └── README.md 
 ```

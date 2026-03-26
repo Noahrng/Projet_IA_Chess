@@ -43,6 +43,7 @@
     gnu-make
     pkg-config
     valgrind
+    glibc
     raylib
     mesa
     libx11
