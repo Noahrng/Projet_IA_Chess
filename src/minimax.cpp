@@ -9,6 +9,8 @@ Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 /*--------------------------------Getters---------------------------------*/
 ChessMove Minimax::getBestMoveFork()
 {
+    signal(SIGCHLD,SIG_IGN);
+
     update_depth();
 
     std::vector<std::pair<Coordinates,Coordinates>> rootMoves;
@@ -24,6 +26,8 @@ ChessMove Minimax::getBestMoveFork()
 
         for(auto& to : moves)
         {
+            std::shared_ptr<Piece> mover = current.getPiece(from);
+            if(mover && mover->getValue() >= 5.0 && isLosingMove(from, to)) continue;
             rootMoves.push_back({from,to});
         }
     }
@@ -104,11 +108,6 @@ ChessMove Minimax::getBestMoveFork()
             best.from=Coordinates(result.fx,result.fy);
             best.to=Coordinates(result.tx,result.ty);
         }
-    }
-
-    for(int i=0;i<N;i++)
-    {
-        wait(nullptr);
     }
 
     return best;
@@ -244,7 +243,7 @@ void Minimax::update_depth()
     }
     else
     {
-        minimax_depth=4;
+        minimax_depth=6;
         quiescence_depth=2;
     }
 }
@@ -256,20 +255,79 @@ bool Minimax::isLosingCapture(Coordinates from, Coordinates to)
     std::shared_ptr<Piece> victim   = game.getWaitingPlayer().getPiece(to);
 
     if(!attacker || !victim) return false;
+
+    // Si on gagne autant ou plus qu'on perd → jamais perdant
     if(attacker->getValue() <= victim->getValue() + 2.0) return false;
 
-    // Vérifier si la case est défendue par une pièce adverse
+    // Simuler la capture
+    attacker->moveTo(to);
+    victim->moveTo(Coordinates(-1,-1));  // retirer temporairement
+
+    // Compter les défenseurs de la case après la capture
+    bool defended = false;
     size_t nb = game.getWaitingPlayer().nbOfPieces();
     for(size_t k = 0; k < nb; k++)
     {
         std::shared_ptr<Piece> defender = game.getWaitingPlayer().getPiece(k);
         if(defender == victim) continue;
+        if(!defender->getCoordinates().onBoard()) continue;
         if(defender->canEatPattern(to) &&
            !game.pieceInBetween(defender->getCoordinates(), to))
         {
-            return true; // capture perdante
+            defended = true;
+            break;
         }
     }
+
+    // Annuler la simulation
+    attacker->moveTo(from);
+    victim->moveTo(to);
+
+    if(defended)
+        return true;  // capture perdante
+
+    return false;
+}
+
+bool Minimax::isLosingMove(Coordinates from, Coordinates to)
+{
+    std::shared_ptr<Piece> mover  = game.getCurrentPlayer().getPiece(from);
+    std::shared_ptr<Piece> victim = game.getWaitingPlayer().getPiece(to);
+
+    if(!mover) return false;
+
+    // Capture gagnante ou égale → jamais perdant
+    if(victim && mover->getValue() <= victim->getValue() + 2.0) return false;
+
+    double gain = victim ? victim->getValue() : 0.0;
+
+    // Simuler le déplacement
+    mover->moveTo(to);
+    if(victim) victim->moveTo(Coordinates(-1,-1));
+
+    // Vérifier si la case to est attaquée après le déplacement
+    bool attacked = false;
+    size_t nb = game.getWaitingPlayer().nbOfPieces();
+    for(size_t k = 0; k < nb; k++)
+    {
+        std::shared_ptr<Piece> defender = game.getWaitingPlayer().getPiece(k);
+        if(defender == victim) continue;
+        if(!defender->getCoordinates().onBoard()) continue;
+        if(defender->canEatPattern(to) &&
+           !game.pieceInBetween(defender->getCoordinates(), to))
+        {
+            attacked = true;
+            break;
+        }
+    }
+
+    // Annuler la simulation
+    mover->moveTo(from);
+    if(victim) victim->moveTo(to);
+
+    if(attacked && mover->getValue() > gain + 2.0)
+        return true;  // on perd plus qu'on ne gagne
+
     return false;
 }
 
@@ -296,6 +354,7 @@ void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
             // Priorité 2 : proximité au centre
             int a_dist = a.distX(3) + a.distY(3);
             int b_dist = b.distX(3) + b.distY(3);
+            
             return a_dist < b_dist;
         }
     );
@@ -363,7 +422,8 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
-                if(isLosingCapture(cell_choose,list_move[j])) continue;
+                std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
+                if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
                 if(game.movePiece(cell_choose,list_move[j],true))
                 {
                     has_move=true;
@@ -395,7 +455,8 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             size_t size_move=list_move.size();
             for(size_t j=0;j<size_move;j++)
             {
-                if(isLosingCapture(cell_choose,list_move[j])) continue;
+                std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
+                if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
                 if(game.movePiece(cell_choose,list_move[j],true))
                 {
                     has_move=true;

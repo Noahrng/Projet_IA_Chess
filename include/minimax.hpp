@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include <array>
 
 struct ChessMove
@@ -58,7 +59,8 @@ class Minimax
         void update_depth();
 
         //Vérification d'état
-        bool isLosingCapture(Coordinates from, Coordinates to);
+        bool isLosingCapture(Coordinates, Coordinates);
+        bool isLosingMove(Coordinates, Coordinates);
 
         //Tris
         void sortMoves(std::vector<Coordinates>&,Coordinates);
