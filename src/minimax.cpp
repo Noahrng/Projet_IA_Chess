@@ -33,7 +33,11 @@ ChessMove Minimax::getBestMoveFork()
     std::vector<std::array<int,2>> pipes(N);
     for(int i=0;i<N;i++)
     {
-        pipe(pipes[i].data());
+        if(pipe(pipes[i].data())==-1)
+        {
+            std::cerr << "pipe() failed\n";
+            exit(1);
+        }
     }
 
     bool maximizing = game.whiteTurn();
@@ -68,7 +72,11 @@ ChessMove Minimax::getBestMoveFork()
             result.tx=to.getX();
             result.ty=to.getY();
 
-            write(pipes[i][1],&result,sizeof(result));
+            if(write(pipes[i][1],&result,sizeof(result))==-1)
+            {
+                std::cerr << "write() failed\n";
+                exit(1);
+            }
             close(pipes[i][1]);
             exit(0);
         }
@@ -83,7 +91,11 @@ ChessMove Minimax::getBestMoveFork()
     for(int i=0;i<N;i++)
     {
         struct { double score; int fx,fy,tx,ty; } result;
-        read(pipes[i][0],&result,sizeof(result));
+        if(read(pipes[i][0],&result,sizeof(result))==-1)
+        {
+            std::cerr << "read() failed\n";
+            exit(1);
+        }
         close(pipes[i][0]);
 
         if(maximizing ? result.score > best.score : result.score < best.score)
@@ -105,7 +117,7 @@ ChessMove Minimax::getBestMoveFork()
 ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
 {
     std::cout << "debut getBestMoveAtDepth depth=" << depth << std::endl;
-    std::cout << "blanc=" << game.whiteTurn() << std::endl; // ← crash ici ?
+    std::cout << "blanc=" << game.whiteTurn() << std::endl;
     ChessMove best;
     bool maximizing = game.whiteTurn();
     best.score = maximizing ? -100.0 : 100.0;
@@ -127,6 +139,7 @@ ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
         sortMovesWithPrevious(list_move, cell_choose, previous_best);
 
         size_t size_move = list_move.size();
+
         for(size_t j = 0; j < size_move; j++)
         {
             if(isLosingCapture(cell_choose,list_move[j])) continue;
@@ -220,11 +233,12 @@ ChessMove Minimax::getBestMove()
 /*------------------------------Mise à Jour-------------------------------*/
 void Minimax::update_depth()
 {
+    size_t nbpiece=game.getCurrentPlayer().nbOfPieces()+game.getWaitingPlayer().nbOfPieces();
     if(game.getCurrentPlayer().nbOfPieces()==1 || game.getWaitingPlayer().nbOfPieces() == 1)
     {
         minimax_depth=8;
     }
-    else if(game.getCurrentPlayer().nbOfPieces()<=3 || game.getWaitingPlayer().nbOfPieces()<=3)
+    else if(nbpiece < 12)
     {
         minimax_depth=6;
     }
@@ -242,7 +256,7 @@ bool Minimax::isLosingCapture(Coordinates from, Coordinates to)
     std::shared_ptr<Piece> victim   = game.getWaitingPlayer().getPiece(to);
 
     if(!attacker || !victim) return false;
-    if(attacker->getValue() <= victim->getValue()) return false;
+    if(attacker->getValue() <= victim->getValue() + 2.0) return false;
 
     // Vérifier si la case est défendue par une pièce adverse
     size_t nb = game.getWaitingPlayer().nbOfPieces();

@@ -38,23 +38,16 @@ double Evaluator::evaluateMaterial()
     Player &white = current.isWhite() ? current : waiting;
     Player &black = current.isBlack() ? current : waiting;
 
-    for(size_t i = 0; i < white.nbOfPieces();i++)
+    for(size_t i = 1; i < white.nbOfPieces();i++)
     {
         std::shared_ptr<Piece> p = white.getPiece(i);
-        if(p!=nullptr && p->getType()!=PieceType::King)
-        {
-            white_score+=p->getValue();
-        }
+        white_score+=p->getValue();
     }
-    for(size_t i = 0; i < black.nbOfPieces();i++)
+    for(size_t i = 1; i < black.nbOfPieces();i++)
     {
         std::shared_ptr<Piece> p = black.getPiece(i);
-        if(p!=nullptr && p->getType()!=PieceType::King)
-        {
-            black_score+=p->getValue();
-        }
+        black_score+=p->getValue();
     }
-
     return white_score-black_score;
 }
 
