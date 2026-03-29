@@ -13,8 +13,8 @@ class Rook : public Piece{
         PieceType getType() const override;
         std::vector<Coordinates>& getVectMove() override;
         
-        bool canMovePattern(Coordinates) override;
-        bool canEatPattern(Coordinates) override;
+        bool canMovePattern(const Coordinates) const override;
+        bool canEatPattern(const Coordinates) const override;
 };
 
 #endif

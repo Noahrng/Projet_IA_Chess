@@ -30,22 +30,23 @@ bool operator<(const Piece &a,const Piece &b)
 }
 
 /*--------------------------------Getters---------------------------------*/
-std::string Piece::getTerminalSprite(){
+std::string Piece::getTerminalSprite() const
+{
     return terminal_sprite;
 }
 
-Coordinates Piece::getCoordinates()
+Coordinates Piece::getCoordinates() const
 {
     return this->coords;
 }
 
-double Piece::getValue()
+double Piece::getValue() const
 {
     return value;
 }
 
 /*--------------------------Nombre De Mouvements--------------------------*/
-int Piece::howManyMoves()
+int Piece::howManyMoves() const
 {
     return nb_of_moves;
 }

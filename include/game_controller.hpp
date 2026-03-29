@@ -52,18 +52,18 @@ class GameController
         //Getters
         Player& getCurrentPlayer();
         Player& getWaitingPlayer();
-        Coordinates getCoordsPieceChosen();
-        std::pair<Coordinates,Coordinates> getLastMove();
+        Coordinates getCoordsPieceChosen() const;
+        std::pair<Coordinates,Coordinates> getLastMove() const;
 
         //Tours Des Joueurs
         void switchTurn();
-        bool whiteTurn();
-        bool blackTurn();
+        bool whiteTurn() const;
+        bool blackTurn() const;
 
 
         //Pièce Choisie
-        bool isNull();
-        bool isChosen();
+        bool isNull() const;
+        bool isChosen() const;
         void choosePiece(Coordinates);
         void choosePiece(int);
         void choosePiece(std::shared_ptr<Piece>);
@@ -78,34 +78,34 @@ class GameController
         void unMove();
 
         //Vérifications & Détections
-        bool isEmpty(Coordinates);
-        bool pieceInBetween(Coordinates, Coordinates);
-        bool pieceAllyDetection(Coordinates);
-        bool pieceEnemyDetection(Coordinates);
-        bool pieceDectection(Coordinates);
+        bool isEmpty(Coordinates) const;
+        bool pieceInBetween(Coordinates, Coordinates) const;
+        bool pieceAllyDetection(Coordinates) const;
+        bool pieceEnemyDetection(Coordinates) const;
+        bool pieceDectection(Coordinates) const;
         
         bool isLegalMove(Coordinates, Coordinates);
         int countLegalMovesOfPiece(std::shared_ptr<Piece>);
 
-        int isThreaten(Coordinates);
-        int isChecked();
+        int isThreaten(Coordinates) const;
+        int isChecked() const;
         bool isKingCheckedAfterMove(Coordinates, Coordinates);
-        bool isRepeat();
+        bool isRepeat() const;
         bool isDraw();
         bool isPat();
         bool isCheckmate();
 
         //Règles Spéciales
-        bool isPawnPromoted(Coordinates,bool);
-        bool promotionPending();
+        bool isPawnPromoted(Coordinates,bool) const;
+        bool promotionPending() const;
         void promoteTo(std::shared_ptr<Piece>,PieceType);
         
-        bool isMoveRock(Coordinates, Coordinates);
-        bool canRock(Coordinates, Coordinates);
+        bool isMoveRock(Coordinates, Coordinates) const;
+        bool canRock(Coordinates, Coordinates) const;
         Coordinates rock(Coordinates);
 
-        bool isMoveEnPassant(Coordinates, Coordinates);
-        bool canEnPassant(Coordinates, Coordinates);
+        bool isMoveEnPassant(Coordinates, Coordinates) const;
+        bool canEnPassant(Coordinates, Coordinates) const;
         void enPassant(Coordinates, Coordinates);
 
 };

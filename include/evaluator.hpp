@@ -78,18 +78,32 @@ class Evaluator{
             { 0.2,  0.2,  0.0,  0.0,  0.0,  0.0,  0.2,  0.2},
             { 0.2,  0.3,  0.1,  0.0,  0.0,  0.1,  0.3,  0.2}
         };
+
+        static constexpr double KING_ENDGAME_TABLE[8][8] = {
+            {-0.5,-0.3,-0.3,-0.3,-0.3,-0.3,-0.3,-0.5},
+            {-0.3,-0.3, 0.0, 0.0, 0.0, 0.0,-0.3,-0.3},
+            {-0.3, 0.0, 0.2, 0.3, 0.3, 0.2, 0.0,-0.3},
+            {-0.3, 0.0, 0.3, 0.4, 0.4, 0.3, 0.0,-0.3},
+            {-0.3, 0.0, 0.3, 0.4, 0.4, 0.3, 0.0,-0.3},
+            {-0.3, 0.0, 0.2, 0.3, 0.3, 0.2, 0.0,-0.3},
+            {-0.3,-0.3, 0.0, 0.0, 0.0, 0.0,-0.3,-0.3},
+            {-0.5,-0.3,-0.3,-0.3,-0.3,-0.3,-0.3,-0.5}
+        };
         
     public:
         //Constructeurs / Destructeurs
         Evaluator(GameController&);
 
         //Getters
-        double getPieceTableValue(Piece&,bool);
+        double getPieceTableValue(Piece&,bool) const;
+
+        //Verification
+        bool isEndGame() const;
         
         //Evaluations
-        double evaluateMaterial();
-        double evaluatePosition();
-        double evaluate();
+        double evaluateMaterial() const;
+        double evaluatePosition() const;
+        double evaluate() const;
 };
 
 #endif

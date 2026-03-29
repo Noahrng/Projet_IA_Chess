@@ -139,7 +139,7 @@ std::ostream& operator<<(std::ostream& os, Coordinates &a)
 }
 
 /*--------------------------------Getters---------------------------------*/
-int Coordinates::getX()
+int Coordinates::getX() const
 /*
     Arguments:
         void
@@ -154,7 +154,7 @@ int Coordinates::getX()
     return this->x;
 }
 
-int Coordinates::getY()
+int Coordinates::getY() const
 /*
     Arguments:
         void
@@ -184,51 +184,50 @@ void Coordinates::setXY(int new_x,int new_y){
 }
 
 /*------------------------------Comparaisons------------------------------*/
-bool Coordinates::onBoard()
+bool Coordinates::onBoard() const
 {
     if(x>=0 && x<8 && y>=0 && y<8) return true;
     return false;
 }
 
-bool Coordinates::lowerThanX(Coordinates c){
+bool Coordinates::lowerThanX(Coordinates c) const
+{
     if(c.x < x) return false;
     return true;
 }
-bool Coordinates::lowerThanY(Coordinates c){
+bool Coordinates::lowerThanY(Coordinates c) const
+{
     if(c.y < y) return false;
     return true;
 }
-bool Coordinates::greaterThanX(Coordinates c){
+bool Coordinates::greaterThanX(Coordinates c) const 
+{
     if(c.x < x) return true;
     return false;
 }
-bool Coordinates::greaterThanY(Coordinates c){
+bool Coordinates::greaterThanY(Coordinates c) const 
+{
     if(c.y < y) return true;
     return false;
 }
 
 /*----------------------Distances Entre Coordonnées-----------------------*/
-int Coordinates::distX(const Coordinates &other)
+int Coordinates::distX(const Coordinates &other) const
 {
     return std::abs(this->x-other.x);
 }
 
-int Coordinates::distX(const int X)
+int Coordinates::distX(const int X) const
 {
     return std::abs(this->x-X);
 }
 
-int Coordinates::distY(const Coordinates &other)
+int Coordinates::distY(const Coordinates &other) const
 {
     return std::abs(this->y-other.y);
 }
 
-int Coordinates::distY(const int Y)
+int Coordinates::distY(const int Y) const
 {
     return std::abs(this->y-Y);
-}
-
-/*-------------------------------Affichage--------------------------------*/
-void Coordinates::print(){
-    std::cout<< this;
 }

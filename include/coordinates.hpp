@@ -43,8 +43,8 @@ class Coordinates{
         Coordinates& operator/=(const int&);
 
         //Getters
-        int getX();
-        int getY();
+        int getX() const;
+        int getY() const;
         
         //Setters
         void setX(int);
@@ -52,20 +52,17 @@ class Coordinates{
         void setXY(int, int);
 
         //Comparaisons
-        bool onBoard();
-        bool lowerThanX(Coordinates);
-        bool lowerThanY(Coordinates);
-        bool greaterThanX(Coordinates);
-        bool greaterThanY(Coordinates);
+        bool onBoard() const;
+        bool lowerThanX(Coordinates) const;
+        bool lowerThanY(Coordinates) const;
+        bool greaterThanX(Coordinates) const;
+        bool greaterThanY(Coordinates) const;
 
         //Distances Entre Coordonnées
-        int distX(const Coordinates&);
-        int distX(const int);
-        int distY(const Coordinates&);
-        int distY(const int);
-
-        //Affichage
-        void print();
+        int distX(const Coordinates&) const;
+        int distX(const int) const;
+        int distY(const Coordinates&) const;
+        int distY(const int) const;
 };
 
 

@@ -7,7 +7,7 @@ Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0},MAX_MO
 }
 
 /*--------------------------------Getters---------------------------------*/
-double Evaluator::getPieceTableValue(Piece &p, bool isWhite)
+double Evaluator::getPieceTableValue(Piece &p, bool isWhite) const
 {
     int x = p.getCoordinates().getX();
     int y = p.getCoordinates().getY();
@@ -22,14 +22,33 @@ double Evaluator::getPieceTableValue(Piece &p, bool isWhite)
         case PieceType::Bishop: return BISHOP_TABLE[row][x];
         case PieceType::Rook:   return ROOK_TABLE[row][x];
         case PieceType::Queen:  return QUEEN_TABLE[row][x];
-        case PieceType::King:   return KING_TABLE[row][x];
+        case PieceType::King:   
+            return isEndGame() ? KING_ENDGAME_TABLE[row][x] : KING_TABLE[row][x];
         default: return 0.0;
     }
 }
 
+/*-----------------------------Verification-------------------------------*/
+bool Evaluator::isEndGame() const
+{
+    Player &current = game.getCurrentPlayer();
+    Player &waiting = game.getWaitingPlayer();
+
+    size_t n1 = current.nbOfPieces();
+    size_t n2 = waiting.nbOfPieces();
+
+    return n1+n2 <= 8;
+
+    std::shared_ptr<Piece> queen_current=current.getPiece(1);
+    std::shared_ptr<Piece> queen_waiting=waiting.getPiece(1);
+
+    bool no_queen=queen_current->getType()!=PieceType::Queen && queen_current->getType()!=PieceType::Queen;
+
+    return no_queen;
+}
 
 /*------------------------------Évaluations-------------------------------*/
-double Evaluator::evaluateMaterial()
+double Evaluator::evaluateMaterial() const
 {
     double white_score=0.0;
     double black_score=0.0;
@@ -38,29 +57,22 @@ double Evaluator::evaluateMaterial()
     Player &white = current.isWhite() ? current : waiting;
     Player &black = current.isBlack() ? current : waiting;
 
-    for(size_t i = 0; i < white.nbOfPieces();i++)
+    for(size_t i = 1; i < white.nbOfPieces();i++)
     {
         std::shared_ptr<Piece> p = white.getPiece(i);
-        if(p!=nullptr && p->getType()!=PieceType::King)
-        {
-            white_score+=p->getValue();
-        }
+        white_score+=p->getValue();
     }
-    for(size_t i = 0; i < black.nbOfPieces();i++)
+    for(size_t i = 1; i < black.nbOfPieces();i++)
     {
         std::shared_ptr<Piece> p = black.getPiece(i);
-        if(p!=nullptr && p->getType()!=PieceType::King)
-        {
-            black_score+=p->getValue();
-        }
+        black_score+=p->getValue();
     }
-
     return white_score-black_score;
 }
 
 
 
-double Evaluator::evaluatePosition()
+double Evaluator::evaluatePosition() const
 {   
     double white_score = 0.0;
     double black_score = 0.0;
@@ -87,12 +99,15 @@ double Evaluator::evaluatePosition()
     return white_score - black_score;
 }
 
-double Evaluator::evaluate()
+double Evaluator::evaluate() const
 {
     double material = evaluateMaterial()/MAX_MATERIAL;
     double position = evaluatePosition()/MAX_POSITION;
 
-    double score = 0.95*material+0.05*position;
+    double pos_weight = isEndGame() ?  0.2 : 0.05;
+    double mat_weight = 1.0-pos_weight;
+
+    double score = mat_weight*material+pos_weight*position;
 
     return std::clamp(score,-0.99,0.99);
 }
