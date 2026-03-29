@@ -1,40 +1,27 @@
 #include "game_controller.hpp"
-#include "pawn.hpp"
 #include "terminal_display.hpp"
 #include "graphic_display.hpp"
-#include "evaluator.hpp"
 #include "minimax.hpp"
 
 #include <chrono>
-#include <random>
 #include <cstdlib>
 
 int main(){
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(0,7);
-
-    std::uniform_int_distribution<> distrib_choice(0,15);
-
     GameController play;
     Evaluator evalt(play);
     Minimax robot(play,evalt);
-    auto start = std::chrono::high_resolution_clock::now();
-    
-    robot.getBestMoveFork();
 
+    auto start = std::chrono::high_resolution_clock::now();
+    robot.getBestMoveFork();
     auto end=std::chrono::high_resolution_clock::now();
     auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
     std::cout << "Temps : " << duration.count() << " ms" << std::endl;
     
-    std::cout<<evalt.evaluate()<<"\n";
-
-
     std::cout << "Affichage Terminal (0) ou Interface Graphique (1) ?\n";
     bool affichage;
     std::cin >> affichage;
 
-    std::cout<<"Voulez vous jouez contre une IA (0:non) (1:oui) (2:2 IA)"<<std::endl;
+    std::cout<<"Voulez vous jouez contre une IA (0:non) (1:oui) (2:IA vs IA)"<<std::endl;
     int isAI;
     std::cin>>isAI;
 

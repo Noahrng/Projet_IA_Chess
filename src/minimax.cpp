@@ -40,7 +40,7 @@ ChessMove Minimax::getBestMoveFork()
         if(pipe(pipes[i].data())==-1)
         {
             std::cerr << "pipe() failed\n";
-            exit(1);
+            exit(0);
         }
     }
 
@@ -79,7 +79,7 @@ ChessMove Minimax::getBestMoveFork()
             if(write(pipes[i][1],&result,sizeof(result))==-1)
             {
                 std::cerr << "write() failed\n";
-                exit(1);
+                exit(0);
             }
             close(pipes[i][1]);
             exit(0);
@@ -98,7 +98,7 @@ ChessMove Minimax::getBestMoveFork()
         if(read(pipes[i][0],&result,sizeof(result))==-1)
         {
             std::cerr << "read() failed\n";
-            exit(1);
+            exit(0);
         }
         close(pipes[i][0]);
 
@@ -228,28 +228,27 @@ ChessMove Minimax::getBestMove()
     return best;
 }
 
-
 /*------------------------------Mise à Jour-------------------------------*/
 void Minimax::update_depth()
 {
-    size_t nbpiece=game.getCurrentPlayer().nbOfPieces()+game.getWaitingPlayer().nbOfPieces();
     if(game.getCurrentPlayer().nbOfPieces()==1 || game.getWaitingPlayer().nbOfPieces() == 1)
     {
         minimax_depth=8;
     }
-    else if(nbpiece < 12)
+    else if(eval.isEndGame() && 1==0)
     {
         minimax_depth=6;
+        quiescence_depth=4;
     }
     else
     {
-        minimax_depth=6;
-        quiescence_depth=2;
+        minimax_depth=4;
+        quiescence_depth=4;
     }
 }
 
 /*--------------------------Vérification d'État---------------------------*/
-bool Minimax::isLosingCapture(Coordinates from, Coordinates to)
+bool Minimax::isLosingCapture(const Coordinates from, const Coordinates to)
 {
     std::shared_ptr<Piece> attacker = game.getCurrentPlayer().getPiece(from);
     std::shared_ptr<Piece> victim   = game.getWaitingPlayer().getPiece(to);
@@ -289,7 +288,7 @@ bool Minimax::isLosingCapture(Coordinates from, Coordinates to)
     return false;
 }
 
-bool Minimax::isLosingMove(Coordinates from, Coordinates to)
+bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
 {
     std::shared_ptr<Piece> mover  = game.getCurrentPlayer().getPiece(from);
     std::shared_ptr<Piece> victim = game.getWaitingPlayer().getPiece(to);
@@ -332,7 +331,7 @@ bool Minimax::isLosingMove(Coordinates from, Coordinates to)
 }
 
 /*----------------------------------Tris----------------------------------*/
-void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
+void Minimax::sortMoves(std::vector<Coordinates> &moves,const Coordinates from) const
 {
     std::sort(moves.begin(), moves.end(),
         [this, from](Coordinates &a,Coordinates &b)
@@ -360,9 +359,7 @@ void Minimax::sortMoves(std::vector<Coordinates> &moves, Coordinates from)
     );
 }
 
-void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,
-                                     Coordinates from,
-                                     const ChessMove &prev_best)
+void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,Coordinates from,const ChessMove &prev_best)
 {
     std::sort(moves.begin(), moves.end(),
         [this, from, &prev_best](Coordinates &a, Coordinates &b)
@@ -390,77 +387,50 @@ void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,
 }
 
 /*------------------------------Algorithmes-------------------------------*/
-double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
+double Minimax::minimax(const int depth,const bool maximizing,double alpha,double beta)
 {
     if(game.isRepeat()) return 0.0;
+    if(game.isCheckmate()) return maximizing ? -1.0 : 1.0;
+    if(game.isPat()) return 0.0;
 
     if(depth==0)
     {
         return quiescence(alpha,beta,maximizing,quiescence_depth);
     }
-    
 
-    double best;
-    bool has_move=false;
+    double best=maximizing ? -100.0 : 100.0;
+    Player &current=game.getCurrentPlayer();
+    size_t nb_piece=current.nbOfPieces();
 
-    if(maximizing)
+    for(size_t i=0;i<nb_piece;i++)
     {
-        best=-100.0;
-        Player &current=game.getCurrentPlayer();
-        size_t nb_piece=current.nbOfPieces();
-        for(size_t i=0;i<nb_piece;i++)
+        std::vector<Coordinates> list_move;
+        list_move.reserve(28);
+        game.choosePiece(i);
+        Coordinates cell_choose=game.getCoordsPieceChosen();
+        game.movesOfPieceChosen(list_move);
+        game.unChoosePiece();
+
+        sortMoves(list_move,cell_choose);
+
+        size_t size_move=list_move.size();
+        for(size_t j=0;j<size_move;j++)
         {
-            std::vector<Coordinates> list_move;
-            list_move.reserve(28);
-            game.choosePiece(i);
-            Coordinates cell_choose=game.getCoordsPieceChosen();
-            game.movesOfPieceChosen(list_move);
-            game.unChoosePiece();
-
-            sortMoves(list_move,cell_choose);
-
-            size_t size_move=list_move.size();
-            for(size_t j=0;j<size_move;j++)
+            std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
+            if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
+            if(game.movePiece(cell_choose,list_move[j],true))
             {
-                std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
-                if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
-                if(game.movePiece(cell_choose,list_move[j],true))
+                game.switchTurn();
+                if(maximizing)
                 {
-                    has_move=true;
-                    game.switchTurn();
                     best=std::max(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
                     if(best>=beta)
                         return best;
                     alpha=std::max(alpha,best);
                 }
-            }
-        }
-    }
-    else
-    {
-        best=100.0;
-        Player &current=game.getCurrentPlayer();
-        size_t nb_piece=current.nbOfPieces();
-        for(size_t i=0;i<nb_piece;i++)
-        {
-            std::vector<Coordinates> list_move;
-            list_move.reserve(28);
-            game.choosePiece(i);
-            Coordinates cell_choose=game.getCoordsPieceChosen();
-            game.movesOfPieceChosen(list_move);
-            game.unChoosePiece();
-
-            sortMoves(list_move,cell_choose);
-            size_t size_move=list_move.size();
-            for(size_t j=0;j<size_move;j++)
-            {
-                std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
-                if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
-                if(game.movePiece(cell_choose,list_move[j],true))
+                else
                 {
-                    has_move=true;
-                    game.switchTurn();
                     best=std::min(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
                     if(alpha>=best)
@@ -470,18 +440,10 @@ double Minimax::minimax(int depth,bool maximizing,double alpha,double beta)
             }
         }
     }
-
-    if(!has_move)
-    {
-        if(game.isChecked())
-            return maximizing ? -1.0 : 1.0;
-        else
-            return 0.0;
-    }
     return best;
 }
 
-double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
+double Minimax::quiescence(double alpha,double beta,const bool maximizing,int depth)
 {
     if(depth == 0)
         return eval.evaluate();
@@ -492,74 +454,48 @@ double Minimax::quiescence(double alpha, double beta, bool maximizing,int depth)
     {
         if(stand_pat >= beta) return stand_pat;
         if(stand_pat > alpha) alpha = stand_pat;
-
-        Player &current = game.getCurrentPlayer();
-        size_t nb_piece = current.nbOfPieces();
-
-        for(size_t i = 0; i < nb_piece; i++)
-        {
-            std::vector<Coordinates> list_move;
-            list_move.reserve(28);
-
-            game.choosePiece(i);
-            Coordinates cell_choose = game.getCoordsPieceChosen();
-            game.movesOfPieceChosen(list_move);
-            game.unChoosePiece();
-
-            for(size_t j = 0; j < list_move.size(); j++)
-            {
-                // Seulement les captures !
-                if(!game.pieceEnemyDetection(list_move[j])) continue;
-                if(isLosingCapture(cell_choose,list_move[j])) continue;
-
-                if(game.movePiece(cell_choose, list_move[j], true))
-                {
-                    game.switchTurn();
-                    double score = quiescence(alpha, beta, !maximizing,depth-1);
-                    game.unMove();
-
-                    if(score >= beta)  return score;
-                    if(score > alpha)  alpha = score;
-                }
-            }
-        }
-        return alpha;
     }
     else
     {
         if(stand_pat <= alpha) return stand_pat;
         if(stand_pat < beta)   beta = stand_pat;
+    }
 
-        Player &current = game.getCurrentPlayer();
-        size_t nb_piece = current.nbOfPieces();
+    Player &current = game.getCurrentPlayer();
+    size_t nb_piece = current.nbOfPieces();
 
-        for(size_t i = 0; i < nb_piece; i++)
+    for(size_t i = 0; i < nb_piece; i++)
+    {
+        std::vector<Coordinates> list_move;
+        list_move.reserve(28);
+        game.choosePiece(i);
+        Coordinates cell_choose = game.getCoordsPieceChosen();
+        game.movesOfPieceChosen(list_move);
+        game.unChoosePiece();
+
+        for(size_t j = 0; j < list_move.size(); j++)
         {
-            std::vector<Coordinates> list_move;
-            list_move.reserve(28);
+            if(!game.pieceEnemyDetection(list_move[j])) continue;
+            if(isLosingCapture(cell_choose, list_move[j])) continue;
 
-            game.choosePiece(i);
-            Coordinates cell_choose = game.getCoordsPieceChosen();
-            game.movesOfPieceChosen(list_move);
-            game.unChoosePiece();
-
-            for(size_t j = 0; j < list_move.size(); j++)
+            if(game.movePiece(cell_choose, list_move[j], true))
             {
-                // Seulement les captures !
-                if(!game.pieceEnemyDetection(list_move[j])) continue;
-                if(isLosingCapture(cell_choose,list_move[j])) continue;
+                game.switchTurn();
+                double score = quiescence(alpha, beta, !maximizing, depth-1);
+                game.unMove();
 
-                if(game.movePiece(cell_choose, list_move[j], true))
+                if(maximizing)
                 {
-                    game.switchTurn();
-                    double score = quiescence(alpha, beta, !maximizing,depth-1);
-                    game.unMove();
-
+                    if(score >= beta)  return score;
+                    if(score > alpha)  alpha = score;
+                }
+                else
+                {
                     if(score <= alpha) return score;
                     if(score < beta)   beta = score;
                 }
             }
         }
-        return beta;
     }
+    return maximizing ? alpha : beta;
 }
