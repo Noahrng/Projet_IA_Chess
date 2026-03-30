@@ -20,15 +20,15 @@ ChessMove Minimax::getBestMoveFork()
     {
         game.choosePiece(i);
         Coordinates from = game.getCoordsPieceChosen();
-        std::vector<Coordinates> moves;
-        game.movesOfPieceChosen(moves);
+        Coordinates moves[218];
+        int size_move=game.movesOfPieceChosen(moves);
         game.unChoosePiece();
 
-        for(auto& to : moves)
+        for(int j=0;j<size_move;j++)
         {
             std::shared_ptr<Piece> mover = current.getPiece(from);
-            if(mover && mover->getValue() >= 5.0 && isLosingMove(from, to)) continue;
-            rootMoves.push_back({from,to});
+            if(mover && mover->getValue() >= 5.0 && isLosingMove(from, moves[j])) continue;
+            rootMoves.push_back({from,moves[j]});
         }
     }
 
@@ -124,22 +124,19 @@ ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
     Player &current = game.getCurrentPlayer();
     size_t nb_piece = current.nbOfPieces();
 
-    std::vector<Coordinates> list_move;
-    list_move.reserve(28);
+    Coordinates list_move[218];
 
     for(size_t i = 0; i < nb_piece; i++)
     {
         game.choosePiece(i);
         Coordinates cell_choose = game.getCoordsPieceChosen();
-        game.movesOfPieceChosen(list_move);
+        int size_move=game.movesOfPieceChosen(list_move);
         game.unChoosePiece();
 
         // Tri avec le meilleur coup de la profondeur précédente
-        sortMovesWithPrevious(list_move, cell_choose, previous_best);
+        sortMovesWithPrevious(list_move,size_move,cell_choose, previous_best);
 
-        size_t size_move = list_move.size();
-
-        for(size_t j = 0; j < size_move; j++)
+        for(int j = 0; j < size_move; j++)
         {
             if(isLosingCapture(cell_choose,list_move[j])) continue;
             if(game.movePiece(cell_choose, list_move[j], true))
@@ -331,37 +328,30 @@ bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
 }
 
 /*----------------------------------Tris----------------------------------*/
-void Minimax::sortMoves(std::vector<Coordinates> &moves,const Coordinates from) const
+void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from)
 {
-    std::sort(moves.begin(), moves.end(),
-        [this, from](Coordinates &a,Coordinates &b)
+    std::sort(moves, moves + size,
+        [this, from](const Coordinates &a, const Coordinates &b)
         {
-            // Priorité 1 : captures MVV-LVA
             bool a_capture = game.pieceEnemyDetection(a);
             bool b_capture = game.pieceEnemyDetection(b);
-
             if(a_capture != b_capture) return a_capture > b_capture;
-
             if(a_capture && b_capture)
             {
-                // Les deux sont des captures → préférer capturer la pièce la plus précieuse
                 std::shared_ptr<Piece> victim_a = game.getWaitingPlayer().getPiece(a);
                 std::shared_ptr<Piece> victim_b = game.getWaitingPlayer().getPiece(b);
                 return victim_a->getValue() > victim_b->getValue();
             }
-
-            // Priorité 2 : proximité au centre
             int a_dist = a.distX(3) + a.distY(3);
             int b_dist = b.distX(3) + b.distY(3);
-            
             return a_dist < b_dist;
         }
     );
 }
 
-void Minimax::sortMovesWithPrevious(std::vector<Coordinates> &moves,Coordinates from,const ChessMove &prev_best)
+void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from,const ChessMove &prev_best)
 {
-    std::sort(moves.begin(), moves.end(),
+    std::sort(moves, moves+size,
         [this, from, &prev_best](Coordinates &a, Coordinates &b)
         {
             bool a_is_best = (from == prev_best.from && a == prev_best.to);
@@ -402,19 +392,19 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
     Player &current=game.getCurrentPlayer();
     size_t nb_piece=current.nbOfPieces();
 
+    Coordinates list_move[218];
+
     for(size_t i=0;i<nb_piece;i++)
     {
-        std::vector<Coordinates> list_move;
-        list_move.reserve(28);
+        
         game.choosePiece(i);
         Coordinates cell_choose=game.getCoordsPieceChosen();
-        game.movesOfPieceChosen(list_move);
+        int size_move=game.movesOfPieceChosen(list_move);
         game.unChoosePiece();
 
-        sortMoves(list_move,cell_choose);
+        sortMoves(list_move,size_move,cell_choose);
 
-        size_t size_move=list_move.size();
-        for(size_t j=0;j<size_move;j++)
+        for(int j=0;j<size_move;j++)
         {
             std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
             if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
@@ -464,16 +454,18 @@ double Minimax::quiescence(double alpha,double beta,const bool maximizing,int de
     Player &current = game.getCurrentPlayer();
     size_t nb_piece = current.nbOfPieces();
 
+    Coordinates list_move[218];
+
     for(size_t i = 0; i < nb_piece; i++)
     {
-        std::vector<Coordinates> list_move;
-        list_move.reserve(28);
+        
+    
         game.choosePiece(i);
         Coordinates cell_choose = game.getCoordsPieceChosen();
-        game.movesOfPieceChosen(list_move);
+        int size_move=game.movesOfPieceChosen(list_move);
         game.unChoosePiece();
 
-        for(size_t j = 0; j < list_move.size(); j++)
+        for(int j = 0; j < size_move; j++)
         {
             if(!game.pieceEnemyDetection(list_move[j])) continue;
             if(isLosingCapture(cell_choose, list_move[j])) continue;

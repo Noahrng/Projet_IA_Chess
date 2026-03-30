@@ -63,8 +63,8 @@ class Minimax
         bool isLosingMove(const Coordinates,const Coordinates);
 
         //Tris
-        void sortMoves(std::vector<Coordinates>&,const Coordinates) const;
-        void sortMovesWithPrevious(std::vector<Coordinates>&,Coordinates,const ChessMove&);
+        void sortMoves(Coordinates*,int,const Coordinates);
+        void sortMovesWithPrevious(Coordinates*,int,Coordinates,const ChessMove&);
 
         //Algorithmes d'IA
         double minimax(const int,const bool,double,double);
