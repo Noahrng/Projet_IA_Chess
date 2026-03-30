@@ -26,13 +26,13 @@ std::vector<Coordinates>& Rook::getVectMove()
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool Rook::canMovePattern(Coordinates new_coords)
+bool Rook::canMovePattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
     return (coords.distX(new_coords) == 0) != (coords.distY(new_coords) == 0);
 }
 
-bool Rook::canEatPattern(Coordinates new_coords)
+bool Rook::canEatPattern(const Coordinates new_coords) const
 {
     return canMovePattern(new_coords);
 }

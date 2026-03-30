@@ -25,18 +25,18 @@ class Piece  {
         virtual ~Piece() = default;
 
         //Getters
-        std::string getTerminalSprite();
-        Coordinates getCoordinates();
-        double getValue();
+        std::string getTerminalSprite() const;
+        Coordinates getCoordinates() const;
+        double getValue() const;
         virtual PieceType getType()const=0;
         virtual std::vector<Coordinates>& getVectMove()=0;
 
         //Modèles de mouvement/capture
-        virtual bool canMovePattern(Coordinates) = 0;
-        virtual bool canEatPattern(Coordinates) = 0;
+        virtual bool canMovePattern(const Coordinates)const=0;
+        virtual bool canEatPattern(const Coordinates)const=0;
 
         //Nombre de Mouvements
-        int howManyMoves();
+        int howManyMoves() const;
         void incrementNbOfMoves();
         void decrementNbOfMoves();
 

@@ -26,13 +26,13 @@ std::vector<Coordinates>& Bishop::getVectMove()
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool Bishop::canMovePattern(Coordinates new_coords)
+bool Bishop::canMovePattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
     return coords.distX(new_coords) == coords.distY(new_coords) && coords != new_coords;
 }
 
-bool Bishop::canEatPattern(Coordinates new_coords)
+bool Bishop::canEatPattern(const Coordinates new_coords) const
 {
     return canMovePattern(new_coords);
 }

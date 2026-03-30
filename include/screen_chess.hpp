@@ -7,7 +7,6 @@
 #include <map>
 #include <memory>
 #include <cstdlib>
-#include <future>
 
 enum class AssetID
 {
