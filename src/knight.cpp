@@ -6,11 +6,13 @@ Knight::Knight(bool col,Coordinates c):Piece(col,c,3.0,"♞")
 
 }
 
-/*-------------Vecteur Statique des Déplacements du Cavalier--------------*/
-std::vector<Coordinates> Knight::vect_move={
+/*-------------Tableau Statique des Déplacements du Cavalier--------------*/
+const Coordinates Knight::vect_move[]={
     Coordinates(1,2),Coordinates(1,-2),Coordinates(-1,2),Coordinates(-1,-2),
     Coordinates(2,1),Coordinates(2,-1),Coordinates(-2,1),Coordinates(-2,-1)
 };
+
+const int Knight::vect_move_size = sizeof(vect_move) / sizeof(vect_move[0]);
 
 /*--------------------------------Getters---------------------------------*/
 PieceType Knight::getType() const
@@ -18,9 +20,14 @@ PieceType Knight::getType() const
     return PieceType::Knight;
 };
 
-std::vector<Coordinates>& Knight::getVectMove()
+const Coordinates* Knight::getVectMove()
 {
     return vect_move;
+}
+
+int Knight::getVectMoveSize()
+{
+    return vect_move_size;
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/

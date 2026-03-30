@@ -69,7 +69,7 @@ class GameController
         void choosePiece(std::shared_ptr<Piece>);
         void unChoosePiece();
         std::vector<Coordinates> movesOfPieceChosen();
-        void movesOfPieceChosen(std::vector<Coordinates> &v);
+        int movesOfPieceChosen(Coordinates*);
 
 
         //Déplacements

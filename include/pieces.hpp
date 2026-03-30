@@ -29,7 +29,8 @@ class Piece  {
         Coordinates getCoordinates() const;
         double getValue() const;
         virtual PieceType getType()const=0;
-        virtual std::vector<Coordinates>& getVectMove()=0;
+        virtual const Coordinates* getVectMove()=0;
+        virtual int getVectMoveSize()=0;
 
         //Modèles de mouvement/capture
         virtual bool canMovePattern(const Coordinates)const=0;

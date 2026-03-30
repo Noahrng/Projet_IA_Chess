@@ -6,16 +6,23 @@ Pawn::Pawn(bool col,Coordinates c):Piece(col,c,1.0,"♟")
     
 }
 
-/*---------------Vecteur Statique des Déplacements du Pion----------------*/
-std::vector<Coordinates> Pawn::vect_move={
+/*---------------Tableau Statique des Déplacements du Pion----------------*/
+const Coordinates Pawn::vect_move[]={
     Coordinates(0,1),Coordinates(0,2),Coordinates(1,1),Coordinates(-1,1),
     Coordinates(0,-1),Coordinates(0,-2),Coordinates(1,-1),Coordinates(-1,-1),
 };
 
+const int Pawn::vect_move_size = sizeof(vect_move) / sizeof(vect_move[0]);
+
 /*--------------------------------Getters---------------------------------*/
-std::vector<Coordinates>& Pawn::getVectMove()
+const Coordinates* Pawn::getVectMove()
 {
     return vect_move;
+}
+
+int Pawn::getVectMoveSize()
+{
+    return vect_move_size;
 }
 
 PieceType Pawn::getType() const
