@@ -5,15 +5,13 @@
 
 class Bishop : public Piece{
     private:
-        static const Coordinates vect_move[];
-        static const int vect_move_size;
+        static std::vector<Coordinates> vect_move;
     public:
         Bishop(bool, Coordinates);
         
         //Getters
         PieceType getType() const override;
-        const Coordinates* getVectMove() override;
-        int getVectMoveSize() override;
+        std::vector<Coordinates>& getVectMove() override;
         
         //Modèles de mouvement/capture
         bool canMovePattern(const Coordinates) const override;

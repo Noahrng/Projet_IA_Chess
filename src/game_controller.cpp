@@ -140,16 +140,12 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
     return v;
 }   
 
-int GameController::movesOfPieceChosen(Coordinates *tab)
+void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
 {
-    int count=0;
+    v.clear();
     std::shared_ptr<Piece> p=current_player->getPiece(cell_chosen);
-    if(!isChosen() || !p) return 0;
-
-    const Coordinates *list_move=p->getVectMove();
-    int size=p->getVectMoveSize();
+    std::vector<Coordinates>& list_move=p->getVectMove();
     Coordinates to;
-
     if(isChosen())
     {
         switch (p->getType())
@@ -165,7 +161,7 @@ int GameController::movesOfPieceChosen(Coordinates *tab)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            tab[count++] = to;
+                            v.push_back(to);
                         if(pieceDectection(to)) break;
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -184,7 +180,7 @@ int GameController::movesOfPieceChosen(Coordinates *tab)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            tab[count++] = to;
+                            v.push_back(to);
                         if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -203,7 +199,7 @@ int GameController::movesOfPieceChosen(Coordinates *tab)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            tab[count++] = to;
+                            v.push_back(to);
                         if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -213,19 +209,19 @@ int GameController::movesOfPieceChosen(Coordinates *tab)
             
             default:
             {
-                for(int i=0;i<size;i++)
+                for(auto it = list_move.begin(); it != list_move.end(); ++it)
                 {
-                    to = cell_chosen + list_move[i]; // ← cell_chosen + *it, pas juste *it
+                    to = cell_chosen + *it; // ← cell_chosen + *it, pas juste *it
                     if(isLegalMove(cell_chosen, to))
-                        tab[count++] = to;
+                        v.push_back(to);
                 }
                 break;
             }
             
         }
     }
-    return count;
 }  
+
 /*------------------------------Déplacements------------------------------*/
 void GameController::eatPiece(std::shared_ptr<Piece> p)
 {
@@ -475,8 +471,7 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
 {
     int moves=0;
-    const Coordinates* list_move=p->getVectMove();
-    int size=p->getVectMoveSize();
+    std::vector<Coordinates>& list_move=p->getVectMove();
     Coordinates from=p->getCoordinates();
     Coordinates to;
     switch (p->getType())
@@ -540,9 +535,9 @@ int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
             
         default:
         {
-            for(int i=0;i<size;i++)
+            for(auto it = list_move.begin(); it != list_move.end(); ++it)
             {
-                to = from + list_move[i]; // ← cell_chosen + *it, pas juste *it
+                to = from + *it; // ← cell_chosen + *it, pas juste *it
                 if(isLegalMove(from, to))
                     moves++;
             }
