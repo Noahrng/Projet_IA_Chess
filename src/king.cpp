@@ -27,7 +27,7 @@ std::vector<Coordinates>& King::getVectMove()
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool King::canMovePattern(Coordinates new_coords)
+bool King::canMovePattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
 
@@ -42,7 +42,7 @@ bool King::canMovePattern(Coordinates new_coords)
     return false;
 }
 
-bool King::canEatPattern(Coordinates new_coords)
+bool King::canEatPattern(const Coordinates new_coords) const
 {
     return canMovePattern(new_coords);
 }

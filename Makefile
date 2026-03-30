@@ -1,6 +1,6 @@
 # === Variables ===
 CC       := g++
-CFLAGS   := -std=c++23 -Wall -Wextra -g 
+CFLAGS   := -std=c++20 -Wall -Wextra -Werror -g -O2
 INC_DIR  := include
 SRC_DIR  := src
 BLD_DIR  := build

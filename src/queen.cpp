@@ -33,7 +33,8 @@ std::vector<Coordinates>& Queen::getVectMove()
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool Queen::canMovePattern(Coordinates new_coords){
+bool Queen::canMovePattern(const Coordinates new_coords) const
+{
     if(!new_coords.onBoard()) return false;
 
     Bishop b(color, coords);
@@ -42,7 +43,7 @@ bool Queen::canMovePattern(Coordinates new_coords){
     return b.canMovePattern(new_coords) || r.canMovePattern(new_coords);
 }
 
-bool Queen::canEatPattern(Coordinates new_coords)
+bool Queen::canEatPattern(const Coordinates new_coords) const
 {
     return canMovePattern(new_coords);
 }

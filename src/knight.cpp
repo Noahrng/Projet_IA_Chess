@@ -24,7 +24,7 @@ std::vector<Coordinates>& Knight::getVectMove()
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool Knight::canMovePattern(Coordinates new_coords)
+bool Knight::canMovePattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
 
@@ -38,7 +38,7 @@ bool Knight::canMovePattern(Coordinates new_coords)
     return false;
 }
 
-bool Knight::canEatPattern(Coordinates new_coords)
+bool Knight::canEatPattern(const Coordinates new_coords) const
 {
     return canMovePattern(new_coords);
 }

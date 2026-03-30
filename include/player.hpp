@@ -15,7 +15,6 @@ class Player
         bool bot;
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
-        double sum_point;
     
     public:
         //Constructeurs / Destructeurs
@@ -27,21 +26,22 @@ class Player
         Player& operator=(Player&&) = default;
 
         //Getters
-        std::shared_ptr<Piece> getPiece(int, int);
-        std::shared_ptr<Piece> getPiece(Coordinates);
-        std::shared_ptr<Piece> getPiece(size_t);
+        std::shared_ptr<Piece> getPiece(int, int) const;
+        std::shared_ptr<Piece> getPiece(Coordinates) const;
+        std::shared_ptr<Piece> getPiece(size_t) const;
+        std::shared_ptr<Piece> getKing() const;
+        std::shared_ptr<Piece> getQueen() const;
         std::vector<std::shared_ptr<Piece>>& getPieces();
-        double getPoint();
-        size_t nbOfPieces();
-        bool isBot();
+        size_t nbOfPieces() const;
+        bool isBot() const;
 
         //Setters
         void setBot(bool);
 
         //Vérification d'état
-        bool isPiece(std::shared_ptr<Piece>, size_t);
-        bool isWhite();
-        bool isBlack();
+        bool isPiece(std::shared_ptr<Piece>, size_t) const;
+        bool isWhite() const;
+        bool isBlack() const;
 
         //Pièces du Joueur
         void addPiece(std::shared_ptr<Piece>);

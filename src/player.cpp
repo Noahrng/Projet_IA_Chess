@@ -7,7 +7,7 @@
 #include "king.hpp"
 
 /*----------------------Constructeurs / Destructeurs----------------------*/
-Player::Player(bool color):color{color},sum_point{39.0}
+Player::Player(bool color):color{color}
 {
     //Création de chaque pieces
     pieces.reserve(20);
@@ -125,13 +125,13 @@ bool operator!=(const Player &a,const Player &b)
 
 
 /*--------------------------------Getters---------------------------------*/
-std::shared_ptr<Piece> Player::getPiece(int x, int y)
+std::shared_ptr<Piece> Player::getPiece(int x, int y) const
 {
     Coordinates c(x,y);
     return getPiece(c);
 }
 
-std::shared_ptr<Piece> Player::getPiece(Coordinates c)
+std::shared_ptr<Piece> Player::getPiece(Coordinates c) const
 {
     if(!c.onBoard()) return nullptr;
 
@@ -144,7 +144,7 @@ std::shared_ptr<Piece> Player::getPiece(Coordinates c)
     }
     return nullptr;
 }
-std::shared_ptr<Piece> Player::getPiece(size_t i)
+std::shared_ptr<Piece> Player::getPiece(size_t i) const
 {
     if(i < pieces.size())
     {
@@ -153,22 +153,27 @@ std::shared_ptr<Piece> Player::getPiece(size_t i)
     return nullptr;
 }
 
+std::shared_ptr<Piece> Player::getKing() const
+{
+    return pieces[0];
+}
+
+std::shared_ptr<Piece> Player::getQueen() const
+{
+    return pieces[1]->getType()==PieceType::Queen ? pieces[1] : nullptr;
+}
+
 std::vector<std::shared_ptr<Piece>>& Player::getPieces()
 {
     return pieces;
 }
 
-double Player::getPoint()
-{
-    return sum_point;
-}
-
-size_t Player::nbOfPieces()
+size_t Player::nbOfPieces() const
 {
     return pieces.size();
 }
 
-bool Player::isBot()
+bool Player::isBot() const
 {
     return bot;
 }
@@ -180,17 +185,17 @@ void Player::setBot(bool bot)
 }
 
 /*--------------------------Vérification d'État---------------------------*/
-bool Player::isPiece(std::shared_ptr<Piece> p, size_t i)
+bool Player::isPiece(std::shared_ptr<Piece> p, size_t i) const
 {
     return p == pieces[i];
 }
 
-bool Player::isWhite()
+bool Player::isWhite() const
 {
     return !color;
 }
 
-bool Player::isBlack()
+bool Player::isBlack() const
 {
     return color;
 }
@@ -198,7 +203,6 @@ bool Player::isBlack()
 /*----------------------------Pièces du Joueur----------------------------*/
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
-    if(p->getType()!=PieceType::King) sum_point+=p->getValue();
     Coordinates c=p->getCoordinates();
     pieces.push_back(std::move(p));
     size_t i=pieces.size()-1;
@@ -219,7 +223,6 @@ void Player::removePiece(Coordinates c){
     if(i<i_max) 
     {
         pieces[i]->moveTo(Coordinates(-1,-1));
-        sum_point-=pieces[i]->getValue();
         pieces.erase(pieces.begin()+i);
         
     }
@@ -228,7 +231,6 @@ void Player::removePiece(Coordinates c){
 void Player::removePiece(size_t i){
     if(i < nbOfPieces()){
         pieces[i]->moveTo(Coordinates(-1,-1));
-        sum_point-=pieces[i]->getValue();
         pieces.erase(pieces.begin()+i);
     }
 }
@@ -239,7 +241,6 @@ void Player::removePiece(std::shared_ptr<Piece> p){
     {
         if(pieces[i] == p)
         {
-            sum_point-=p->getValue();
             removePiece(i);
         }
         i++;    

@@ -24,7 +24,7 @@ PieceType Pawn::getType() const
 };
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
-bool Pawn::canMovePattern(Coordinates new_coords)
+bool Pawn::canMovePattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
 
@@ -65,7 +65,7 @@ bool Pawn::canMovePattern(Coordinates new_coords)
     
 }
 
-bool Pawn::canEatPattern(Coordinates new_coords)
+bool Pawn::canEatPattern(const Coordinates new_coords) const
 {
     if(!new_coords.onBoard()) return false;
 

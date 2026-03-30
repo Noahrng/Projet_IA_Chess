@@ -45,12 +45,12 @@ Player& GameController::getWaitingPlayer()
 {
     return *waiting_player;
 }
-Coordinates GameController::getCoordsPieceChosen()
+Coordinates GameController::getCoordsPieceChosen() const
 {
     return cell_chosen;
 }
 
-std::pair<Coordinates,Coordinates> GameController::getLastMove()
+std::pair<Coordinates,Coordinates> GameController::getLastMove() const
 {
     MoveHistory h=moves.back();
     std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
@@ -90,22 +90,23 @@ void GameController::switchTurn()
     std::swap(current_player,waiting_player);
 }
 
-bool GameController::whiteTurn()
+bool GameController::whiteTurn() const
 {
     return current_player->isWhite();
 }
 
-bool GameController::blackTurn()
+bool GameController::blackTurn() const
 {
     return current_player->isBlack();
 }
 
 /*-----------------------------Pièce Choisie------------------------------*/
-bool GameController::isNull(){
+bool GameController::isNull() const
+{
     return piece_chosen==nullptr;
 }
 
-bool GameController::isChosen()
+bool GameController::isChosen() const
 {
     return piece_chosen!=nullptr;
 }
@@ -283,7 +284,7 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
                 incrementNOMWE();
                 unitMove.rookRockFrom=rock(to);
             }
-            else if(isMoveEnPassant(from,to)) 
+            else if(unitMove.eatenPiece==nullptr && isMoveEnPassant(from,to)) 
             {
                 bool color = current_player->isBlack();
                 Coordinates c_enemy;
@@ -379,12 +380,12 @@ void GameController::unMove()
 
 
 /*-----------------------Vérifications & Détections-----------------------*/
-bool GameController::isEmpty(Coordinates c)
+bool GameController::isEmpty(Coordinates c) const
 {
     return !pieceDectection(c);
 }
 
-bool GameController::pieceInBetween(Coordinates from, Coordinates to)
+bool GameController::pieceInBetween(Coordinates from, Coordinates to) const
 /* 
 Vérifie s'il y a une pièce entre les coordonnées de départ, et les coordonnées d'arrivées. 
 Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, lignes ou colonnes
@@ -436,17 +437,17 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
     return false;
 }
 
-bool GameController::pieceAllyDetection(Coordinates c)
+bool GameController::pieceAllyDetection(Coordinates c) const
 {
     return current_player->getPiece(c)!=nullptr;
 }
 
-bool GameController::pieceEnemyDetection(Coordinates c)
+bool GameController::pieceEnemyDetection(Coordinates c) const
 {
     return waiting_player->getPiece(c)!=nullptr;
 }
 
-bool GameController::pieceDectection(Coordinates c)
+bool GameController::pieceDectection(Coordinates c) const
 {
     return this->pieceAllyDetection(c) || this->pieceEnemyDetection(c);
 }
@@ -503,23 +504,84 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
 {
     int moves=0;
-    Coordinates p_coord=p->getCoordinates();
-    int i,j;
-    for(i=0;i<8;i++)
+    std::vector<Coordinates>& list_move=p->getVectMove();
+    Coordinates from=p->getCoordinates();
+    Coordinates to;
+    switch (p->getType())
     {
-        for(j=0;j<8;j++)
+        case PieceType::Bishop:
         {
-            Coordinates to(j,i);
-            if(isLegalMove(p_coord,to))
+            int dx[]={1,1,-1,-1};
+            int dy[]={1,-1,1,-1};
+            for(int d = 0; d < 4; d++)
             {
-                moves++;
+                to = from;
+                to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                while(to.onBoard())
+                {
+                    if(isLegalMove(from, to))
+                        moves++;
+                    if(pieceDectection(to)) break;
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                }
             }
+            break;
+        }
+
+        case PieceType::Rook:
+        {
+            int dx[] = {1, -1, 0, 0};
+            int dy[] = {0, 0, 1, -1};
+            for(int d = 0; d < 4; d++)
+            {
+                to = from;
+                to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                while(to.onBoard())
+                {
+                    if(isLegalMove(from, to))
+                        moves++;
+                    if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                }
+            }
+            break;
+        }
+
+        case PieceType::Queen:
+        {
+            int dx[] = {1, 1, -1, -1, 1, -1, 0, 0};
+            int dy[] = {1, -1, 1, -1, 0, 0, 1, -1};
+            for(int d = 0; d < 8; d++)
+            {
+                to = from;
+                to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                while(to.onBoard())
+                {
+                    if(isLegalMove(from, to))
+                        moves++;
+                    if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
+                    to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
+                }
+            }
+            break;
+        }
+            
+        default:
+        {
+            for(auto it = list_move.begin(); it != list_move.end(); ++it)
+            {
+                to = from + *it; // ← cell_chosen + *it, pas juste *it
+                if(isLegalMove(from, to))
+                    moves++;
+            }
+            break;
         }
     }
+    
     return moves;
 }
 
-int GameController::isThreaten(Coordinates c)
+int GameController::isThreaten(Coordinates c) const
     /* 
     Vérifie si une case aux coordonnées c est menacée ou non par une pièce 
     et renvoie le nombre de pièces qui la menace
@@ -543,33 +605,12 @@ int GameController::isThreaten(Coordinates c)
     return nb_threats;
 }
 
-int GameController::isChecked()
+int GameController::isChecked() const
 /* 
     Vérifie si un joueur est en échec ou pas et renvoie le nombre de pièces qui le met en échec.
 */
 {
-    size_t n = current_player->nbOfPieces();
-    if(n == 0)
-    {
-        return 0;
-    }
-
-    size_t i = 0;
-    std::shared_ptr<Piece> king = nullptr;
-    bool is_king = false;
-    
-    while(i < n && !is_king)
-    {
-        king = current_player->getPiece(i);
-        is_king = king->getType() == PieceType::King;
-        i++;
-    }
-
-    if(!is_king)
-    {
-        return 0;
-    }
-
+    std::shared_ptr<Piece> king = current_player->getKing();
     Coordinates c = king->getCoordinates();
     return isThreaten(c);
 }
@@ -633,7 +674,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     return checked;
 }
 
-bool GameController::isRepeat()
+bool GameController::isRepeat() const
 {
     size_t n = moves.size();
     if(n<8) return false;
@@ -785,7 +826,7 @@ bool GameController::isCheckmate()
     return true;
 }
 /*----------------------------Règles Spéciales----------------------------*/
-bool GameController::isPawnPromoted(Coordinates c, bool color)
+bool GameController::isPawnPromoted(Coordinates c, bool color) const
 {
     std::shared_ptr<Piece> p ;
     if( (current_player->isWhite() && color == 0) || 
@@ -805,7 +846,7 @@ bool GameController::isPawnPromoted(Coordinates c, bool color)
     return false;
 }
 
-bool GameController::promotionPending()
+bool GameController::promotionPending() const
 {
     return waiting_promotion;
 }
@@ -852,7 +893,7 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
     }
 }
 
-bool GameController::isMoveRock(Coordinates from, Coordinates to)
+bool GameController::isMoveRock(Coordinates from, Coordinates to) const
 {
     std::shared_ptr<Piece> p = current_player->getPiece(from);
     if(!p) return false;
@@ -872,7 +913,7 @@ bool GameController::isMoveRock(Coordinates from, Coordinates to)
     return false;
 }
 
-bool GameController::canRock(Coordinates from, Coordinates to)
+bool GameController::canRock(Coordinates from, Coordinates to) const
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> king = current_player->getPiece(from);
@@ -905,19 +946,20 @@ bool GameController::canRock(Coordinates from, Coordinates to)
 
     if(!rook) return false;
     if(pieceInBetween(from,rook_coords)) return false;
+    if(king->howManyMoves() != 0 || rook->howManyMoves() != 0) return false;
+    if(isThreaten(from)) return false;
+    int direction=(to.getX()>from.getX()) ? 1 : -1;
+    Coordinates c=from;
+    c.setXY(c.getX()+direction,c.getY());
 
-    if(king->howManyMoves() == 0 && rook->howManyMoves() == 0)
+    while(c!=to)
     {
-        int x=from.getX()-to.getX();
-        if(x<0) x*=-1;
-
-        Coordinates c_intermediaire(from.getX()-to.getX(),from.getY());
-        if(!isThreaten(from) && !isThreaten(c_intermediaire))
-        {
-            return true;
-        }
+        if(isThreaten(c)) return false;
+        c.setXY(c.getX() + direction, c.getY());
     }
-    return false;
+
+    if(isThreaten(to)) return false;
+    return true;
 }
 
 Coordinates GameController::rock(Coordinates to)
@@ -967,7 +1009,7 @@ Coordinates GameController::rock(Coordinates to)
     return c;
 }
 
-bool GameController::isMoveEnPassant(Coordinates from, Coordinates to)
+bool GameController::isMoveEnPassant(Coordinates from, Coordinates to) const
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -980,13 +1022,14 @@ bool GameController::isMoveEnPassant(Coordinates from, Coordinates to)
             else c_enemy.setXY(to.getX(),from.getY());
             
             std::shared_ptr<Piece> enemy = waiting_player->getPiece(c_enemy);
+
             if(enemy && enemy->howManyMoves()==1 && enemy->getType() == PieceType::Pawn) return true;
         }
     }
     return false;
 }
 
-bool GameController::canEnPassant(Coordinates from, Coordinates to)
+bool GameController::canEnPassant(Coordinates from, Coordinates to) const
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> p = current_player->getPiece(from);
