@@ -591,7 +591,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     bool isEP = (p->getType() == PieceType::Pawn)
              && (from.distX(to) == 1)
              && (from.distY(to) == 1)
-             && isEmpty(to);  // ← détection manuelle, sans appeler isMoveEnPassant
+             && isEmpty(to);  //détection manuelle, sans appeler isMoveEnPassant
 
     Coordinates epCoords(-1,-1);
     std::shared_ptr<Piece> epEnemy = nullptr;
