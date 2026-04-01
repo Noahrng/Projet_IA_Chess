@@ -63,8 +63,6 @@ class Minimax
         int minimax_depth;
         int quiescence_depth;
         ChessMove previous_best;
-        Coordinates killerMoves[32][2];
-        int historyHeuristic[64][64];
         std::unordered_map<PositionKey, TTEntry, PositionKeyHash> TT;
     public:
         //Constructeurs / Destructeurs
@@ -83,7 +81,7 @@ class Minimax
         bool isLosingMove(const Coordinates,const Coordinates);
 
         //Tris
-        void sortMoves(Coordinates*,int,const Coordinates,int);
+        void sortMoves(Coordinates*,int,const Coordinates);
         void sortMovesWithPrevious(Coordinates*,int,Coordinates,const ChessMove&);
 
         //Algorithmes d'IA
