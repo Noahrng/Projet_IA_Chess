@@ -1,14 +1,33 @@
 #include "minimax.hpp"
 
+int moveToIndex(const Coordinates& c)
+{
+    return c.getX()*8+c.getY();
+}
+
 /*----------------------Constructeurs / Destructeurs----------------------*/
 Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 {
-  
+    for(int d=0;d<32;d++)
+    {
+        killerMoves[d][0]=Coordinates(-1,-1);
+        killerMoves[d][1]=Coordinates(-1,-1);
+    }
+
+    for(int i=0;i<64;i++)
+        for(int j=0;j<64;j++)
+            historyHeuristic[i][j]=0;
+    
 }
 
 /*--------------------------------Getters---------------------------------*/
 ChessMove Minimax::getBestMoveFork()
 {
+    for(int d=0; d<32; d++)
+    {
+        killerMoves[d][0] = Coordinates(-1,-1);
+        killerMoves[d][1] = Coordinates(-1,-1);
+    }
     signal(SIGCHLD,SIG_IGN);
 
     update_depth();
@@ -235,8 +254,8 @@ void Minimax::update_depth()
     }
     else
     {
-        minimax_depth=4;
-        quiescence_depth=6;
+        minimax_depth=6;
+        quiescence_depth=2;
     }
 }
 
@@ -324,23 +343,24 @@ bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
 }
 
 /*----------------------------------Tris----------------------------------*/
-void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from)
+void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from,int depth)
 {
     std::sort(moves, moves + size,
-        [this, from](const Coordinates &a, const Coordinates &b)
+        [this, from,depth](const Coordinates &a, const Coordinates &b)
         {
+            if(a == killerMoves[depth][0]) return true;
+            if(b == killerMoves[depth][0]) return false;
+            if(a == killerMoves[depth][1]) return true;
+            if(b == killerMoves[depth][1]) return false;
+
             bool a_capture = game.pieceEnemyDetection(a);
             bool b_capture = game.pieceEnemyDetection(b);
             if(a_capture != b_capture) return a_capture > b_capture;
-            if(a_capture && b_capture)
-            {
-                std::shared_ptr<Piece> victim_a = game.getWaitingPlayer().getPiece(a);
-                std::shared_ptr<Piece> victim_b = game.getWaitingPlayer().getPiece(b);
-                return victim_a->getValue() > victim_b->getValue();
-            }
-            int a_dist = a.distX(3) + a.distY(3);
-            int b_dist = b.distX(3) + b.distY(3);
-            return a_dist < b_dist;
+
+            int a_score = historyHeuristic[moveToIndex(from)][moveToIndex(a)];
+            int b_score = historyHeuristic[moveToIndex(from)][moveToIndex(b)];
+
+            return a_score > b_score;
         }
     );
 }
@@ -409,7 +429,7 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
         int size_move=game.movesOfPieceChosen(list_move);
         game.unChoosePiece();
 
-        sortMoves(list_move,size_move,cell_choose);
+        sortMoves(list_move,size_move,cell_choose,depth);
 
         for(int j=0;j<size_move;j++)
         {
@@ -423,7 +443,20 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
                     best=std::max(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
                     if(best>=beta)
+                    {
+                        if(!game.pieceEnemyDetection(list_move[j]))
+                        {
+                            // killer move
+                            killerMoves[depth][1] = killerMoves[depth][0];
+                            killerMoves[depth][0] = list_move[j];
+
+                            // history heuristic
+                            int fromIdx = moveToIndex(cell_choose);
+                            int toIdx   = moveToIndex(list_move[j]);
+                            historyHeuristic[fromIdx][toIdx] += depth * depth;
+                        }
                         return best;
+                    }
                     alpha=std::max(alpha,best);
                 }
                 else
@@ -431,7 +464,19 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
                     best=std::min(best,minimax(depth-1,!maximizing,alpha,beta));
                     game.unMove();
                     if(alpha>=best)
+                    {
+                        if(!game.pieceEnemyDetection(list_move[j]))
+                        {
+                            killerMoves[depth][1] = killerMoves[depth][0];
+                            killerMoves[depth][0] = list_move[j];
+
+                            int fromIdx = moveToIndex(cell_choose);
+                            int toIdx   = moveToIndex(list_move[j]);
+                            historyHeuristic[fromIdx][toIdx] += depth * depth;
+                        }
+
                         return best;
+                    }
                     beta=std::min(beta,best);
                 }
             }
