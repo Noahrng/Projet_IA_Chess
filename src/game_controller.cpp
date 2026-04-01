@@ -78,7 +78,7 @@ bool GameController::blackTurn() const
     return current_player->isBlack();
 }
 
-/*Calcul de position*/
+/*----------------------------Calcul de position--------------------------c*/
 uint8_t GameController::encodePiece(PieceType type, bool isBlack) const
 {
     int base = isBlack ? 6 : 0;
@@ -319,6 +319,7 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
             else
             {
                 p->moveTo(to.getX(),to.getY());
+                current_player->updateBoard(from,to);
             }
             p->incrementNbOfMoves();
             unChoosePiece();
@@ -360,6 +361,7 @@ void GameController::unMove()
         }
         else{
             std::shared_ptr<Piece> p = current_player->getPiece(h.to);
+            current_player->updateBoard(h.to,h.from);
             p->moveTo(h.from); 
             p->decrementNbOfMoves();
         }
@@ -382,6 +384,7 @@ void GameController::unMove()
             Coordinates c(h.rookRockFrom.getX()==7 ? 5:3,current_player->isWhite() ? 7:0);
             std::shared_ptr<Piece> p = current_player->getPiece(c);
 
+            current_player->updateBoard(c,h.rookRockFrom);
             p->moveTo(h.rookRockFrom);
             
         }
@@ -660,6 +663,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 
     
     p->moveTo(to);  // On simule le coup
+    current_player->updateBoard(from,to);
     
     //Si on mange une pièce, on la sauvegarde aussi
     if(pieceEnemyDetection(to))
@@ -685,6 +689,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     {
         checked = isChecked();
     }
+    current_player->updateBoard(to,from);
     p->moveTo(saved_x,saved_y);
     return checked;
 }
@@ -991,6 +996,8 @@ Coordinates GameController::rock(Coordinates to)
         {
             rook = current_player->getPiece(7,0);
             c.setXY(7,0);
+            current_player->updateBoard(Coordinates(4,0),Coordinates(6,0));
+            current_player->updateBoard(Coordinates(7,0),Coordinates(5,0));
             king->moveTo(6,0);
             rook->moveTo(5,0);
         }
@@ -998,6 +1005,8 @@ Coordinates GameController::rock(Coordinates to)
         {
             rook = current_player->getPiece(0,0);
             c.setXY(0,0);
+            current_player->updateBoard(Coordinates(4,0),Coordinates(2,0));
+            current_player->updateBoard(Coordinates(0,0),Coordinates(3,0));
             king->moveTo(2,0);
             rook->moveTo(3,0);
         }
@@ -1010,6 +1019,8 @@ Coordinates GameController::rock(Coordinates to)
         {
             rook = current_player->getPiece(7,7);
             c.setXY(7,7);
+            current_player->updateBoard(Coordinates(4,7),Coordinates(6,7));
+            current_player->updateBoard(Coordinates(7,7),Coordinates(5,7));
             king->moveTo(6,7);
             rook->moveTo(5,7);
         }
@@ -1017,6 +1028,8 @@ Coordinates GameController::rock(Coordinates to)
         {
             rook = current_player->getPiece(0,7);
             c.setXY(0,7);
+            current_player->updateBoard(Coordinates(4,7),Coordinates(2,7));
+            current_player->updateBoard(Coordinates(0,7),Coordinates(3,7));
             king->moveTo(2,7);
             rook->moveTo(3,7);
         }
@@ -1079,6 +1092,7 @@ void GameController::enPassant(Coordinates from, Coordinates to)
     if(color) c_enemy.setXY(to.getX(),from.getY());
     else c_enemy.setXY(to.getX(),from.getY());
     
+    current_player->updateBoard(from,to);
     ally_pawn->moveTo(to);
     waiting_player->removePiece(c_enemy);
 }

@@ -15,6 +15,7 @@ class Player
         bool bot;
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
+        std::shared_ptr<Piece> board[8][8];
     
     public:
         //Constructeurs / Destructeurs
@@ -37,6 +38,8 @@ class Player
 
         //Setters
         void setBot(bool);
+
+        void updateBoard(Coordinates,Coordinates);
 
         //Vérification d'état
         bool isPiece(std::shared_ptr<Piece>, size_t) const;

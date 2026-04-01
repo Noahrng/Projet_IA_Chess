@@ -9,6 +9,9 @@
 /*----------------------Constructeurs / Destructeurs----------------------*/
 Player::Player(bool color):color{color}
 {
+    for(int i=0;i<8;i++)
+        for(int j=0;j<8;j++)
+            board[i][j]=nullptr;
     //Création de chaque pieces
     pieces.reserve(20);
     int i,j;
@@ -133,34 +136,16 @@ std::shared_ptr<Piece> Player::getPiece(int x, int y) const
 
 std::shared_ptr<Piece> Player::getPiece(Coordinates c) const
 {
-    if(!c.onBoard()) return nullptr;
-
-    for(size_t i=0;i<pieces.size();i++)
-    {
-        if(pieces[i]->getCoordinates()==c)
-        {
-            return pieces[i];
-        }
-    }
-    return nullptr;
+    return board[c.getX()][c.getY()];
 }
 std::shared_ptr<Piece> Player::getPiece(size_t i) const
 {
-    if(i < pieces.size())
-    {
-        return pieces[i];
-    }
-    return nullptr;
+    return pieces[i];
 }
 
 std::shared_ptr<Piece> Player::getKing() const
 {
     return pieces[0];
-}
-
-std::shared_ptr<Piece> Player::getQueen() const
-{
-    return pieces[1]->getType()==PieceType::Queen ? pieces[1] : nullptr;
 }
 
 std::vector<std::shared_ptr<Piece>>& Player::getPieces()
@@ -184,6 +169,13 @@ void Player::setBot(bool bot)
     this->bot=bot;
 }
 
+void Player::updateBoard(Coordinates from,Coordinates to)
+{
+    board[to.getX()][to.getY()]=board[from.getX()][from.getY()];
+    board[from.getX()][from.getY()]=nullptr;
+}
+
+
 /*--------------------------Vérification d'État---------------------------*/
 bool Player::isPiece(std::shared_ptr<Piece> p, size_t i) const
 {
@@ -204,13 +196,15 @@ bool Player::isBlack() const
 void Player::addPiece(std::shared_ptr<Piece> p)
 {
     Coordinates c=p->getCoordinates();
-    pieces.push_back(std::move(p));
+    pieces.push_back(p);
     size_t i=pieces.size()-1;
     while(i>0 && pieces[i]->getValue() > pieces[i-1]->getValue())
     {
         std::swap(pieces[i],pieces[i-1]);
         i--;
     }
+
+    board[c.getX()][c.getY()]=p;
     
 }
 
@@ -224,25 +218,20 @@ void Player::removePiece(Coordinates c){
     {
         pieces[i]->moveTo(Coordinates(-1,-1));
         pieces.erase(pieces.begin()+i);
-        
     }
+
+    board[c.getX()][c.getY()]=nullptr;
 }
 
 void Player::removePiece(size_t i){
     if(i < nbOfPieces()){
+        Coordinates c = pieces[i]->getCoordinates();
+        board[c.getX()][c.getY()]=nullptr;
         pieces[i]->moveTo(Coordinates(-1,-1));
         pieces.erase(pieces.begin()+i);
     }
 }
 void Player::removePiece(std::shared_ptr<Piece> p){
-    size_t i = 0;
-    size_t n = nbOfPieces();
-    while(i < n)
-    {
-        if(pieces[i] == p)
-        {
-            removePiece(i);
-        }
-        i++;    
-    }
+    Coordinates c = p->getCoordinates();
+    removePiece(c);
 }

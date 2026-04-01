@@ -103,6 +103,8 @@ class Evaluator{
         //Evaluations
         double evaluateMaterial() const;
         double evaluatePosition() const;
+        double evaluateKingPosition() const;
+        double evaluateKingPositionSingle(Player&,bool) const;
         double evaluate() const;
 };
 

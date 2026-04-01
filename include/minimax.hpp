@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <array>
+#include <unordered_map>
 
 struct ChessMove
 {
@@ -38,6 +39,22 @@ struct PipeResult
     int to_x,to_y;
 };
 
+struct TTEntry {
+    double score;
+    int depth;
+    double alpha;
+    double beta;
+};
+
+struct PositionKeyHash {
+    std::size_t operator()(const PositionKey& k) const {
+        std::size_t h = 0;
+        for(auto v : k.data)
+            h ^= std::hash<uint64_t>()(v + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2));
+        return h ^ std::hash<bool>()(k.white_turn);
+    }
+};
+
 class Minimax
 {
     private:
@@ -46,6 +63,7 @@ class Minimax
         int minimax_depth;
         int quiescence_depth;
         ChessMove previous_best;
+        std::unordered_map<PositionKey, TTEntry, PositionKeyHash> TT;
     public:
         //Constructeurs / Destructeurs
         Minimax(GameController&,Evaluator&);

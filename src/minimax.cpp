@@ -228,19 +228,15 @@ ChessMove Minimax::getBestMove()
 /*------------------------------Mise à Jour-------------------------------*/
 void Minimax::update_depth()
 {
-    if(game.getCurrentPlayer().nbOfPieces()==1 || game.getWaitingPlayer().nbOfPieces() == 1)
-    {
-        minimax_depth=8;
-    }
-    else if(eval.isEndGame() && 1==0)
+    if(eval.isEndGame())
     {
         minimax_depth=6;
-        quiescence_depth=4;
+        quiescence_depth=6;
     }
     else
     {
         minimax_depth=4;
-        quiescence_depth=4;
+        quiescence_depth=6;
     }
 }
 
@@ -321,7 +317,7 @@ bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
     mover->moveTo(from);
     if(victim) victim->moveTo(to);
 
-    if(attacked && mover->getValue() > gain + 2.0)
+    if(attacked && mover->getValue() > gain + 1.0)
         return true;  // on perd plus qu'on ne gagne
 
     return false;
@@ -379,9 +375,20 @@ void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from
 /*------------------------------Algorithmes-------------------------------*/
 double Minimax::minimax(const int depth,const bool maximizing,double alpha,double beta)
 {
-    if(game.isRepeat()) return 0.0;
+    PositionKey key = game.computeKey();
+    auto it = TT.find(key);
+    if(it != TT.end())
+    {
+        const TTEntry& entry = it->second;
+
+        if(entry.depth >= depth)
+        {
+            if(entry.alpha <= alpha && entry.beta >= beta)
+                return entry.score;
+        }
+    }
+    if(game.isDraw()) return 0.0;
     if(game.isCheckmate()) return maximizing ? -1.0 : 1.0;
-    if(game.isPat()) return 0.0;
 
     if(depth==0)
     {
@@ -430,6 +437,8 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
             }
         }
     }
+
+    TT[key] = {best, depth, alpha, beta};
     return best;
 }
 
