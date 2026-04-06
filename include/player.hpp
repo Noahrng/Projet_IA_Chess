@@ -32,6 +32,7 @@ class Player
         std::shared_ptr<Piece> getPiece(size_t) const;
         std::shared_ptr<Piece> getKing() const;
         std::shared_ptr<Piece> getQueen() const;
+        Piece& getKingFast() const;
         std::vector<std::shared_ptr<Piece>>& getPieces();
         size_t nbOfPieces() const;
         bool isBot() const;

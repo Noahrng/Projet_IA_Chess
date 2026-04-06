@@ -3,13 +3,9 @@
 
 #include "game_controller.hpp"
 #include "evaluator.hpp"
-#include <iostream>
-#include <algorithm>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include <array>
-#include <unordered_map>
 
 struct ChessMove
 {
@@ -39,22 +35,6 @@ struct PipeResult
     int to_x,to_y;
 };
 
-struct TTEntry {
-    double score;
-    int depth;
-    double alpha;
-    double beta;
-};
-
-struct PositionKeyHash {
-    std::size_t operator()(const PositionKey& k) const {
-        std::size_t h = 0;
-        for(auto v : k.data)
-            h ^= std::hash<uint64_t>()(v + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2));
-        return h ^ std::hash<bool>()(k.white_turn);
-    }
-};
-
 class Minimax
 {
     private:
@@ -63,18 +43,18 @@ class Minimax
         int minimax_depth;
         int quiescence_depth;
         ChessMove previous_best;
-        std::unordered_map<PositionKey, TTEntry, PositionKeyHash> TT;
     public:
         //Constructeurs / Destructeurs
         Minimax(GameController&,Evaluator&);
 
         //Getters
         ChessMove getBestMoveFork();
-        ChessMove getBestMoveAtDepth(int,double,double);
-        ChessMove getBestMove();
+        int getDepth();
         
         //Mise à Jour
-        void update_depth();
+        void sub_minimax_depth();
+        void add_minimax_depth();
+
 
         //Vérification d'état
         bool isLosingCapture(const Coordinates,const Coordinates);

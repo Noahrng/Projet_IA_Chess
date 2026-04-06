@@ -136,6 +136,7 @@ std::shared_ptr<Piece> Player::getPiece(int x, int y) const
 
 std::shared_ptr<Piece> Player::getPiece(Coordinates c) const
 {
+    if(!c.onBoard()) return nullptr;
     return board[c.getX()][c.getY()];
 }
 std::shared_ptr<Piece> Player::getPiece(size_t i) const
@@ -151,6 +152,11 @@ std::shared_ptr<Piece> Player::getKing() const
 std::vector<std::shared_ptr<Piece>>& Player::getPieces()
 {
     return pieces;
+}
+
+Piece& Player::getKingFast() const
+{
+    return *pieces[0].get();
 }
 
 size_t Player::nbOfPieces() const

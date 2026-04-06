@@ -1,7 +1,7 @@
 #include "minimax.hpp"
 
 /*----------------------Constructeurs / Destructeurs----------------------*/
-Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
+Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval},minimax_depth{4},quiescence_depth{4}
 {
   
 }
@@ -10,8 +10,6 @@ Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval}
 ChessMove Minimax::getBestMoveFork()
 {
     signal(SIGCHLD,SIG_IGN);
-
-    update_depth();
 
     std::vector<std::pair<Coordinates,Coordinates>> rootMoves;
 
@@ -24,6 +22,8 @@ ChessMove Minimax::getBestMoveFork()
         int size_move=game.movesOfPieceChosen(moves);
         game.unChoosePiece();
 
+        sortMovesWithPrevious(moves,size_move,from,previous_best);
+
         for(int j=0;j<size_move;j++)
         {
             std::shared_ptr<Piece> mover = current.getPiece(from);
@@ -33,6 +33,7 @@ ChessMove Minimax::getBestMoveFork()
     }
 
     int N = (int)rootMoves.size();
+    if(N==0) return ChessMove();
 
     std::vector<std::array<int,2>> pipes(N);
     for(int i=0;i<N;i++)
@@ -65,7 +66,10 @@ ChessMove Minimax::getBestMoveFork()
 
             if(game.movePiece(from,to,true)){
                 game.switchTurn();
-                score=minimax(minimax_depth-1,!maximizing,-2.0,2.0);
+                if(game.isRepeat())
+                    score=0.0;
+                else
+                    score=minimax(minimax_depth-1,!maximizing,-2.0,2.0);
                 game.unMove();
             }
 
@@ -108,136 +112,36 @@ ChessMove Minimax::getBestMoveFork()
             best.from=Coordinates(result.fx,result.fy);
             best.to=Coordinates(result.tx,result.ty);
         }
-    }
 
-    return best;
-}
-
-ChessMove Minimax::getBestMoveAtDepth(int depth, double alpha, double beta)
-{
-    std::cout << "debut getBestMoveAtDepth depth=" << depth << std::endl;
-    std::cout << "blanc=" << game.whiteTurn() << std::endl;
-    ChessMove best;
-    bool maximizing = game.whiteTurn();
-    best.score = maximizing ? -100.0 : 100.0;
-
-    Player &current = game.getCurrentPlayer();
-    size_t nb_piece = current.nbOfPieces();
-
-    Coordinates list_move[218];
-
-    for(size_t i = 0; i < nb_piece; i++)
-    {
-        game.choosePiece(i);
-        Coordinates cell_choose = game.getCoordsPieceChosen();
-        int size_move=game.movesOfPieceChosen(list_move);
-        game.unChoosePiece();
-
-        // Tri avec le meilleur coup de la profondeur précédente
-        sortMovesWithPrevious(list_move,size_move,cell_choose, previous_best);
-
-        for(int j = 0; j < size_move; j++)
+        else if(result.score==best.score)
         {
-            if(isLosingCapture(cell_choose,list_move[j])) continue;
-            if(game.movePiece(cell_choose, list_move[j], true))
+            Coordinates to(result.tx, result.ty);
+            if(game.pieceEnemyDetection(to) && !game.pieceEnemyDetection(best.to))
             {
-                game.switchTurn();
-                double score;
-                if(game.isRepeat())
-                    score=0.0;
-                else 
-                    score=minimax(depth - 1, !maximizing, alpha, beta);
-                game.unMove();
-
-                if(maximizing)
-                {
-                    if(score > best.score)
-                    {
-                        best.score = score;
-                        best.from  = cell_choose;
-                        best.to    = list_move[j];
-                        alpha      = std::max(alpha, best.score);
-
-                        if(best.score >= 1.0) return best;
-                    }
-                    else if(score == best.score)
-                    {
-                        if(game.pieceEnemyDetection(list_move[j]) &&
-                           !game.pieceEnemyDetection(best.to))
-                        {
-                            best.from = cell_choose;
-                            best.to   = list_move[j];
-                        }
-                    }
-                }
-                else
-                {
-                    if(score < best.score)
-                    {
-                        best.score = score;
-                        best.from  = cell_choose;
-                        best.to    = list_move[j];
-                        beta       = std::min(beta, best.score);
-
-                        if(best.score <= -1.0) return best;
-                    }
-                    else if(score == best.score)
-                    {
-                        if(game.pieceEnemyDetection(list_move[j]) &&
-                           !game.pieceEnemyDetection(best.to))
-                        {
-                            best.from = cell_choose;
-                            best.to   = list_move[j];
-                        }
-                    }
-                }
+                best.from = Coordinates(result.fx, result.fy);
+                best.to   = to;
             }
         }
     }
+
+    previous_best=best;
     return best;
 }
 
-ChessMove Minimax::getBestMove()
+int Minimax::getDepth()
 {
-    update_depth();
-    // Réinitialiser le meilleur coup précédent
-    previous_best = ChessMove();
-
-    ChessMove best;
-
-    for(int d = 1; d <= minimax_depth; d++)
-    {
-        double alpha = -2.0;
-        double beta  =  2.0;
-
-        ChessMove result = getBestMoveAtDepth(d, alpha, beta);
-
-        // Mettre à jour le meilleur coup pour trier à la prochaine profondeur
-        previous_best = result;
-        best = result;
-
-        if(best.score>=1.0 || best.score <=-1.0)
-        {
-            std::cout << "Mat trouvé a depth=" << d << std::endl;
-            break;
-        }
-    }
-    return best;
+    return minimax_depth;
 }
 
 /*------------------------------Mise à Jour-------------------------------*/
-void Minimax::update_depth()
+void Minimax::add_minimax_depth()
 {
-    if(eval.isEndGame())
-    {
-        minimax_depth=6;
-        quiescence_depth=6;
-    }
-    else
-    {
-        minimax_depth=4;
-        quiescence_depth=6;
-    }
+    minimax_depth=std::min(6,minimax_depth+2);
+}
+
+void Minimax::sub_minimax_depth()
+{
+    minimax_depth=std::max(2,minimax_depth-2);
 }
 
 /*--------------------------Vérification d'État---------------------------*/
@@ -375,35 +279,22 @@ void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from
 /*------------------------------Algorithmes-------------------------------*/
 double Minimax::minimax(const int depth,const bool maximizing,double alpha,double beta)
 {
-    PositionKey key = game.computeKey();
-    auto it = TT.find(key);
-    if(it != TT.end())
-    {
-        const TTEntry& entry = it->second;
-
-        if(entry.depth >= depth)
-        {
-            if(entry.alpha <= alpha && entry.beta >= beta)
-                return entry.score;
-        }
-    }
     if(game.isDraw()) return 0.0;
-    if(game.isCheckmate()) return maximizing ? -1.0 : 1.0;
 
-    if(depth==0)
+    if(depth<=0)
     {
         return quiescence(alpha,beta,maximizing,quiescence_depth);
     }
 
+
     double best=maximizing ? -100.0 : 100.0;
+    bool has_move=false;
     Player &current=game.getCurrentPlayer();
     size_t nb_piece=current.nbOfPieces();
-
     Coordinates list_move[218];
 
     for(size_t i=0;i<nb_piece;i++)
     {
-        
         game.choosePiece(i);
         Coordinates cell_choose=game.getCoordsPieceChosen();
         int size_move=game.movesOfPieceChosen(list_move);
@@ -414,9 +305,10 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
         for(int j=0;j<size_move;j++)
         {
             std::shared_ptr<Piece> mover = game.getCurrentPlayer().getPiece(cell_choose);
-            if(mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
+            if(has_move && mover && mover->getValue() >= 3.0 && isLosingMove(cell_choose,list_move[j])) continue;
             if(game.movePiece(cell_choose,list_move[j],true))
             {
+                has_move=true;
                 game.switchTurn();
                 if(maximizing)
                 {
@@ -438,7 +330,12 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
         }
     }
 
-    TT[key] = {best, depth, alpha, beta};
+    if(!has_move)
+    {
+        if(game.isChecked()) return maximizing ? -1.0 : 1.0;
+        return 0.0;
+    }
+
     return best;
 }
 
