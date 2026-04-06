@@ -9,7 +9,6 @@ class Evaluator{
         GameController &game;
 
         const double MAX_MATERIAL;
-        const double MAX_MOBILITY;
         const double MAX_POSITION;
 
         //Table d'avantage des pièces selon leur position

@@ -4,7 +4,6 @@
 #include "screen.hpp"
 #include "button.hpp"
 #include "text_shape.hpp"
-#include "rectangle_shape.hpp"
 #include "circle_shape.hpp"
 #include <memory>
 

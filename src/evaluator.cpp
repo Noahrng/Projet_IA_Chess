@@ -1,7 +1,7 @@
 #include "evaluator.hpp"
 
 /*----------------------Constructeurs / Destructeurs----------------------*/
-Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0},MAX_MOBILITY{50.0},MAX_POSITION{8.0}
+Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0},MAX_POSITION{8.0}
 {
 
 }

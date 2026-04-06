@@ -2,36 +2,11 @@
 #define GAME_CONTROLLER_HPP
 
 #include "player.hpp"
-#include "coordinates.hpp"
+#include "movehistory.hpp"
 #include "position_key.hpp"
 #include <string>
 #include <iostream>
 #include <stack>
-
-struct MoveHistory
-{
-    Coordinates from;
-    Coordinates to;
-    Coordinates rookRockFrom;
-    std::shared_ptr<Piece> eatenPiece;
-    std::shared_ptr<Piece> promotedPiece;
-    std::pair<std::shared_ptr<Piece>,Coordinates> enPassantInfo;
-
-
-    MoveHistory(Coordinates from,Coordinates to):from{from},
-                                                to{to},
-                                                rookRockFrom(Coordinates(-1,-1)),
-                                                eatenPiece{nullptr},
-                                                promotedPiece{nullptr},
-                                                enPassantInfo{nullptr,Coordinates(-1,-1)}{}
-
-    friend bool operator==(const MoveHistory &a,const MoveHistory &b)
-    {
-        if(a.from!=b.from) return false;
-        if(a.to!=b.to) return false;
-        return true;
-    }
-};
 
 class GameController 
 {

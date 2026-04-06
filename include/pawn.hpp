@@ -2,7 +2,6 @@
 #define PAWN_HPP
 
 #include "pieces.hpp"
-#include "player.hpp"
 
 class Pawn:public Piece{
     private:

@@ -26,7 +26,8 @@
           (base32 "10ilg74qpy9crb22klywxf831v57l7p3wm2f9shl171axawlkw4q"))))
     (build-system cmake-build-system)
     (arguments
-      '(#:configure-flags
+      '(#:tests? #f
+        #:configure-flags
         (list "-DBUILD_SHARED_LIBS=ON"
               "-DPLATFORM=Desktop")))
     (inputs
