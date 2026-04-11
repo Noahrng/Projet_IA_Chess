@@ -8,6 +8,12 @@ Minimax::Minimax(GameController &game,Evaluator &eval):game{game},eval{eval},min
 
 /*--------------------------------Getters---------------------------------*/
 ChessMove Minimax::getBestMoveFork()
+/*
+    Description:
+        Renvoie le meilleur mouvement Calculé
+        Cette méthode réalise des fork , un pour chaque mouvement racine de départ , 
+        et envoie ces resultat dans un tableau de tube , pour que le procesus parent les receptionne
+*/
 {
     signal(SIGCHLD,SIG_IGN);
 
@@ -129,23 +135,43 @@ ChessMove Minimax::getBestMoveFork()
 }
 
 int Minimax::getDepth()
+/*
+    Description:
+        Renvoie le parametre de profondeur de minimax
+*/
 {
     return minimax_depth;
 }
 
 /*------------------------------Mise à Jour-------------------------------*/
 void Minimax::add_minimax_depth()
+/*
+    Description:
+        ajoute 2 au paramametre de profondeur de minimax
+    Note:
+        minimax_depth ne peut pas dépasser 6
+*/
 {
     minimax_depth=std::min(6,minimax_depth+2);
 }
 
 void Minimax::sub_minimax_depth()
+/*
+    Description:
+        enleve 2 au paramametre de profondeur de minimax
+    Note:
+        minimax_depth ne peut être inferieur a 2
+*/
 {
     minimax_depth=std::max(2,minimax_depth-2);
 }
 
 /*--------------------------Vérification d'État---------------------------*/
 bool Minimax::isLosingCapture(const Coordinates from, const Coordinates to)
+/*
+    Description:
+        renvoie si le mouvement de from a to est une capture perdante
+*/
 {
     std::shared_ptr<Piece> attacker = game.getCurrentPlayer().getPiece(from);
     std::shared_ptr<Piece> victim   = game.getWaitingPlayer().getPiece(to);
@@ -186,6 +212,10 @@ bool Minimax::isLosingCapture(const Coordinates from, const Coordinates to)
 }
 
 bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
+/*
+    Description:
+        renvoie si le mouvement de from a to est un mouvement perdant
+*/
 {
     std::shared_ptr<Piece> mover  = game.getCurrentPlayer().getPiece(from);
     std::shared_ptr<Piece> victim = game.getWaitingPlayer().getPiece(to);
@@ -229,6 +259,14 @@ bool Minimax::isLosingMove(const Coordinates from,const Coordinates to)
 
 /*----------------------------------Tris----------------------------------*/
 void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from)
+/*
+    Description:
+        trie moves en fonction de plusieurs comparaison
+    Note:
+        Les capture sont en premier
+        sinon on prefere des capture la plus precieuse
+        sinon on prefere les case les plus proche du centre
+*/
 {
     std::sort(moves, moves + size,
         [this, from](const Coordinates &a, const Coordinates &b)
@@ -250,6 +288,10 @@ void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from)
 }
 
 void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from,const ChessMove &prev_best)
+/*
+    Description:
+        Comme sortMoves excepté sauf que le meilleur mouvement précendant est placé en premier 
+*/
 {
     std::sort(moves, moves+size,
         [this, from, &prev_best](Coordinates &a, Coordinates &b)
@@ -278,6 +320,10 @@ void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from
 
 /*------------------------------Algorithmes-------------------------------*/
 double Minimax::minimax(const int depth,const bool maximizing,double alpha,double beta)
+/*
+    Description:
+        Applique l'algorithme Minimax avec élagage alpha-béta
+*/
 {
     if(game.isDraw()) return 0.0;
 
@@ -340,6 +386,13 @@ double Minimax::minimax(const int depth,const bool maximizing,double alpha,doubl
 }
 
 double Minimax::quiescence(double alpha,double beta,const bool maximizing,int depth)
+/*
+    Description:
+        Applique la quiescence a une profondeur limité
+    Note:
+        il est utile pour explorer quand on atteint depth=0 dans minimax de l'appeller pour explorer des coup supplémentaire qui
+        sont des coups de capture
+*/
 {
     if(depth == 0)
         return eval.evaluate();

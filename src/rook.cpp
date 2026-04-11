@@ -16,23 +16,39 @@ std::vector<Coordinates> Rook::vect_move={
 
 /*--------------------------------Getters---------------------------------*/
 PieceType Rook::getType() const
+/*
+    Description:
+        Retourne le type de la pièce
+*/
 {
     return PieceType::Rook;
 };
 
 std::vector<Coordinates>& Rook::getVectMove()
+/*
+    Description:
+        Retourne une reférence sur un vecteur de mouvement de base de la pièce
+*/
 {
     return vect_move;
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
 bool Rook::canMovePattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     if(!new_coords.onBoard()) return false;
     return (coords.distX(new_coords) == 0) != (coords.distY(new_coords) == 0);
 }
 
 bool Rook::canEatPattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     return canMovePattern(new_coords);
 }
