@@ -52,7 +52,6 @@ Coordinates GameController::getCoordsPieceChosen() const
 
 std::pair<Coordinates,Coordinates> GameController::getLastMove() const
 {
-    MoveHistory h=moves.back();
     std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
     if(!moves.empty())
     {

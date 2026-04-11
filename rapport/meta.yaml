@@ -1,0 +1,23 @@
+---
+toc: true
+toc-depth: 4
+toc-title: "Sommaire :"
+mainfont: "Liberation Sans"
+geometry: a4paper
+fontsize: 12pt
+header-includes: |
+  \usepackage{graphicx}
+  \usepackage{fancyhdr}
+  \usepackage{caption}
+  
+  \pagestyle{fancy}
+  \fancyhead[L]{Rapport de Projet : IA Échecs} 
+  \fancyhead[C]{}
+  \fancyhead[R]{Projet Génie Logiciel}
+  
+  \renewcommand{\footrulewidth}{0.4pt}
+  \fancyfoot[L]{FAVRIOU Valentin, ARANEGA Noah} 
+  \fancyfoot[C]{}
+  \fancyfoot[R]{\thepage}
+
+---
