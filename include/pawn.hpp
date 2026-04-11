@@ -7,8 +7,9 @@ class Pawn:public Piece{
     private:
         static std::vector<Coordinates> vect_move;
     public:
+        //Constructeurs/Destructeurs
         Pawn(bool,Coordinates);
-        
+
         //Getters
         PieceType getType() const override;
         std::vector<Coordinates>& getVectMove() override;

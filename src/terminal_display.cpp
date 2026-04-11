@@ -80,8 +80,8 @@ void TerminalDisplay::printBoard()
 {
     bool color_turn = game.blackTurn();
     std::string colored_cell;
+    std::string last_move_cell_color="\033[43m";
     std::string end_color = "\033[0m";
-
     std::string legal_moves = "\033[93m";
 
     if(!color_turn)
@@ -107,7 +107,11 @@ void TerminalDisplay::printBoard()
             else        c.setXY(7-j,7-i);
 
             std::shared_ptr<Piece> p;
-            if((i+j)%2==0){
+            if(game.getLastMove().first == c || game.getLastMove().second == c)
+            {
+                std::cout << last_move_cell_color;
+            }
+            else if((i+j)%2==0){
                 std::cout << "\033[48;2;245;222;179m";
             }
             else{
@@ -192,7 +196,8 @@ void TerminalDisplay::run()
 {
     bool quit = false;
     bool checkmate = false;
-    while(1 && !quit && !checkmate)
+    bool draw = false;
+    while(1 && !quit && !checkmate && !draw)
     {
         std::string string_coords;
         Coordinates c;
@@ -206,90 +211,100 @@ void TerminalDisplay::run()
         bool piece_belong_to;
         
         checkmate = game.isCheckmate();
+        draw = game.isDraw();
         
 
-        while(!got_moved && !quit && !checkmate){
+        while(!got_moved && !quit && !checkmate && !draw){
             clearTerminal();
             printBoard();
             coords_onboard = false;
             cancel_move = false;
             piece_belong_to = false;
 
-            while((!coords_onboard || !piece_belong_to) && !quit)
+            if(game.getCurrentPlayer().isBot())
             {
-                std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
-                string_coords = playerEntryString();
-                if(isGameQuitted(string_coords)) quit = true;
-                else
+                ChessMove best_move = robot.getBestMove();
+                got_moved = game.movePiece(best_move.from,best_move.to,true);
+                std::cout << game.getNOMWE() << "\n";
+            }
+            else{
+                while((!coords_onboard || !piece_belong_to) && !quit)
                 {
-                    c=convertStringIntoCoords(string_coords);
-                    if(c.onBoard())
+                    std::cout << "Entrez les coordonnées d'une de vos pièces :\n";
+                    string_coords = playerEntryString();
+                    if(isGameQuitted(string_coords)) quit = true;
+                    else
                     {
-                        coords_onboard = true;
-                        game.choosePiece(c);
-                        if(!game.isNull())
+                        c=convertStringIntoCoords(string_coords);
+                        if(c.onBoard())
                         {
-                            piece_belong_to = true;
+                            coords_onboard = true;
+                            game.choosePiece(c);
+                            if(!game.isNull())
+                            {
+                                piece_belong_to = true;
+                            }
+                            else
+                            {
+                                std::cout << error_color <<
+                                "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n"
+                                << end_color;
+                            }
                         }
                         else
                         {
                             std::cout << error_color <<
-                            "/!\\ Coordonnées invalides, il n'y a pas de pièce qui vous appartient.\n"
+                            "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n"
                             << end_color;
+
                         }
                     }
+                }
+
+                clearTerminal();
+                printBoard();
+
+                while(!got_moved && !cancel_move && !quit)
+                {
+                    std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
+                    string_coords = playerEntryString();
+                    if(isGameQuitted(string_coords)) quit = true;
+                    else if(moveCancelled(string_coords)) cancel_move = true;
                     else
                     {
-                        std::cout << error_color <<
-                        "/!\\ Coordonnées invalides, elles ne sont pas sur le plateau !\n"
-                        << end_color;
-
+                        c=convertStringIntoCoords(string_coords);
+                        got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
+                        if(!c.onBoard() || !got_moved) 
+                            std::cout << error_color << 
+                            "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n"
+                            << end_color;
                     }
                 }
-            }
-
-            clearTerminal();
-            printBoard();
-
-            while(!got_moved && !cancel_move && !quit)
-            {
-                std::cout << "Entrez les coordonnées pour déplacer votre pièce (cancel si vous voulez annulez votre coup) :\n";
-                string_coords = playerEntryString();
-                if(isGameQuitted(string_coords)) quit = true;
-                else if(moveCancelled(string_coords)) cancel_move = true;
-                else
+                if(got_moved && game.promotionPending())
                 {
-                    c=convertStringIntoCoords(string_coords);
-                    got_moved = game.movePiece(game.getCoordsPieceChosen(),c);
-                    if(!c.onBoard() || !got_moved) 
-                        std::cout << error_color << 
-                        "/!\\ Coordonnées invalides, vous ne pouvez pas bouger ici !\n"
-                        << end_color;
-                }
-            }
-            if(got_moved && game.promotionPending())
-            {
-                std::string promotion;
-                PieceType t = PieceType::Nothing;
+                    std::string promotion;
+                    PieceType t = PieceType::Nothing;
 
-                while(t == PieceType::Nothing)
-                {
-                    clearTerminal();
-                    printBoard();
-                    printInfosPromote();
-                    std::cout << "Quelle pièce choisissez-vous pour la promotion ?\n";
-                    
-                    promotion = playerEntryString();
-                    t = convertStringIntoType(promotion);
+                    while(t == PieceType::Nothing)
+                    {
+                        clearTerminal();
+                        printBoard();
+                        printInfosPromote();
+                        std::cout << "Quelle pièce choisissez-vous pour la promotion ?\n";
+                        
+                        promotion = playerEntryString();
+                        t = convertStringIntoType(promotion);
+                    }
+                    //Promouvoir la pièce
+                    Player& curr = game.getCurrentPlayer();
+                    std::shared_ptr<Piece> p = curr.getPiece(c);
+                    game.promoteTo(p,t);
                 }
-                //Promouvoir la pièce
-                Player& curr = game.getCurrentPlayer();
-                std::shared_ptr<Piece> p = curr.getPiece(c);
-                game.promoteTo(p,t);
+                game.unChoosePiece();
             }
-            game.unChoosePiece();
+            std::cout << game.getNOMWE() << "\n";
+            if(!checkmate && !draw) game.switchTurn();
         }
-        if(!checkmate) game.switchTurn();
     }
 
 }
