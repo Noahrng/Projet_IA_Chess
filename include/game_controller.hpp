@@ -3,6 +3,7 @@
 
 #include "player.hpp"
 #include "coordinates.hpp"
+#include "position_key.hpp"
 #include <string>
 #include <iostream>
 #include <stack>
@@ -47,6 +48,7 @@ class GameController
         std::shared_ptr<Piece> piece_chosen;
         Coordinates cell_chosen;
         std::vector<MoveHistory> moves;
+        std::vector<PositionKey> hashHistory;
         bool waiting_promotion;
         int nb_of_moves_without_eating;
 
@@ -67,6 +69,11 @@ class GameController
         void decrementNOMWE();
         void resetNOMWE();
 
+        //Calcul de position
+        uint8_t encodePiece(PieceType type, bool isBlack) const;
+        void setCase(PositionKey& key, int x, int y, uint8_t val) const;
+        PositionKey computeKey() const;
+
         //Tours Des Joueurs
         void switchTurn();
         bool whiteTurn() const;
@@ -81,7 +88,7 @@ class GameController
         void choosePiece(std::shared_ptr<Piece>);
         void unChoosePiece();
         std::vector<Coordinates> movesOfPieceChosen();
-        void movesOfPieceChosen(std::vector<Coordinates> &v);
+        int movesOfPieceChosen(Coordinates*);
 
 
         //Déplacements

@@ -15,6 +15,7 @@ GameController::GameController(): current_player{std::make_shared<Player>(false)
     nb_of_moves_without_eating{0}
 {
     cell_chosen.setXY(-1,-1);
+    hashHistory.push_back(computeKey());
 }
 
 GameController::~GameController()
@@ -99,6 +100,50 @@ bool GameController::blackTurn() const
     return current_player->isBlack();
 }
 
+/*Calcul de position*/
+uint8_t GameController::encodePiece(PieceType type, bool isBlack) const
+{
+    int base = isBlack ? 6 : 0;
+    return base + static_cast<int>(type) + 1;
+}
+
+void GameController::setCase(PositionKey& key, int x, int y, uint8_t val) const
+{
+    int index = y * 8 + x;
+    int word  = index / 16;
+    int bit   = (index % 16) * 4;
+    key.data[word] |= ((uint64_t)val << bit);
+}
+
+PositionKey GameController::computeKey() const
+{
+    PositionKey key;
+    key.data.fill(0);
+    key.white_turn = current_player->isWhite();
+
+    for(size_t i = 0; i < current_player->nbOfPieces(); i++)
+    {
+        auto p = current_player->getPiece(i);
+        if(!p->getCoordinates().onBoard()) continue;
+        setCase(key,
+                p->getCoordinates().getX(),
+                p->getCoordinates().getY(),
+                encodePiece(p->getType(), current_player->isBlack()));
+    }
+
+    for(size_t i = 0; i < waiting_player->nbOfPieces(); i++)
+    {
+        auto p = waiting_player->getPiece(i);
+        if(!p->getCoordinates().onBoard()) continue;
+        setCase(key,
+                p->getCoordinates().getX(),
+                p->getCoordinates().getY(),
+                encodePiece(p->getType(), waiting_player->isBlack()));
+    }
+
+    return key;
+}
+
 /*-----------------------------Pièce Choisie------------------------------*/
 bool GameController::isNull() const
 {
@@ -162,9 +207,9 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
     return v;
 }   
 
-void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
+int GameController::movesOfPieceChosen(Coordinates *v)
 {
-    v.clear();
+    int nbmove=0;
     std::shared_ptr<Piece> p=current_player->getPiece(cell_chosen);
     std::vector<Coordinates>& list_move=p->getVectMove();
     Coordinates to;
@@ -183,7 +228,7 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            v.push_back(to);
+                            v[nbmove++]=to;
                         if(pieceDectection(to)) break;
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -202,7 +247,7 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            v.push_back(to);
+                            v[nbmove++]=to;
                         if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -221,7 +266,7 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
                     while(to.onBoard())
                     {
                         if(isLegalMove(cell_chosen, to))
-                            v.push_back(to);
+                            v[nbmove++]=to;
                         if(pieceDectection(to)) break; // ← arrêt si pièce rencontrée
                         to.setXY(to.getX()+dx[d], to.getY()+dy[d]);
                     }
@@ -235,13 +280,14 @@ void GameController::movesOfPieceChosen(std::vector<Coordinates> &v)
                 {
                     to = cell_chosen + *it; // ← cell_chosen + *it, pas juste *it
                     if(isLegalMove(cell_chosen, to))
-                        v.push_back(to);
+                        v[nbmove++]=to;
                 }
                 break;
             }
             
         }
     }
+    return nbmove;
 }  
 
 /*------------------------------Déplacements------------------------------*/
@@ -318,6 +364,7 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
                     promoteTo(p,PieceType::Queen);      
             }
             moves.push_back(unitMove);
+            hashHistory.push_back(computeKey());
 
             return true;
         }
@@ -372,7 +419,8 @@ void GameController::unMove()
         }
 
         
-        
+        if(!hashHistory.empty())
+            hashHistory.pop_back();
 
     }
 }
@@ -675,12 +723,19 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 
 bool GameController::isRepeat() const
 {
-    size_t n = moves.size();
-    if(n<8) return false;
-    return moves[n-1] == moves[n-5] &&
-           moves[n-2] == moves[n-6] &&
-           moves[n-3] == moves[n-7] &&
-           moves[n-4] == moves[n-8];
+    if(hashHistory.size() < 5) return false;
+
+    const PositionKey& current = hashHistory.back();
+    int count = 0;
+
+    for(size_t i = 0; i < hashHistory.size(); i++)
+    {
+        if(hashHistory[i] == current)
+            count++;
+        if(count >= 3)
+            return true;
+    }
+    return false;
 }
 
 bool GameController::isDraw()
