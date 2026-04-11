@@ -5,6 +5,7 @@
 
 struct MoveHistory
 {
+    int old_nomwe;
     Coordinates from;
     Coordinates to;
     Coordinates rookRockFrom;
@@ -13,12 +14,16 @@ struct MoveHistory
     std::pair<std::shared_ptr<Piece>,Coordinates> enPassantInfo;
 
 
-    MoveHistory(Coordinates from,Coordinates to):from{from},
-                                                to{to},
-                                                rookRockFrom(Coordinates(-1,-1)),
-                                                eatenPiece{nullptr},
-                                                promotedPiece{nullptr},
-                                                enPassantInfo{nullptr,Coordinates(-1,-1)}{}
+    MoveHistory(Coordinates from,Coordinates to): old_nomwe{0},
+        from{from},
+        to{to},
+        rookRockFrom(Coordinates(-1,-1)),
+        eatenPiece{nullptr},
+        promotedPiece{nullptr},
+        enPassantInfo{nullptr,Coordinates(-1,-1)}
+    {
+
+    }
 
     friend bool operator==(const MoveHistory &a,const MoveHistory &b)
     {

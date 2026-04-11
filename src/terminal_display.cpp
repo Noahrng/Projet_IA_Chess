@@ -223,7 +223,7 @@ void TerminalDisplay::run()
 
             if(game.getCurrentPlayer().isBot())
             {
-                ChessMove best_move = robot.getBestMove();
+                ChessMove best_move = robot.getBestMoveFork();
                 got_moved = game.movePiece(best_move.from,best_move.to,true);
                 std::cout << game.getNOMWE() << "\n";
             }
