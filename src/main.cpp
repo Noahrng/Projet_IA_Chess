@@ -30,7 +30,7 @@ int main(){
         play.getWaitingPlayer().setBot(true);
         play.getCurrentPlayer().setBot(true);
     }
-    else if(isAI)
+    else if(isAI==1)
     {
         std::cout<<"Voulez vous jouez les blanc ? (0:non) (1:oui)"<<std::endl;
         int white;

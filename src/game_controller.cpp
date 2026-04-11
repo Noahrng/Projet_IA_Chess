@@ -11,7 +11,8 @@
 GameController::GameController(): current_player{std::make_shared<Player>(false)} ,
     waiting_player{std::make_shared<Player>(true)} ,
     piece_chosen{nullptr} ,
-    waiting_promotion{false}
+    waiting_promotion{false},
+    nb_of_moves_without_eating{0}
 {
     cell_chosen.setXY(-1,-1);
     hashHistory.push_back(computeKey());
@@ -60,6 +61,27 @@ std::pair<Coordinates,Coordinates> GameController::getLastMove() const
         lastMove.second=h.to;
     }
     return lastMove;
+}
+
+int GameController::getNOMWE()
+{
+    return nb_of_moves_without_eating;
+}
+
+/*--------------------------------Setters---------------------------------*/
+void GameController::incrementNOMWE()
+{
+    nb_of_moves_without_eating++;
+}
+
+void GameController::decrementNOMWE()
+{
+    nb_of_moves_without_eating--;
+}
+
+void GameController::resetNOMWE()
+{
+    nb_of_moves_without_eating = 0;
 }
 
 /*---------------------------Tours Des Joueurs----------------------------*/
@@ -285,6 +307,7 @@ void GameController::eatPiece(std::shared_ptr<Piece> p)
 
 bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote)
 {
+    bool ate = false;
     if(isLegalMove(from,to)){
         MoveHistory unitMove(from,to);
         std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -294,12 +317,16 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
                 std::shared_ptr<Piece> p_mangee = waiting_player->getPiece(to);
                 unitMove.eatenPiece=p_mangee;
                 eatPiece(p_mangee);
-                
+                ate = true;
+                unitMove.old_nomwe = nb_of_moves_without_eating;
+                resetNOMWE();                
             }
             //Déplacer la pièce
 
             if(isMoveRock(from,to))
             {
+                unitMove.old_nomwe = nb_of_moves_without_eating;
+                incrementNOMWE();
                 unitMove.rookRockFrom=rock(to);
             }
             else if(unitMove.eatenPiece==nullptr && isMoveEnPassant(from,to)) 
@@ -318,6 +345,10 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
             }
             else
             {
+                if(!ate){
+                    unitMove.old_nomwe = nb_of_moves_without_eating;
+                    incrementNOMWE();
+                }
                 p->moveTo(to.getX(),to.getY());
             }
             p->incrementNbOfMoves();
@@ -348,6 +379,7 @@ void GameController::unMove()
         this->switchTurn();
         MoveHistory h=moves.back();
         moves.pop_back();
+        nb_of_moves_without_eating = h.old_nomwe;
 
         if(h.promotedPiece!=nullptr)
         {
@@ -647,7 +679,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
     bool isEP = (p->getType() == PieceType::Pawn)
              && (from.distX(to) == 1)
              && (from.distY(to) == 1)
-             && isEmpty(to);  // ← détection manuelle, sans appeler isMoveEnPassant
+             && isEmpty(to);  //détection manuelle, sans appeler isMoveEnPassant
 
     Coordinates epCoords(-1,-1);
     std::shared_ptr<Piece> epEnemy = nullptr;
@@ -708,7 +740,13 @@ bool GameController::isRepeat() const
 
 bool GameController::isDraw()
 {
+    //50 coups sans manger
+    if(nb_of_moves_without_eating >= 50) return true;
+
+    //Coups répétitifs
     if(isRepeat()) return true;
+
+
     //Matériel insuffisant :
     size_t n1 = current_player->nbOfPieces();
     size_t n2 = waiting_player->nbOfPieces();
@@ -984,6 +1022,7 @@ Coordinates GameController::rock(Coordinates to)
     std::shared_ptr<Piece> king;
     std::shared_ptr<Piece> rook;
     Coordinates c;
+    
     if(color)
     {
         king = current_player->getPiece(4,0);
@@ -1081,4 +1120,6 @@ void GameController::enPassant(Coordinates from, Coordinates to)
     
     ally_pawn->moveTo(to);
     waiting_player->removePiece(c_enemy);
+    resetNOMWE();
 }
+
