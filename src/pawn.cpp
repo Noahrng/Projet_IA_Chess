@@ -14,17 +14,29 @@ std::vector<Coordinates> Pawn::vect_move={
 
 /*--------------------------------Getters---------------------------------*/
 std::vector<Coordinates>& Pawn::getVectMove()
+/*
+    Description:
+        Retourne une reférence sur un vecteur de mouvement de base de la pièce
+*/
 {
     return vect_move;
 }
 
 PieceType Pawn::getType() const
+/*
+    Description:
+        Retourne le type de la pièce
+*/
 {
     return PieceType::Pawn;
 };
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
 bool Pawn::canMovePattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     if(!new_coords.onBoard()) return false;
 
@@ -66,6 +78,10 @@ bool Pawn::canMovePattern(const Coordinates new_coords) const
 }
 
 bool Pawn::canEatPattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     if(!new_coords.onBoard()) return false;
 

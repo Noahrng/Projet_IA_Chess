@@ -23,17 +23,29 @@ std::vector<Coordinates> Queen::vect_move=
 
 /*--------------------------------Getters---------------------------------*/
 PieceType Queen::getType() const
+/*
+    Description:
+        Retourne le type de la pièce
+*/
 {
     return PieceType::Queen;
 };
 
 std::vector<Coordinates>& Queen::getVectMove()
+/*
+    Description:
+        Retourne une reférence sur un vecteur de mouvement de base de la pièce
+*/
 {
     return vect_move;
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
 bool Queen::canMovePattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     if(!new_coords.onBoard()) return false;
 
@@ -44,6 +56,10 @@ bool Queen::canMovePattern(const Coordinates new_coords) const
 }
 
 bool Queen::canEatPattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     return canMovePattern(new_coords);
 }

@@ -141,14 +141,8 @@ std::ostream& operator<<(std::ostream& os, Coordinates &a)
 /*--------------------------------Getters---------------------------------*/
 int Coordinates::getX() const
 /*
-    Arguments:
-        void
-
     Description:
         retourne la valeur X courante
-
-    Retour:
-        int
 */
 {
     return this->x;
@@ -156,56 +150,88 @@ int Coordinates::getX() const
 
 int Coordinates::getY() const
 /*
-    Arguments:
-        void
-
     Description:
-        retourne la valeur X courrante
-
-    Retour:
-        int
+        retourne la valeur Y courrante
 */
 {
     return this->y;
 }
 
 /*--------------------------------Setters---------------------------------*/
-void Coordinates::setX(int new_x){
+void Coordinates::setX(int new_x)
+/*
+    Description:
+        affecte une nouvelle valeur a X
+*/
+{
     x = new_x;
 }
 
-void Coordinates::setY(int new_y){
+void Coordinates::setY(int new_y)
+/*
+    Description:
+        affecte une nouvelle valeur a Y
+*/
+{
     y = new_y;
 }
 
-void Coordinates::setXY(int new_x,int new_y){
+void Coordinates::setXY(int new_x,int new_y)
+/*
+    Description:
+        affecte des nouvelles valeurs a X et Y
+*/
+{
     x = new_x;
     y = new_y;
 }
 
 /*------------------------------Comparaisons------------------------------*/
 bool Coordinates::onBoard() const
+/*
+    Description:
+        renvoie si la coordonnée courant est contenu dans un plateau d'echec 8x8
+*/
 {
     if(x>=0 && x<8 && y>=0 && y<8) return true;
     return false;
 }
 
 bool Coordinates::lowerThanX(Coordinates c) const
+/*
+    Description:
+        Verifie sur l'abscisse de la coordonnée courant est inferieur ou égale a l'abscisse de c
+*/
 {
     if(c.x < x) return false;
     return true;
 }
+
 bool Coordinates::lowerThanY(Coordinates c) const
+/*
+    Description:
+        Verifie sur l'ordonnée de la coordonnée courant est inferieur ou égale a l'ordonnée de c
+*/
 {
     if(c.y < y) return false;
     return true;
 }
+
 bool Coordinates::greaterThanX(Coordinates c) const 
+/*
+    Description:
+        Verifie sur l'abscisse de la coordonnée courant est strictement supérieur a l'abscisse de c
+*/
 {
     if(c.x < x) return true;
     return false;
 }
+
 bool Coordinates::greaterThanY(Coordinates c) const 
+/*
+    Description:
+        Verifie sur l'ordonnée de la coordonnée courant est strictement supérieur a l'ordonnée de c
+*/
 {
     if(c.y < y) return true;
     return false;
@@ -213,21 +239,37 @@ bool Coordinates::greaterThanY(Coordinates c) const
 
 /*----------------------Distances Entre Coordonnées-----------------------*/
 int Coordinates::distX(const Coordinates &other) const
+/*
+    Description:
+        Calcule en renvoie la distance entre les deux abscisse
+*/
 {
     return std::abs(this->x-other.x);
 }
 
 int Coordinates::distX(const int X) const
+/*
+    Description:
+        Calcule en renvoie la distance de l'abscisse courant et un autre entier X
+*/
 {
     return std::abs(this->x-X);
 }
 
 int Coordinates::distY(const Coordinates &other) const
+/*
+    Description:
+        Calcule en renvoie la distance entre les deux ordonnées
+*/
 {
     return std::abs(this->y-other.y);
 }
 
 int Coordinates::distY(const int Y) const
+/*
+    Description:
+        Calcule en renvoie la distance de l'ordonnée courant et un autre entier Y
+*/
 {
     return std::abs(this->y-Y);
 }

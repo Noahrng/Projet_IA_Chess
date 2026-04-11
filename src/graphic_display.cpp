@@ -22,6 +22,10 @@ GraphicDisplay::~GraphicDisplay(){
 
 /*------------------------------Mise à Jour-------------------------------*/
 void GraphicDisplay::updateDimensions()
+/*
+    Description:
+        Actualise les dimension de la fenetre
+*/
 {
     width=GetScreenWidth();
     height=GetScreenHeight();
@@ -29,6 +33,10 @@ void GraphicDisplay::updateDimensions()
 
 /*-------------------------------Exécution--------------------------------*/
 void GraphicDisplay::run()
+/*
+    Description:
+        Boucle d'execution de l'interface graphique
+*/
 {
     while(!WindowShouldClose())
     {

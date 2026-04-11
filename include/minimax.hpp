@@ -3,12 +3,9 @@
 
 #include "game_controller.hpp"
 #include "evaluator.hpp"
-#include <iostream>
-#include <algorithm>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include <array>
 
 struct ChessMove
 {
@@ -52,11 +49,12 @@ class Minimax
 
         //Getters
         ChessMove getBestMoveFork();
-        ChessMove getBestMoveAtDepth(int,double,double);
-        ChessMove getBestMove();
+        int getDepth();
         
         //Mise à Jour
-        void update_depth();
+        void sub_minimax_depth();
+        void add_minimax_depth();
+
 
         //Vérification d'état
         bool isLosingCapture(const Coordinates,const Coordinates);

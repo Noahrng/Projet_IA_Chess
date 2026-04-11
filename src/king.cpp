@@ -18,16 +18,28 @@ std::vector<Coordinates> King::vect_move=
 
 /*--------------------------------Getters---------------------------------*/
 PieceType King::getType() const
+/*
+    Description:
+        Retourne le type de la pièce
+*/
 {
     return PieceType::King;
 };
 std::vector<Coordinates>& King::getVectMove()
+/*
+    Description:
+        Retourne une reférence sur un vecteur de mouvement de base de la pièce
+*/
 {
     return vect_move;
 }
 
 /*---------------------Modèles de mouvement/capture-----------------------*/
 bool King::canMovePattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     if(!new_coords.onBoard()) return false;
 
@@ -43,6 +55,10 @@ bool King::canMovePattern(const Coordinates new_coords) const
 }
 
 bool King::canEatPattern(const Coordinates new_coords) const
+/*
+    Description:
+        verifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
+*/
 {
     return canMovePattern(new_coords);
 }

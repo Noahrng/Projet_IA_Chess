@@ -5,7 +5,6 @@
 #include "player.hpp"
 #include "screen.hpp"
 #include "screen_main_menu.hpp"
-#include "screen_chess.hpp"
 #include <raylib.h>
 #include <memory>
 

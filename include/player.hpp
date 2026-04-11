@@ -15,6 +15,7 @@ class Player
         bool bot;
         bool color;
         std::vector<std::shared_ptr<Piece>> pieces;
+        std::shared_ptr<Piece> board[8][8];
     
     public:
         //Constructeurs / Destructeurs
@@ -31,12 +32,15 @@ class Player
         std::shared_ptr<Piece> getPiece(size_t) const;
         std::shared_ptr<Piece> getKing() const;
         std::shared_ptr<Piece> getQueen() const;
+        Piece& getKingFast() const;
         std::vector<std::shared_ptr<Piece>>& getPieces();
         size_t nbOfPieces() const;
         bool isBot() const;
 
         //Setters
         void setBot(bool);
+
+        void updateBoard(Coordinates,Coordinates);
 
         //Vérification d'état
         bool isPiece(std::shared_ptr<Piece>, size_t) const;

@@ -236,6 +236,8 @@ void ChessScreen::draw()
     ClearBackground(BLACK);
     drawAsset(AssetID::chessBoard,0,0,boardSize);
 
+    
+
     if(game.isChosen())
     {
         drawPieces(squareSize,game.getCoordsPieceChosen());
@@ -318,7 +320,21 @@ void ChessScreen::draw()
     }
     
 
-    
+    char data_depth[12];
+    std::sprintf(data_depth,"Depth=%d",(robot.getDepth()));
+    DrawText(data_depth,10,10,50,YELLOW);
+
+    if(GetMouseWheelMove()<0.0)
+    {
+        robot.sub_minimax_depth();
+    }
+
+    if(GetMouseWheelMove()>0.0)
+    {
+        robot.add_minimax_depth();
+    }
+
+
 
     EndDrawing();
 
