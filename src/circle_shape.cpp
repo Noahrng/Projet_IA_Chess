@@ -11,7 +11,7 @@ CircleShape::CircleShape(float x,float y,float radius)
 float CircleShape::getCenterX() 
 /*
     Description:
-        retourne l'absice du centre du cercle
+        Retourne l'abscisse du centre du cercle
 */
 { 
     return x; 
@@ -19,7 +19,7 @@ float CircleShape::getCenterX()
 float CircleShape::getCenterY() 
 /*
     Description:
-        retourne l'ordonnée du centre du cercle
+        Retourne l'ordonnée du centre du cercle
 */
 { 
     return y; 
@@ -28,7 +28,7 @@ float CircleShape::getCenterY()
 float CircleShape::getWidth()  
 /*
     Description:
-        retourne la largeur du cercle
+        Retourne la largeur du cercle
     Note:
         ici largeur = hauteur comme c'est un cercle
 */
@@ -38,7 +38,7 @@ float CircleShape::getWidth()
 float CircleShape::getHeight() 
 /*
     Description:
-        retourne la hauteur du cercle du cercle
+        Retourne la hauteur du cercle 
     Note:
         ici largeur = hauteur comme c'est un cercle
 */
@@ -50,7 +50,7 @@ float CircleShape::getHeight()
 bool CircleShape::isHovered(Vector2 mouse)
 /*
     Description:
-        retourne si le cercle est survolé avec la souris
+        Retourne si le cercle est survolé avec la souris
 */
 {
     return CheckCollisionPointCircle(mouse, {x, y}, radius);

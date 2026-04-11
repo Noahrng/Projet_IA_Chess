@@ -29,7 +29,7 @@ void TextShape::setTextColor(Color color)
 void TextShape::setFontSize(int size)
 /*
     Description:
-        Change la Police du texte
+        Change la police du texte
 */
 {
     fontSize=size;

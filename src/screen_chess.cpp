@@ -66,7 +66,7 @@ Coordinates ChessScreen::getCoords(int squareSize)
     Description:
         Renvoie une coordonnée en fonction de la position courante de la souris
     Note:
-        l'abscisse et l'ordonné sont compris entre 0 et 7 inclu
+        L'abscisse et l'ordonné sont compris entre 0 et 7 inclu
 */
 {
     int x=GetMouseX()/squareSize;
@@ -91,7 +91,7 @@ Coordinates ChessScreen::getCoords(int squareSize)
 bool ChessScreen::isFinished()
 /*
     Description:
-        Renvoie si l'ecran courant est terminer
+        Renvoie si l'écran courant est terminé
 */
 {
     return finished;
@@ -123,8 +123,8 @@ std::unique_ptr<Screen> ChessScreen::nextScreen()
 void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 /*
     Description:
-        quand une promotion est attendu , on demande au joueur en quel pièce
-        il veut promovoir le pion , ce choix ce fait au scroll de la souris
+        Quand une promotion est attendue, on demande au joueur en quelle pièce
+        il veut promouvoir le pion, ce choix, ce fait au scroll de la souris
 */
 {
     std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
@@ -164,7 +164,7 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 void ChessScreen::switchSide()
 /*
     Description:
-        inverse side
+        Inverse side
     Note:
         à pour effet de retourner le plateau d'echec
 */
@@ -176,9 +176,9 @@ void ChessScreen::switchSide()
 void ChessScreen::addImage(AssetID id,const std::string &path)
 /*
     Description:
-        ajoute une image dans images , en fonction de path
+        Ajoute une image dans images , en fonction de path
     Note:
-        chaque images possede une clé id de type AssetID
+        Chaque images possede une clé id de type AssetID
 */
 {
     images[id]=std::make_unique<GameAsset>(path,0,0,0);
@@ -188,7 +188,7 @@ void ChessScreen::addImage(AssetID id,const std::string &path)
 void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
 /*
     Description:
-        Affiche l'asset en fonction de id , avec des paramatres de position , de taille , et de teinte
+        Affiche l'asset en fonction de id , avec des paramètres de position , de taille , et de teinte
 */
 {
     images.at(id)->setPosition(x,y);
@@ -203,8 +203,8 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
     Description:
         Affiche l'ensemble des pièces
     Note:
-        la piece choisi a une teinte jaune
-        le roi si il est en echec est affiché avec une teinte jaune
+        La piece choisi a une teinte jaune
+        Le roi si il est en échec est affiché avec une teinte jaune
 */
 {
     Player &p1=game.getCurrentPlayer();
@@ -270,9 +270,9 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
 void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
 /*
     Description:
-        Affiche des cercle sur les case en fonction d'un vecteur de coordonnée
+        Affiche des cercles sur les cases en fonction d'un vecteur de coordonnées
     Note:
-        Utilisé pour afficher les coup légaux de la pièce choisi
+        Utilisé pour afficher les coups légaux de la pièce choisie
 */
 {
     for(std::size_t i=0;i<coords.size();i++)
