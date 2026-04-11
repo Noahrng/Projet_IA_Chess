@@ -23,12 +23,20 @@ MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int
 
 /*--------------------------Vérification d'État---------------------------*/
 bool MainMenuScreen::isFinished()
+/*
+    Description:
+        Renvoie si l'ecran courant est terminer
+*/
 {
     return finished;
 }
 
 /*------------------------------Mise à Jour-------------------------------*/
 void MainMenuScreen::update()
+/*
+    Description:
+        Actualise les paramètre en fonction d'input utilisateur
+*/
 {
     if(playButton->isClicked())
     {
@@ -37,12 +45,20 @@ void MainMenuScreen::update()
 }
 
 std::unique_ptr<Screen> MainMenuScreen::nextScreen()
+/*
+    Description:
+        Renvoie la prochaine instance de screen après le screen courant
+*/
 {
     return std::make_unique<ChessScreen>(game,robot);
 }
 
 /*-------------------------Dessiner le Main Menu--------------------------*/
 void MainMenuScreen::draw()
+/*
+    Description:
+        Affichage
+*/
 {
     BeginDrawing();
     ClearBackground(Color{0,128,0,255});

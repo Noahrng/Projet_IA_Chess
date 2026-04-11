@@ -129,53 +129,93 @@ bool operator!=(const Player &a,const Player &b)
 
 /*--------------------------------Getters---------------------------------*/
 std::shared_ptr<Piece> Player::getPiece(int x, int y) const
+/*
+    Description:
+        Retourne la piece a la coordonnée x,y
+*/
 {
     Coordinates c(x,y);
     return getPiece(c);
 }
 
 std::shared_ptr<Piece> Player::getPiece(Coordinates c) const
+/*
+    Description:
+        Retourne la piece a la coordonnée c
+*/
 {
     if(!c.onBoard()) return nullptr;
     return board[c.getX()][c.getY()];
 }
 std::shared_ptr<Piece> Player::getPiece(size_t i) const
+/*
+    Description:
+        Retourne la piece d'indice i
+*/
 {
     return pieces[i];
 }
 
 std::shared_ptr<Piece> Player::getKing() const
+/*
+    Description:
+        Retourne le roi du joueur
+*/
 {
     return pieces[0];
 }
 
 std::vector<std::shared_ptr<Piece>>& Player::getPieces()
+/*
+    Description:
+        Retourne une reference sur les pièces du joueur
+*/
 {
     return pieces;
 }
 
 Piece& Player::getKingFast() const
+/*
+    Description:
+        Retourne une reference sur le roi du joueur
+*/
 {
     return *pieces[0].get();
 }
 
 size_t Player::nbOfPieces() const
+/*
+    Description:
+        Retourne le nombre de pièce du joueur
+*/
 {
     return pieces.size();
 }
 
 bool Player::isBot() const
+/*
+    Description:
+        Retourne si joueur est un bot
+*/
 {
     return bot;
 }
 
 /*----------------------------Setters-------------------------------------*/
 void Player::setBot(bool bot)
+/*
+    Description:
+        Affecte au joueur si il est un bot ou non
+*/
 {
     this->bot=bot;
 }
 
 void Player::updateBoard(Coordinates from,Coordinates to)
+/*
+    Description:
+        Actualise le tableau d'accès rapide
+*/
 {
     board[to.getX()][to.getY()]=board[from.getX()][from.getY()];
     board[from.getX()][from.getY()]=nullptr;
@@ -184,22 +224,38 @@ void Player::updateBoard(Coordinates from,Coordinates to)
 
 /*--------------------------Vérification d'État---------------------------*/
 bool Player::isPiece(std::shared_ptr<Piece> p, size_t i) const
+/*
+    Description:
+        Retourne si p appartient a la piece d'indice i du joueur
+*/
 {
     return p == pieces[i];
 }
 
 bool Player::isWhite() const
+/*
+    Description:
+        Retourne si le joueur joue les blanc
+*/
 {
     return !color;
 }
 
 bool Player::isBlack() const
+/*
+    Description:
+        Retourne si le joueur joue les noir
+*/
 {
     return color;
 }
 
 /*----------------------------Pièces du Joueur----------------------------*/
 void Player::addPiece(std::shared_ptr<Piece> p)
+/*
+    Description:
+        Ajoute la pièce p au joueur
+*/
 {
     Coordinates c=p->getCoordinates();
     pieces.push_back(p);
@@ -214,7 +270,15 @@ void Player::addPiece(std::shared_ptr<Piece> p)
     
 }
 
-void Player::removePiece(Coordinates c){
+void Player::removePiece(Coordinates c)
+/*
+    Description:
+        enleve la pièce de coordonnée c au joueur
+    Note:
+        Ne retire rien si il n'y a pas de piece en c
+*/
+{
+    
     size_t i=0;
     size_t i_max=pieces.size();
     while(i<i_max && pieces[i]->getCoordinates()!=c){
@@ -229,7 +293,12 @@ void Player::removePiece(Coordinates c){
     board[c.getX()][c.getY()]=nullptr;
 }
 
-void Player::removePiece(size_t i){
+void Player::removePiece(size_t i)
+/*
+    Description:
+        enleve la pièce d'indice i
+*/
+{
     if(i < nbOfPieces()){
         Coordinates c = pieces[i]->getCoordinates();
         board[c.getX()][c.getY()]=nullptr;
@@ -237,7 +306,12 @@ void Player::removePiece(size_t i){
         pieces.erase(pieces.begin()+i);
     }
 }
-void Player::removePiece(std::shared_ptr<Piece> p){
+void Player::removePiece(std::shared_ptr<Piece> p)
+/*
+    Description:
+        enleve la pièce p au joueur
+*/
+{
     Coordinates c = p->getCoordinates();
     removePiece(c);
 }
