@@ -38,19 +38,37 @@ bool operator!=(const GameController &a,const GameController &b)
 
 /*--------------------------------Getters---------------------------------*/
 Player& GameController::getCurrentPlayer()
+/*
+    Description:
+        renvoie une réference sur le joueur a qui c'est le tour
+*/
 {
     return *current_player;
 }
+
 Player& GameController::getWaitingPlayer()
+/*
+    Description:
+        renvoie une réference sur le joueur a qui ce n'est pas le tour
+*/
 {
     return *waiting_player;
 }
+
 Coordinates GameController::getCoordsPieceChosen() const
+/*
+    Description:
+        renvoie la coordonnée de la pièce choisie
+*/
 {
     return cell_chosen;
 }
 
 std::pair<Coordinates,Coordinates> GameController::getLastMove() const
+/*
+    Description:
+        renvoie deux coordonnées représentant le dernier mouvement jouer
+*/
 {
     std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
     if(!moves.empty())
@@ -64,22 +82,38 @@ std::pair<Coordinates,Coordinates> GameController::getLastMove() const
 
 /*---------------------------Tours Des Joueurs----------------------------*/
 void GameController::switchTurn()
+/*
+    Description:
+        change le tour , en échangeant current_player et waiting_player
+*/
 {
     std::swap(current_player,waiting_player);
 }
 
 bool GameController::whiteTurn() const
+/*
+    Description:
+        renvoie si c'est le tour des blanc
+*/
 {
     return current_player->isWhite();
 }
 
 bool GameController::blackTurn() const
+/*
+    Description:
+        renvoie si c'est le tour des noir
+*/
 {
     return current_player->isBlack();
 }
 
 /*----------------------------Calcul de position--------------------------c*/
 uint8_t GameController::encodePiece(PieceType type, bool isBlack) const
+/*
+    Description:
+        renvoie une valeur entre 0 et 12 représentant la piece en fonction du type et de la couleur
+*/
 {
     int base = isBlack ? 6 : 0;
     return base + static_cast<int>(type) + 1;
@@ -94,6 +128,10 @@ void GameController::setCase(PositionKey& key, int x, int y, uint8_t val) const
 }
 
 PositionKey GameController::computeKey() const
+/*
+    Description:
+        retourne une clé sur (4 entier 64 bit) representant la position courant
+*/
 {
     PositionKey key;
     key.data.fill(0);
@@ -124,16 +162,28 @@ PositionKey GameController::computeKey() const
 
 /*-----------------------------Pièce Choisie------------------------------*/
 bool GameController::isNull() const
+/*
+    Description:
+        renvoie si il n'y a pas de pièce choisie
+*/
 {
     return piece_chosen==nullptr;
 }
 
 bool GameController::isChosen() const
+/*
+    Description:
+        renvoie si une pièce est choisie
+*/
 {
     return piece_chosen!=nullptr;
 }
 
 void GameController::choosePiece(Coordinates c)
+/*
+    Description:
+        choisie une piece du joueur courant en fonction d'une coordonnée c
+*/
 {
     this->piece_chosen=current_player->getPiece(c);
     if(piece_chosen != nullptr)
@@ -141,6 +191,10 @@ void GameController::choosePiece(Coordinates c)
 }
 
 void GameController::choosePiece(int i)
+/*
+    Description:
+        choisie une piece du joueur courant en fonction d'un indice i
+*/
 {
     this->piece_chosen=current_player->getPiece(i);
     if(piece_chosen != nullptr)
@@ -148,6 +202,10 @@ void GameController::choosePiece(int i)
 }
 
 void GameController::choosePiece(std::shared_ptr<Piece> p)
+/*
+    Description:
+        choisie une piece du joueur courant en fonction d'une autre piece
+*/
 {
     this->piece_chosen=p;
     if(this->piece_chosen != nullptr)
@@ -155,12 +213,20 @@ void GameController::choosePiece(std::shared_ptr<Piece> p)
 }
 
 void GameController::unChoosePiece()
+/*
+    Description:
+        déselectionne la pièce
+*/
 {
     this->piece_chosen=nullptr;
     cell_chosen.setXY(-1,-1);
 }
 
 std::vector<Coordinates> GameController::movesOfPieceChosen()
+/*
+    Description:
+        renvoie un vecteur des mouvement possible de la pièce choisie
+*/
 {
     std::vector<Coordinates> v;
     v.reserve(16);
@@ -186,6 +252,10 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
 }   
 
 int GameController::movesOfPieceChosen(Coordinates *v)
+/*
+    Description:
+        remplie un tableau v des mouvement possible de la piece choisie et renvoie le nombre de mouvement
+*/
 {
     int nbmove=0;
     std::shared_ptr<Piece> p=current_player->getPiece(cell_chosen);
@@ -270,6 +340,10 @@ int GameController::movesOfPieceChosen(Coordinates *v)
 
 /*------------------------------Déplacements------------------------------*/
 void GameController::eatPiece(std::shared_ptr<Piece> p)
+/*
+    Description:
+        Mange (supprime la piece) des piece du joueur a qui ce n'est pas le tour
+*/
 {
     size_t i = 0;
     size_t n = waiting_player->nbOfPieces();
@@ -284,6 +358,12 @@ void GameController::eatPiece(std::shared_ptr<Piece> p)
 }
 
 bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote)
+/*
+    Description:
+        Deplace la pièce de from a to
+    Note:
+        si autoPromote est a True la promotion est automatiquement fait en dame
+*/
 {
     if(isLegalMove(from,to)){
         MoveHistory unitMove(from,to);
@@ -343,6 +423,10 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
 }
 
 void GameController::unMove()
+/*
+    Description:
+        Annule le derniere mouvement
+*/
 {
     if(!moves.empty())
     {
@@ -399,14 +483,20 @@ void GameController::unMove()
 
 /*-----------------------Vérifications & Détections-----------------------*/
 bool GameController::isEmpty(Coordinates c) const
+/*
+    Description:
+        renvoie si il n'y a pas de piece présent a la coordonée c
+*/
 {
     return !pieceDectection(c);
 }
 
 bool GameController::pieceInBetween(Coordinates from, Coordinates to) const
 /* 
-Vérifie s'il y a une pièce entre les coordonnées de départ, et les coordonnées d'arrivées. 
-Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, lignes ou colonnes
+    Description:
+        Vérifie s'il y a une pièce entre les coordonnées de départ, et les coordonnées d'arrivées. 
+    Note:
+        Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, lignes ou colonnes
 */
 {
     if(!from.onBoard() || !to.onBoard()) return false;
@@ -456,21 +546,37 @@ Ne marche que si les coordonnées de départ et d'arrivées sont en diagonales, 
 }
 
 bool GameController::pieceAllyDetection(Coordinates c) const
+/*
+    Description:
+        renvoie si une pièce est présente dans le joueur courrant a la coordonnée c
+*/
 {
     return current_player->getPiece(c)!=nullptr;
 }
 
 bool GameController::pieceEnemyDetection(Coordinates c) const
+/*
+    Description:
+        renvoie si une pièce est présente dans le joueur adverse a la coordonnée c
+*/
 {
     return waiting_player->getPiece(c)!=nullptr;
 }
 
 bool GameController::pieceDectection(Coordinates c) const
+/*
+    Description:
+        renvoie si une pièce est présente a la coordonnée c
+*/
 {
     return this->pieceAllyDetection(c) || this->pieceEnemyDetection(c);
 }
 
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
+/*
+    Description:
+        renvoie si le mouvement de from a to est un coup légal
+*/
 {
     std::shared_ptr<Piece> p = current_player->getPiece(from);
     
@@ -520,6 +626,10 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 }
 
 int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
+/*
+    Description:
+        renvoie le nombre de coup légal de la piece p
+*/
 {
     int moves=0;
     std::vector<Coordinates>& list_move=p->getVectMove();
@@ -600,10 +710,11 @@ int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
 }
 
 int GameController::isThreaten(Coordinates c) const
-    /* 
-    Vérifie si une case aux coordonnées c est menacée ou non par une pièce 
-    et renvoie le nombre de pièces qui la menace
-    */    
+/*
+    Description:
+        Vérifie si une case aux coordonnées c est menacée ou non par une pièce 
+        et renvoie le nombre de pièces qui la menace
+*/
 {
     if(!c.onBoard()) return 0;
     
@@ -625,7 +736,8 @@ int GameController::isThreaten(Coordinates c) const
 
 int GameController::isChecked() const
 /* 
-    Vérifie si un joueur est en échec ou pas et renvoie le nombre de pièces qui le met en échec.
+    Description:
+        Vérifie si un joueur est en échec ou pas et renvoie le nombre de pièces qui le met en échec.
 */
 {
     std::shared_ptr<Piece> king = current_player->getKing();
@@ -634,6 +746,10 @@ int GameController::isChecked() const
 }
 
 bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
+/*
+    Description:
+        renvoie si le roi est en echec apres un potentiel mouvement de from a to
+*/
 {
     if(!from.onBoard() || !to.onBoard()) return false;
 
@@ -695,6 +811,10 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 }
 
 bool GameController::isRepeat() const
+/*
+    Description:
+        Renvoie si il y a eu 3 position identique qui on été joué
+*/
 {
     if(hashHistory.size() < 5) return false;
 
@@ -712,6 +832,10 @@ bool GameController::isRepeat() const
 }
 
 bool GameController::isDraw()
+/*
+    Description:
+        renvoie si la partie est une égalité
+*/
 {
     if(isRepeat()) return true;
     //Matériel insuffisant :
@@ -797,6 +921,12 @@ bool GameController::isDraw()
 }
 
 bool GameController::isPat()
+/*
+    Description:
+        renvoie si la partie est pat
+    Note:
+        Pat veut dire que le joueur courant n'a aucun coup légal mais n'est pas en echec
+*/
 {
     if(!isChecked()){
         size_t n = current_player->nbOfPieces();
@@ -816,7 +946,8 @@ bool GameController::isPat()
 
 bool GameController::isCheckmate()
 /* 
-    Vérifie si current player est en échec et mat
+    Description:
+        Vérifie si le joueur courrant est en échec et mat
 */
 {
     if(!isChecked())
@@ -848,6 +979,10 @@ bool GameController::isCheckmate()
 }
 /*----------------------------Règles Spéciales----------------------------*/
 bool GameController::isPawnPromoted(Coordinates c, bool color) const
+/*
+    Description:
+        renvoie si le pion peut etre promue
+*/
 {
     std::shared_ptr<Piece> p ;
     if( (current_player->isWhite() && color == 0) || 
@@ -868,11 +1003,19 @@ bool GameController::isPawnPromoted(Coordinates c, bool color) const
 }
 
 bool GameController::promotionPending() const
+/*
+    Description:
+        retourne si on attend une promotion
+*/
 {
     return waiting_promotion;
 }
 
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
+/*
+    Description:
+        transforme la pièce p en une autre piece de type t
+*/
 {
     if(waiting_promotion){
         if(t == PieceType::Bishop)
@@ -915,6 +1058,10 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 }
 
 bool GameController::isMoveRock(Coordinates from, Coordinates to) const
+/*
+    Description:
+        renvoie si le mouvement de from a to est un mouvement de roque
+*/
 {
     std::shared_ptr<Piece> p = current_player->getPiece(from);
     if(!p) return false;
@@ -935,6 +1082,10 @@ bool GameController::isMoveRock(Coordinates from, Coordinates to) const
 }
 
 bool GameController::canRock(Coordinates from, Coordinates to) const
+/*
+    Description:
+        renvoie si le mouvement de roque est réalisable
+*/
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> king = current_player->getPiece(from);
@@ -984,6 +1135,10 @@ bool GameController::canRock(Coordinates from, Coordinates to) const
 }
 
 Coordinates GameController::rock(Coordinates to)
+/*
+    Description:
+        Applique le roque
+*/
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> king;
@@ -1038,6 +1193,10 @@ Coordinates GameController::rock(Coordinates to)
 }
 
 bool GameController::isMoveEnPassant(Coordinates from, Coordinates to) const
+/*
+    Description:
+        renvoie si le mouvement de from a to est un mouvement de type en Passant
+*/
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -1058,6 +1217,10 @@ bool GameController::isMoveEnPassant(Coordinates from, Coordinates to) const
 }
 
 bool GameController::canEnPassant(Coordinates from, Coordinates to) const
+/*
+    Description:
+        renvoie si le en passant peut être effectué
+*/
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -1084,6 +1247,10 @@ bool GameController::canEnPassant(Coordinates from, Coordinates to) const
 }
 
 void GameController::enPassant(Coordinates from, Coordinates to)
+/*
+    Description:
+        Applique le enpassant
+*/
 {
     bool color = current_player->isBlack();
     std::shared_ptr<Piece> ally_pawn = current_player->getPiece(from);

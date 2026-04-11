@@ -8,6 +8,10 @@ Evaluator::Evaluator(GameController &game):game{game}, MAX_MATERIAL{39.0},MAX_PO
 
 /*--------------------------------Getters---------------------------------*/
 double Evaluator::getPieceTableValue(Piece &p, bool isWhite) const
+/*
+    Description:
+        renvoie la valeur positionnel de la piece en fonction de son type et d'une table positionnel
+*/
 {
     int x = p.getCoordinates().getX();
     int y = p.getCoordinates().getY();
@@ -30,6 +34,10 @@ double Evaluator::getPieceTableValue(Piece &p, bool isWhite) const
 
 /*-----------------------------Verification-------------------------------*/
 bool Evaluator::isEndGame() const
+/*
+    Description:
+        verifie arbitrairement si on est en finale
+*/
 {
     Player &current = game.getCurrentPlayer();
     Player &waiting = game.getWaitingPlayer();
@@ -57,6 +65,10 @@ bool Evaluator::isEndGame() const
 
 /*------------------------------Évaluations-------------------------------*/
 double Evaluator::evaluateMaterial() const
+/*
+    Description:
+        evalue le materiel disponible et renvoie le score blanc-noir compris entre -1.0 et 1.0
+*/
 {
     double white_score=0.0;
     double black_score=0.0;
@@ -81,6 +93,10 @@ double Evaluator::evaluateMaterial() const
 
 
 double Evaluator::evaluatePosition() const
+/*
+    Description:
+        evalue la position et renvoie le score blanc-noir compris entre -1.0 et 1.0
+*/
 {   
     double white_score = 0.0;
     double black_score = 0.0;
@@ -108,6 +124,10 @@ double Evaluator::evaluatePosition() const
 }
 
 double Evaluator::evaluateKingPositionSingle(Player &player,bool isWhite) const
+/*
+    Description:
+        evalue la position du roi en fonction de sa couleur
+*/
 {
     double penalty = 0.0;
 
@@ -151,6 +171,10 @@ double Evaluator::evaluateKingPositionSingle(Player &player,bool isWhite) const
 }
 
 double Evaluator::evaluateKingPosition() const
+/*
+    Description:
+        evalue les positions des roi et renvoie le score blanc-noir compris entre -1.0 et 1.0
+*/
 {
     double score = 0.0;
 
@@ -166,6 +190,10 @@ double Evaluator::evaluateKingPosition() const
     return score;
 }
 double Evaluator::evaluate() const
+/*
+    Description:
+        applique chaque evaluation pondéré en fonction de coefficient en renvoie un score general blanc-noir
+*/
 {
     double material = evaluateMaterial()/MAX_MATERIAL;
     double position = evaluatePosition()/MAX_POSITION;
