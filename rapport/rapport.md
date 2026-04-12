@@ -29,6 +29,17 @@ include-before: |
 
 \newpage
 
+# Table des Figures
+
+- [Figure 1](#fig:img1) Capture d'écran personnelle 
+- [Figure 2](#fig:img2) Capture d'écran personnelle 
+- [Figure 3](#fig:img3) Capture d'écran personnelle 
+- [Figure 4](#fig:img4) Capture d'écran personnelle 
+- [Figure 5](#fig:img5) Capture d'écran personnelle 
+- [Figure 6](#fig:img6) Capture d'écran personnelle 
+
+\clearpage
+
 # Introduction
 
 Le jeu d'échecs est un des jeux les plus anciens de l'histoire qui est encore populaire de nos jours. Faisant son apparition autour du 6ème siècle après J-C, il mélange stratégie, anticipation, prise dé decisions  dans un environnement complexe et réflexion du joueur.  
@@ -50,8 +61,37 @@ Cet épisode de l'histoire des échecs nous a inspiré à recréer une IA qui so
 Ce rapport présentera tout d'abord l'application que l'on a conçue, pour ensuite présenter l'architecture logicielle, suivi du diagramme des classes UML de notre projet, nous rebondirons ensuite sur les patrons de conceptions que nous avons utilisé pour notre projet, puis nous aborderons ensuite les outils logiciells utilisés, les tâches effectuées et les difficultés rencontrées.
 
 
-\clearpage
 # Présentation de l'Applicaton
+
+## Contenu de l'application
+
+Nous avons réaliser ce projet d'IA d'échecs dans le cadre de nos études, au cours de la matière Génie Logiciel. L'objectif de cette application est de pouvoir jouer aux échecs, sur terminal ou via une interface graphique sous raylib, contre une intelligence artificielle ou un autre joueur sur la même machine.  
+L'application contient un plateau d'échecs avec toutes les pièces à disposition que l'on peut déplacer sous la contrainte des règles officielles du jeu d'échecs. Elle dispose d'une IA qui se base sur l'algorithme de recherche "minimax" pour pouvoir trouver le coup le plus optimal. Il est aussi possible d'annuler le dernier coup de l'adversaire ou son propre coup grâce à un historique de coup. La configuration des joueurs (IA ou humains) se fait via le terminal, et il est possible de choisir son camp si on joue contre une IA.  
+
+## Utilisation de l'application
+
+Pour utiliser l'application, il faut avoir docker ou guix d'installé et suivre les instructions d'exécutions présentes dans le README.md du projet.  
+Après exécution, il y a tout d'abord une demande faite à l'utilisateur pour qu'il choisisse entre l'affichage graphique ou terminal, en mettant 0 pour l'affichage sur terminal et 1 pour l'affichage graphique.  
+
+![Question à l'utilisateur concernant l'affichage](image/question_interface.png){#fig:img1}
+
+Ensuite, après avoir choisi l'affichage utilisé, l'utilisateur doit ensuite choisir si la partie d'échecs opposera (0) deux joueurs, un joueur vs une IA (1) ou alors deux IA (2).  
+
+![Question à l'utilisateur concernant les joueurs](image/question_joueurs.png){#fig:img2}
+
+S'il a choisit de jouer contre une IA, il doit alors choisir s'il joue les blancs ou non.  
+
+![Question à l'utilisateur concernant son camp](image/question_camp.png){#fig:img3}
+
+Pour l'affichage terminal, le joueur doit écrire la position de la pièce qu'il veut bouger (ex: a7), puis l'emplacement où il vevut la bouger.
+
+![Affichage sur terminal](image/affichage_terminal.png){#fig:img4}  
+
+Pour l'affichage graphique, il y a d'abord un menu contenant un bouton play sur lequel le joueur doit appuyer pour jouer, puis le plateau s'affiche avec toutes les pièces. Pour déplacer une pièce, le joueuur doit cliquer dessus puis cliquer sur un emplacement valable où il peut la déplacer.
+
+![Affichage du menu](image/affichage_menu.png){#fig:img5}
+
+![Affichage sur interface graphique](image/affichage_graphique.png){#fig:img6}
 
 \clearpage
 # Présentation de l'architecture logicielle
@@ -73,33 +113,38 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
-\clearpage
 # Diagramme de classes UML
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagrammeuml.png}
 \end{figure}
 
-\clearpage
 # Diagramme de séquence UML
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagramme.png}
 \end{figure}
 
-\clearpage
 # Patrons de Conception utilisés
+Les deux patrons de conceptions principaux qui ont été utilisés sont les suivants :
 
-Modèle-Vue-Controlleur :
 
-Modèle
-Vue
-Controlleur
+## Modèle-Vue-Controlleur  
+L'application est séparée en trois parties distinctes:  
 
-Memento : 
-Historique des coups
+1) **Modèle**:  
+La partie modèle est le cœur des données et de la logique. Elle contient les données, les règles du jeu et les calculs. Elle contient les les classes suivantes: Piece et tout ce qui en hérite (Knight, Pawn, Bishop...), Player, Coordinates, Evaluator, Minimax et MoveHistory.
 
-\clearpage
+2) **Vue**:  
+La partie Vue (View) consiste à l'affichage des données pour l'utilisateur, et son interface. Elle comprend les classes suivantes : Display, TerminalDisplay, GraphicDisplay, Drawable, Shape, Button, TextShape, CircleShape et GameAsset.
+
+3) **Controlleur**:  
+Et enfin, la partie controlleur est le "chef d'orchestre", elle reçoit les actions utilisateurs, modifie le modèle et met à jour la vue. Elle contient donc la classe GameController, Screen, ScreenChess et ScreenMainMenu.
+
+## Memento
+Le patron de oconception Memento est utilisé pour sauvegarder chaque coup effectué par l'utilisateur ou l'IA, et de pouvoir restaurer un état précédent sans exposer les détails internes.  
+Il est modélisé par la classe MoveHistory qui contient la copie d'un mouvement fait précédemment, dont le controlleur se sert pour pouvoir annuler un coup, et dont l'IA se sert pour explorer des mouvements.
+
 # Outils logiciels utilisés
 ## Langage et compilation
 Ce projet a été développé en **C++20**, un langage de programmation compilé offrant
@@ -143,28 +188,27 @@ les appels **POSIX** `fork()` et `pipe()`. Chaque coup candidat à la racine
 de l'arbre Minimax est évalué dans un processus fils indépendant, les
 résultats étant renvoyés au processus père via des tubes de communication.
 
-\clearpage
 # Tableau des Tâches
 \begin{center}
-\begin{tabular}{|c|l|c|c|}
+\begin{tabular}{|c|l|c|c|c|}
 \hline
-\textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} \\
+\textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} & \textbf{Qui ?}\\
 \hline
-A & Classe Coordinates & - & 1 jour \\
+A & Classe Coordinates & - & 1 jour & Valentin\\
 \hline
-B & Classe Piece & A & 2 Jours\\
+B & Classe Piece & A & 2 Jours & Noah\\
 \hline
-C & Classe Player & B & 3 Jours \\
+C & Classe Player & B & 3 Jours & Noah\\
 \hline
-D & Classe GameController & C & 7 Jours\\
+D & Classe GameController & C & 7 Jours & Noah, Valentin\\
 \hline
-E & Classe Evaluator & D & 1 Jours\\
+E & Classe Evaluator & D & 1 Jours & Valentin\\
 \hline
-F & Classe Minimax & E & 10 Jours\\
+F & Classe Minimax & E & 10 Jours & Valentin\\
 \hline
-G & Interface Terminal & D & 2 Jours\\
+G & Interface Terminal & D & 2 Jours & Noah\\
 \hline
-H & Interface Graphique & D & 5 Jours\\
+H & Interface Graphique & D & 5 Jours & Valentin\\
 \hline
 \end{tabular}
 \end{center}
@@ -174,7 +218,6 @@ H & Interface Graphique & D & 5 Jours\\
     \item D → G
     \item D → H
 \end{itemize}
-\clearpage
 # Difficultés rencontrées
 ## Gestions des coups illégaux / reglès du jeu
 La gestion correcte des règles du jeu (déplacements valides, détection d’échec, captures, enPassant) a constitué une certaine difficulé, 
@@ -250,3 +293,13 @@ Il a fallu gérer correctement la communication et la terminaison des processus 
 
 \clearpage
 # Conclusion
+
+Au cours de ce projet, nous avons développé une application complète de jeu d’échecs intégrant une intelligence artificielle basée sur l’algorithme Minimax. Ce travail nous a permis de mettre en pratique des notions fondamentales du génie logiciel, telles que la conception orientée objet, l’utilisation de diagrammes UML et la mise en place d’une architecture logicielle structurée de type Modèle-Vue-Contrôleur.
+
+L’application réalisée est fonctionnelle et permet de jouer aussi bien contre un autre joueur que contre une intelligence artificielle, via une interface graphique ou terminale. L’intégration de l’algorithme Minimax, combiné à des optimisations comme l’élagage alpha-bêta, nous a permis d’obtenir une IA capable de prendre des décisions cohérentes dans un temps raisonnable.
+
+Ce projet nous a également permis de développer des compétences importantes, notamment en programmation C++, en conception logicielle, ainsi qu’en optimisation algorithmique. Les principales difficultés rencontrées ont concerné la gestion des règles complexes du jeu d’échecs et la maîtrise de la complexité de l’algorithme Minimax, ce qui nous a amenés à approfondir notre compréhension de ces concepts.
+
+Plusieurs améliorations pourraient être apportées à ce projet. Il serait notamment possible d’enrichir la fonction d’évaluation de l’IA, d’ajouter une interface utilisateur plus avancée ou encore d’implémenter un mode multijoueur en réseau. De plus, l’intégration de techniques avancées comme les tables de transposition permettrait d’améliorer significativement les performances de l’IA.
+
+En conclusion, ce projet constitue une expérience enrichissante qui nous a permis de consolider nos compétences en développement logiciel et de mieux appréhender les enjeux liés à la conception d’une intelligence artificielle dans un environnement complexe.
