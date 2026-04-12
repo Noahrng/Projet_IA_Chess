@@ -36,6 +36,11 @@ ChessScreen::~ChessScreen()
 
 /*--------------------------------Getters---------------------------------*/
 AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
+/*
+    Description:
+        Renvoie en fonction de la couleur et du type de la pièce correspondant
+        l'id de l'asset
+*/
 {
     int base=static_cast<int>(piece.getType())*2;
     int colorOffset=color ? 0 : 1;
@@ -44,6 +49,11 @@ AssetID ChessScreen::getAssetForPiece(const Piece& piece,bool color)
 }
 
 AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
+/*
+    Description:
+        Renvoie en fonction de la couleur et du type de la pièce correspondant
+        l'id de l'asset
+*/
 {
     int base=static_cast<int>(piece)*2;
     int colorOffset=color ? 0 : 1;
@@ -52,6 +62,12 @@ AssetID ChessScreen::getAssetForPiece(const PieceType& piece,bool color)
 }
 
 Coordinates ChessScreen::getCoords(int squareSize)
+/*
+    Description:
+        Renvoie une coordonnée en fonction de la position courante de la souris
+    Note:
+        L'abscisse et l'ordonné sont compris entre 0 et 7 inclu
+*/
 {
     int x=GetMouseX()/squareSize;
     int y=GetMouseY()/squareSize;
@@ -73,12 +89,20 @@ Coordinates ChessScreen::getCoords(int squareSize)
 
 /*--------------------------Vérification d'État---------------------------*/
 bool ChessScreen::isFinished()
+/*
+    Description:
+        Renvoie si l'écran courant est terminé
+*/
 {
     return finished;
 }
 
 /*------------------------------Mise à Jour-------------------------------*/
 void ChessScreen::update()
+/*
+    Description:
+        Actualise les paramètre en fonction d'input utilisateur
+*/
 {
     if(IsKeyPressed(KEY_TAB))
     {
@@ -87,12 +111,21 @@ void ChessScreen::update()
 } 
 
 std::unique_ptr<Screen> ChessScreen::nextScreen()
+/*
+    Description:
+        Renvoie la prochaine instance de screen après le screen courant
+*/
 {
     return std::make_unique<MainMenuScreen>(game,robot,1000,1000);
 }
 
 /*----------------------------Action du Joueur----------------------------*/
 void ChessScreen::scrollPiece(Coordinates c,int squareSize)
+/*
+    Description:
+        Quand une promotion est attendue, on demande au joueur en quelle pièce
+        il veut promouvoir le pion, ce choix, ce fait au scroll de la souris
+*/
 {
     std::shared_ptr<Piece> p = game.getCurrentPlayer().getPiece(c);
 
@@ -129,18 +162,34 @@ void ChessScreen::scrollPiece(Coordinates c,int squareSize)
 }
 
 void ChessScreen::switchSide()
+/*
+    Description:
+        Inverse side
+    Note:
+        à pour effet de retourner le plateau d'echec
+*/
 {
     side=!side;
 }
 
 /*--------------------------------Texture---------------------------------*/
 void ChessScreen::addImage(AssetID id,const std::string &path)
+/*
+    Description:
+        Ajoute une image dans images , en fonction de path
+    Note:
+        Chaque images possede une clé id de type AssetID
+*/
 {
     images[id]=std::make_unique<GameAsset>(path,0,0,0);
 }
 
 /*----------------------------Dessiner le Jeu-----------------------------*/
 void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
+/*
+    Description:
+        Affiche l'asset en fonction de id , avec des paramètres de position , de taille , et de teinte
+*/
 {
     images.at(id)->setPosition(x,y);
     images.at(id)->setSize(size);
@@ -150,6 +199,13 @@ void ChessScreen::drawAsset(AssetID id, int x, int y, int size,Color tint)
 }
 
 void ChessScreen::drawPieces(int squareSize,Coordinates choose)
+/*
+    Description:
+        Affiche l'ensemble des pièces
+    Note:
+        La piece choisi a une teinte jaune
+        Le roi si il est en échec est affiché avec une teinte jaune
+*/
 {
     Player &p1=game.getCurrentPlayer();
     Player &p2=game.getWaitingPlayer();
@@ -212,6 +268,12 @@ void ChessScreen::drawPieces(int squareSize,Coordinates choose)
 }
 
 void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
+/*
+    Description:
+        Affiche des cercles sur les cases en fonction d'un vecteur de coordonnées
+    Note:
+        Utilisé pour afficher les coups légaux de la pièce choisie
+*/
 {
     for(std::size_t i=0;i<coords.size();i++)
     {
@@ -223,6 +285,10 @@ void ChessScreen::drawCircles(int squareSize,std::vector<Coordinates> coords)
 }
 
 void ChessScreen::draw()
+/*
+    Description:
+        Affichage
+*/
 {
     int width=GetScreenWidth();
     int height=GetScreenHeight();

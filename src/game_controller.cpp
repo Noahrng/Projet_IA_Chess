@@ -41,7 +41,7 @@ bool operator!=(const GameController &a,const GameController &b)
 Player& GameController::getCurrentPlayer()
 /*
     Description:
-        renvoie une réference sur le joueur a qui c'est le tour
+        Renvoie une réference sur le joueur a qui c'est le tour
 */
 {
     return *current_player;
@@ -50,7 +50,7 @@ Player& GameController::getCurrentPlayer()
 Player& GameController::getWaitingPlayer()
 /*
     Description:
-        renvoie une réference sur le joueur a qui ce n'est pas le tour
+        Renvoie une référence sur le joueur à qui ce n'est pas le tour
 */
 {
     return *waiting_player;
@@ -59,7 +59,7 @@ Player& GameController::getWaitingPlayer()
 Coordinates GameController::getCoordsPieceChosen() const
 /*
     Description:
-        renvoie la coordonnée de la pièce choisie
+        Renvoie la coordonnée de la pièce choisie
 */
 {
     return cell_chosen;
@@ -68,7 +68,7 @@ Coordinates GameController::getCoordsPieceChosen() const
 std::pair<Coordinates,Coordinates> GameController::getLastMove() const
 /*
     Description:
-        renvoie deux coordonnées représentant le dernier mouvement jouer
+        Renvoie deux coordonnées représentant le dernier mouvement jouer
 */
 {
     std::pair<Coordinates,Coordinates> lastMove={Coordinates(-1,-1),Coordinates(-1,-1)};
@@ -82,22 +82,38 @@ std::pair<Coordinates,Coordinates> GameController::getLastMove() const
 }
 
 int GameController::getNOMWE()
+/*
+    Description:
+        Renvoie le nombre de mouvement sans capture
+*/
 {
     return nb_of_moves_without_eating;
 }
 
 /*--------------------------------Setters---------------------------------*/
 void GameController::incrementNOMWE()
+/*
+    Description:
+        Incrémente le nombre de mouvement sans capture
+*/
 {
     nb_of_moves_without_eating++;
 }
 
 void GameController::decrementNOMWE()
+/*
+    Description:
+        Décrémente le nombre de mouvement sans capture
+*/
 {
     nb_of_moves_without_eating--;
 }
 
 void GameController::resetNOMWE()
+/*
+    Description:
+        Reset le nombre de mouvement sans capture
+*/
 {
     nb_of_moves_without_eating = 0;
 }
@@ -106,7 +122,7 @@ void GameController::resetNOMWE()
 void GameController::switchTurn()
 /*
     Description:
-        change le tour , en échangeant current_player et waiting_player
+        Change le tour, en échangeant current_player et waiting_player
 */
 {
     std::swap(current_player,waiting_player);
@@ -115,7 +131,7 @@ void GameController::switchTurn()
 bool GameController::whiteTurn() const
 /*
     Description:
-        renvoie si c'est le tour des blanc
+        Renvoie si c'est le tour des blanc
 */
 {
     return current_player->isWhite();
@@ -124,7 +140,7 @@ bool GameController::whiteTurn() const
 bool GameController::blackTurn() const
 /*
     Description:
-        renvoie si c'est le tour des noir
+        Renvoie si c'est le tour des noir
 */
 {
     return current_player->isBlack();
@@ -134,7 +150,7 @@ bool GameController::blackTurn() const
 uint8_t GameController::encodePiece(PieceType type, bool isBlack) const
 /*
     Description:
-        renvoie une valeur entre 0 et 12 représentant la piece en fonction du type et de la couleur
+        Renvoie une valeur entre 0 et 12 représentant la pièce en fonction du type et de la couleur
 */
 {
     int base = isBlack ? 6 : 0;
@@ -142,6 +158,10 @@ uint8_t GameController::encodePiece(PieceType type, bool isBlack) const
 }
 
 void GameController::setCase(PositionKey& key, int x, int y, uint8_t val) const
+/*
+    Description:
+        Met à jour la clé en fonction de x,y et d'une valeur sur 8 bits
+*/
 {
     int index = y * 8 + x;
     int word  = index / 16;
@@ -152,7 +172,7 @@ void GameController::setCase(PositionKey& key, int x, int y, uint8_t val) const
 PositionKey GameController::computeKey() const
 /*
     Description:
-        retourne une clé sur (4 entier 64 bit) representant la position courant
+        Retourne une clé sur (4 entiers 64 bit) representant la position courante
 */
 {
     PositionKey key;
@@ -186,7 +206,7 @@ PositionKey GameController::computeKey() const
 bool GameController::isNull() const
 /*
     Description:
-        renvoie si il n'y a pas de pièce choisie
+        Renvoie s'il n'y a pas de pièce choisie
 */
 {
     return piece_chosen==nullptr;
@@ -195,7 +215,7 @@ bool GameController::isNull() const
 bool GameController::isChosen() const
 /*
     Description:
-        renvoie si une pièce est choisie
+        Renvoie si une pièce est choisie
 */
 {
     return piece_chosen!=nullptr;
@@ -204,7 +224,7 @@ bool GameController::isChosen() const
 void GameController::choosePiece(Coordinates c)
 /*
     Description:
-        choisie une piece du joueur courant en fonction d'une coordonnée c
+        Choisie une pièce du joueur courant en fonction d'une coordonnée c
 */
 {
     this->piece_chosen=current_player->getPiece(c);
@@ -215,7 +235,7 @@ void GameController::choosePiece(Coordinates c)
 void GameController::choosePiece(int i)
 /*
     Description:
-        choisie une piece du joueur courant en fonction d'un indice i
+        Choisie une pièce du joueur courant en fonction d'un indice i
 */
 {
     this->piece_chosen=current_player->getPiece(i);
@@ -226,7 +246,7 @@ void GameController::choosePiece(int i)
 void GameController::choosePiece(std::shared_ptr<Piece> p)
 /*
     Description:
-        choisie une piece du joueur courant en fonction d'une autre piece
+        choisie une pièce du joueur courant en fonction d'une autre piece
 */
 {
     this->piece_chosen=p;
@@ -237,7 +257,7 @@ void GameController::choosePiece(std::shared_ptr<Piece> p)
 void GameController::unChoosePiece()
 /*
     Description:
-        déselectionne la pièce
+        Dé-selectionne la pièce
 */
 {
     this->piece_chosen=nullptr;
@@ -247,7 +267,7 @@ void GameController::unChoosePiece()
 std::vector<Coordinates> GameController::movesOfPieceChosen()
 /*
     Description:
-        renvoie un vecteur des mouvement possible de la pièce choisie
+        Renvoie un vecteur des mouvements possibles de la pièce choisie
 */
 {
     std::vector<Coordinates> v;
@@ -276,7 +296,7 @@ std::vector<Coordinates> GameController::movesOfPieceChosen()
 int GameController::movesOfPieceChosen(Coordinates *v)
 /*
     Description:
-        remplie un tableau v des mouvement possible de la piece choisie et renvoie le nombre de mouvement
+        Remplie un tableau v des mouvement possible de la pièce choisie et renvoie le nombre de mouvement
 */
 {
     int nbmove=0;
@@ -364,7 +384,7 @@ int GameController::movesOfPieceChosen(Coordinates *v)
 void GameController::eatPiece(std::shared_ptr<Piece> p)
 /*
     Description:
-        Mange (supprime la piece) des piece du joueur a qui ce n'est pas le tour
+        Mange (supprime la pièce) des pièce du joueur à qui ce n'est pas le tour
 */
 {
     size_t i = 0;
@@ -382,9 +402,9 @@ void GameController::eatPiece(std::shared_ptr<Piece> p)
 bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote)
 /*
     Description:
-        Deplace la pièce de from a to
+        Déplace la pièce de from a to
     Note:
-        si autoPromote est a True la promotion est automatiquement fait en dame
+        Si autoPromote est à True la promotion est automatiquement fait en dame
 */
 {
     bool ate = false;
@@ -456,7 +476,7 @@ bool GameController::movePiece(Coordinates from, Coordinates to,bool autoPromote
 void GameController::unMove()
 /*
     Description:
-        Annule le derniere mouvement
+        Annule le dernier mouvement
 */
 {
     if(!moves.empty())
@@ -517,7 +537,7 @@ void GameController::unMove()
 bool GameController::isEmpty(Coordinates c) const
 /*
     Description:
-        renvoie si il n'y a pas de piece présent a la coordonée c
+        Renvoie s'il n'y a pas de pièce présent a la coordonnée c
 */
 {
     return !pieceDectection(c);
@@ -580,7 +600,7 @@ bool GameController::pieceInBetween(Coordinates from, Coordinates to) const
 bool GameController::pieceAllyDetection(Coordinates c) const
 /*
     Description:
-        renvoie si une pièce est présente dans le joueur courrant a la coordonnée c
+        Renvoie si une pièce est présente dans le joueur courrant a la coordonnée c
 */
 {
     return current_player->getPiece(c)!=nullptr;
@@ -589,7 +609,7 @@ bool GameController::pieceAllyDetection(Coordinates c) const
 bool GameController::pieceEnemyDetection(Coordinates c) const
 /*
     Description:
-        renvoie si une pièce est présente dans le joueur adverse a la coordonnée c
+        Renvoie si une pièce est présente dans le joueur adverse a la coordonnée c
 */
 {
     return waiting_player->getPiece(c)!=nullptr;
@@ -598,7 +618,7 @@ bool GameController::pieceEnemyDetection(Coordinates c) const
 bool GameController::pieceDectection(Coordinates c) const
 /*
     Description:
-        renvoie si une pièce est présente a la coordonnée c
+        Renvoie si une pièce est présente a la coordonnée c
 */
 {
     return this->pieceAllyDetection(c) || this->pieceEnemyDetection(c);
@@ -607,7 +627,7 @@ bool GameController::pieceDectection(Coordinates c) const
 bool GameController::isLegalMove(Coordinates from, Coordinates to)
 /*
     Description:
-        renvoie si le mouvement de from a to est un coup légal
+        Renvoie si le mouvement de from a to est un coup légal
 */
 {
     std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -660,7 +680,7 @@ bool GameController::isLegalMove(Coordinates from, Coordinates to)
 int GameController::countLegalMovesOfPiece(std::shared_ptr<Piece> p)
 /*
     Description:
-        renvoie le nombre de coup légal de la piece p
+        Renvoie le nombre de coups légal de la pièce p
 */
 {
     int moves=0;
@@ -780,7 +800,7 @@ int GameController::isChecked() const
 bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 /*
     Description:
-        renvoie si le roi est en echec apres un potentiel mouvement de from a to
+        Renvoie si le roi est en échec après un potentiel mouvement de from a to
 */
 {
     if(!from.onBoard() || !to.onBoard()) return false;
@@ -845,7 +865,7 @@ bool GameController::isKingCheckedAfterMove(Coordinates from, Coordinates to)
 bool GameController::isRepeat() const
 /*
     Description:
-        Renvoie si il y a eu 3 position identique qui on été joué
+        Renvoie s'il y a eu 3 positions identiques qui ont été jouéés
 */
 {
     if(hashHistory.size() < 5) return false;
@@ -866,7 +886,7 @@ bool GameController::isRepeat() const
 bool GameController::isDraw()
 /*
     Description:
-        renvoie si la partie est une égalité
+        Renvoie si la partie est une égalité
 */
 {
     //50 coups sans manger
@@ -961,9 +981,9 @@ bool GameController::isDraw()
 bool GameController::isPat()
 /*
     Description:
-        renvoie si la partie est pat
+        Renvoie si la partie est Pat
     Note:
-        Pat veut dire que le joueur courant n'a aucun coup légal mais n'est pas en echec
+        Pat veut dire que le joueur courant n'a aucun coup légal, mais n'est pas en échec
 */
 {
     if(!isChecked()){
@@ -985,7 +1005,7 @@ bool GameController::isPat()
 bool GameController::isCheckmate()
 /* 
     Description:
-        Vérifie si le joueur courrant est en échec et mat
+        Vérifie si le joueur courant est en échec et mat
 */
 {
     if(!isChecked())
@@ -1019,7 +1039,7 @@ bool GameController::isCheckmate()
 bool GameController::isPawnPromoted(Coordinates c, bool color) const
 /*
     Description:
-        renvoie si le pion peut etre promue
+        Renvoie si le pion peut être promue
 */
 {
     std::shared_ptr<Piece> p ;
@@ -1043,7 +1063,7 @@ bool GameController::isPawnPromoted(Coordinates c, bool color) const
 bool GameController::promotionPending() const
 /*
     Description:
-        retourne si on attend une promotion
+        Retourne si on attend une promotion
 */
 {
     return waiting_promotion;
@@ -1052,7 +1072,7 @@ bool GameController::promotionPending() const
 void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 /*
     Description:
-        transforme la pièce p en une autre piece de type t
+        Transforme la pièce p en une autre pièce de type t
 */
 {
     if(waiting_promotion){
@@ -1098,7 +1118,7 @@ void GameController::promoteTo(std::shared_ptr<Piece> p, PieceType t)
 bool GameController::isMoveRock(Coordinates from, Coordinates to) const
 /*
     Description:
-        renvoie si le mouvement de from a to est un mouvement de roque
+        Renvoie si le mouvement de from a to est un mouvement de roque
 */
 {
     std::shared_ptr<Piece> p = current_player->getPiece(from);
@@ -1122,7 +1142,7 @@ bool GameController::isMoveRock(Coordinates from, Coordinates to) const
 bool GameController::canRock(Coordinates from, Coordinates to) const
 /*
     Description:
-        renvoie si le mouvement de roque est réalisable
+        Renvoie si le mouvement de roque est réalisable
 */
 {
     bool color = current_player->isBlack();
@@ -1234,7 +1254,7 @@ Coordinates GameController::rock(Coordinates to)
 bool GameController::isMoveEnPassant(Coordinates from, Coordinates to) const
 /*
     Description:
-        renvoie si le mouvement de from a to est un mouvement de type en Passant
+        Renvoie si le mouvement de from a to est un mouvement de type en Passant
 */
 {
     bool color = current_player->isBlack();
@@ -1258,7 +1278,7 @@ bool GameController::isMoveEnPassant(Coordinates from, Coordinates to) const
 bool GameController::canEnPassant(Coordinates from, Coordinates to) const
 /*
     Description:
-        renvoie si le en passant peut être effectué
+        Renvoie si l'en passant peut être effectué
 */
 {
     bool color = current_player->isBlack();
@@ -1288,7 +1308,7 @@ bool GameController::canEnPassant(Coordinates from, Coordinates to) const
 void GameController::enPassant(Coordinates from, Coordinates to)
 /*
     Description:
-        Applique le enpassant
+        Applique l'en passant
 */
 {
     bool color = current_player->isBlack();

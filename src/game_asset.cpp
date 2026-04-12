@@ -36,7 +36,7 @@ float GameAsset::getCenterY()
 float GameAsset::getWidth()
 /*
     Description:
-        Retourne la largeur de l'asset
+        Retourne la largeur de l'asset courant
 */
 {
     return (float)size;
@@ -45,7 +45,7 @@ float GameAsset::getWidth()
 float GameAsset::getHeight()
 /*
     Description:
-        Retourne la hauteur de l'asset
+        Retourne la hauteur de l'asset courant
 */
 {
     return (float)size;
@@ -55,7 +55,7 @@ float GameAsset::getHeight()
 void GameAsset::setPosition(int newX,int newY)
 /*
     Description:
-        Deplace l'asset vers une nouvelle position
+        Déplace l'asset vers une nouvelle position
 */
 {
     x=newX;
@@ -83,7 +83,7 @@ void GameAsset::setTint(Color color)
 void GameAsset::resetTint()
 /*
     Description:
-        reset le tint de l'asset en blanc
+        Reset le tint de l'asset en blanc
 */
 {
     tint=WHITE;
@@ -101,7 +101,7 @@ void GameAsset::setBackgroundColor(Color c)
 bool GameAsset::isHovered(Vector2 mouse)
 /*
     Description:
-        renvoie si l'asset est survolé avec la souris
+        Renvoie si l'asset est survolé avec la souris
 */
 {
     return CheckCollisionPointRec(mouse,{(float)x,(float)y,(float)size,(float)size});

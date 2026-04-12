@@ -1,6 +1,8 @@
 ---
 header-includes:
   - \usepackage{graphicx}
+  - \usepackage{titlesec}
+  - \newcommand{\sectionbreak}{\clearpage}
 
 include-before: |
   \begin{titlepage}
@@ -46,9 +48,10 @@ Cet épisode de l'histoire des échecs nous a inspiré à recréer une IA qui so
 Ce rapport présentera tout d'abord l'application que l'on a conçue, pour ensuite présenter l'architecture logicielle, suivi du diagramme des classes UML de notre projet, nous rebondirons ensuite sur les patrons de conceptions que nous avons utilisé pour notre projet, puis nous aborderons ensuite les outils logiciells utilisés, les tâches effectuées et les difficultés rencontrées.
 
 
-
+\clearpage
 # Présentation de l'Applicaton
 
+\clearpage
 # Présentation de l'architecture logicielle
 
 L’application a été conçue selon une architecture modulaire, permettant de séparer clairement les différentes responsabilités du système. Cette organisation facilite la compréhension, la maintenance et l’évolution du code.
@@ -68,10 +71,13 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
+\clearpage
 # Diagramme de classes UML
 
+\clearpage
 # Diagramme de séquence UML
 
+\clearpage
 # Patrons de Conception utilisés
 
 Modèle-Vue-Controlleur :
@@ -83,10 +89,153 @@ Controlleur
 Memento : 
 Historique des coups
 
+\clearpage
 # Outils logiciels utilisés
+## Langage et compilation
+Ce projet a été développé en **C++20**, un langage de programmation compilé offrant
+des performances élevées, adaptées aux algorithmes de recherche
+intensifs comme le Minimax. La compilation est gérée par un **Makefile** utilisant
+**g++** avec les flags d'optimisation `-O2` pour les builds de production et `-g`
+pour le débogage.
 
+## Bibliothèque graphique
+L'interface graphique a été réalisée à l'aide de **Raylib**, une bibliothèque C
+légère et multiplateforme orientée jeu vidéo. Elle nous a permis de gérer
+l'affichage du plateau, des pièces, et les interactions souris
+
+## Environnements de développement
+Deux environnements ont été utilisés selon les besoins :
+
+- **Docker** : un conteneur basé sur Ubuntu 22.04 garantit un environnement
+  de compilation reproductible et isolé, facilitant le déploiement et
+  l'intégration continue. Il embarque toutes les dépendances nécessaires
+  (Raylib, g++, CMake, Valgrind).
+
+- **Guix** : un gestionnaire de paquets fonctionnel utilisé pour le
+  développement local. Contrairement à Docker, Guix s'exécute directement
+  sur la machine hôte, offrant un accès natif à l'affichage X11 sans
+  configuration supplémentaire. La commande `guix shell --manifest=guix.scm`
+  instancie un environnement isolé avec exactement les paquets déclarés.
+
+## Débogage et analyse mémoire
+**Valgrind** a été utilisé pour détecter les fuites mémoire et les accès
+invalides, notamment sur les structures de données complexes comme les
+`shared_ptr` et les vecteurs de pièces.
+
+## Gestion de versions
+Le projet a été versionné avec **Git** et hébergé sur **GitHub**, permettant
+une collaboration efficace entre les membres de l'équipe et un suivi précis
+de l'historique des modifications.
+
+## Parallélisme
+La recherche du meilleur coup par l'IA exploite le parallélisme système via
+les appels **POSIX** `fork()` et `pipe()`. Chaque coup candidat à la racine
+de l'arbre Minimax est évalué dans un processus fils indépendant, les
+résultats étant renvoyés au processus père via des tubes de communication.
+
+\clearpage
 # Tableau des Tâches
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline
+\textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} \\
+\hline
+A & Classe Coordinates & - & 1 jour \\
+\hline
+B & Classe Piece & A & 2 Jours\\
+\hline
+C & Classe Player & B & 3 Jours \\
+\hline
+D & Classe GameController & C & 7 Jours\\
+\hline
+E & Classe Evaluator & D & 1 Jours\\
+\hline
+F & Classe Minimax & E & 10 Jours\\
+\hline
+G & Interface Terminal & D & 2 Jours\\
+\hline
+H & Interface Graphique & D & 5 Jours\\
+\hline
+\end{tabular}
+\end{center}
 
+\begin{itemize}
+    \item A → B → C → D → E → F
+    \item D → G
+    \item D → H
+\end{itemize}
+\clearpage
 # Difficultés rencontrées
+## Gestions des coups illégaux / reglès du jeu
+La gestion correcte des règles du jeu (déplacements valides, détection d’échec, captures, enPassant) a constitué une certaine difficulé, 
+notamment pour garantir la validité des positions générées lors de la recherche Minimax.
 
+## Equilibrage de l'évaluation
+Le choix de la fonction d’évaluation a été difficile, car il fallait trouver un équilibre entre précision et rapidité de calcul. 
+Une évaluation trop simple rend l’IA faible, tandis qu’une évaluation trop complexe ralentit fortement la recherche.
+
+## Compléxité de l'algorithme Minimax
+L’implémentation de l’algorithme Minimax a posé des difficultés en raison de la complexité exponentielle du nombre de positions à explorer. 
+Sans optimisation, les temps de calcul devenaient rapidement trop importants, rendant l’IA peu réactive.\
+Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur->nombre de coups possible
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+
+\hline
+\textbf{Profondeur en Demi-coups} & \textbf{Nombre de coups Possible}\\
+\hline
+1 & 20\\
+\hline
+2 & 420\\
+\hline
+3 & 9 322\\
+\hline
+4 & 206 599\\
+\hline
+5 & 5 072 033\\
+\hline
+6 & environ 124 000 000\\
+\hline
+7 & environ 3 319 000 000\\
+\hline
+8 & Trop long à calculé\\
+\hline
+
+\end{tabular}
+\end{center}
+
+## Optimisation alpha-beta & heuristiques
+Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups (killer move, history heuristic). Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
+Voici un tableau représentant l'association profondeur->nombre de coups possible en utilisant l'élagage alpha-bêta
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline
+\textbf{Profondeur en Demi-coups} & \textbf{Nombre de coups Possible}\\
+\hline
+1 & 20\\
+\hline
+2 & 125\\
+\hline
+3 & 1 191\\
+\hline
+4 & 7 470\\
+\hline
+5 & 167 120\\
+\hline
+6 & 715 953\\
+\hline
+7 & 6 756 624\\
+\hline
+8 & environ 47 000 000\\
+\hline
+\end{tabular}
+\end{center}
+
+Comme on peut le voir sur le tableau , l'élagage alpha-bêta a permis de réduire le nombre de coups exploré.
+
+## Parallélisme
+La mise en place du parallélisme via les appels système fork() et pipe() a représenté une petite difficulté technique. 
+Il a fallu gérer correctement la communication et la terminaison des processus , ainsi que la synchronisation des résultats.
+
+\clearpage
 # Conclusion

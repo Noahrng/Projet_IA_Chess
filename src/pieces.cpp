@@ -33,7 +33,7 @@ bool operator<(const Piece &a,const Piece &b)
 std::string Piece::getTerminalSprite() const
 /*
     Description:
-        retourne le caractère correspondant a la pièce
+        Retourne le caractère correspondant a la pièce
 */
 {
     return terminal_sprite;
@@ -42,7 +42,7 @@ std::string Piece::getTerminalSprite() const
 Coordinates Piece::getCoordinates() const
 /*
     Description:
-        retourne la coordonnée de la pièce
+        Retourne la coordonnée de la pièce
 */
 {
     return this->coords;
@@ -51,7 +51,7 @@ Coordinates Piece::getCoordinates() const
 double Piece::getValue() const
 /*
     Description:
-        retourne la valeur de la pièce
+        Retourne la valeur de la pièce
 */
 {
     return value;
@@ -61,7 +61,7 @@ double Piece::getValue() const
 int Piece::howManyMoves() const
 /*
     Description:
-        retourne le nombre de fois que la pièce a bouger
+        Retourne le nombre de fois que la pièce a bougé
 */
 {
     return nb_of_moves;
@@ -70,7 +70,7 @@ int Piece::howManyMoves() const
 void Piece::incrementNbOfMoves()
 /*
     Description:
-        incremente le nb_of_moves
+        Incrèmente nb_of_moves
 */
 {
     nb_of_moves++;
@@ -79,7 +79,7 @@ void Piece::incrementNbOfMoves()
 void Piece::decrementNbOfMoves()
 /*
     Description:
-        decremente le nb_of_moves
+        Décrèmente nb_of_moves
 */
 {
     nb_of_moves--;
@@ -89,7 +89,7 @@ void Piece::decrementNbOfMoves()
 void Piece::moveTo(int x, int y)
 /*
     Description:
-        déplace la pièce avec deux entier x,y
+        Déplace la pièce avec deux entiers x,y
 */
 {
     coords.setXY(x,y);
@@ -98,7 +98,7 @@ void Piece::moveTo(int x, int y)
 void Piece::moveTo(Coordinates c)
 /*
     Description:
-        déplace la pièce avec une coordonnée c
+        Déplace la pièce avec une coordonnée c
 */
 {
     coords = c;

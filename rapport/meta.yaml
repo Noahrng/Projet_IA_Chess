@@ -2,7 +2,7 @@
 toc: true
 toc-depth: 4
 toc-title: "Sommaire :"
-mainfont: "Liberation Sans"
+mainfont: "DejaVu Sans"
 geometry: a4paper
 fontsize: 12pt
 header-includes: |

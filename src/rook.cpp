@@ -27,7 +27,7 @@ PieceType Rook::getType() const
 std::vector<Coordinates>& Rook::getVectMove()
 /*
     Description:
-        Retourne une reférence sur un vecteur de mouvement de base de la pièce
+        Retourne une référence sur un vecteur de mouvement de base de la pièce
 */
 {
     return vect_move;
@@ -37,7 +37,7 @@ std::vector<Coordinates>& Rook::getVectMove()
 bool Rook::canMovePattern(const Coordinates new_coords) const
 /*
     Description:
-        verifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
+        Vérifie si un mouvement peut être réaliser selon les règles déplacement de la pièce
 */
 {
     if(!new_coords.onBoard()) return false;
@@ -47,7 +47,7 @@ bool Rook::canMovePattern(const Coordinates new_coords) const
 bool Rook::canEatPattern(const Coordinates new_coords) const
 /*
     Description:
-        verifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
+        Vérifie si un mouvement de capture peut être réaliser selon les règles déplacement de la pièce
 */
 {
     return canMovePattern(new_coords);
