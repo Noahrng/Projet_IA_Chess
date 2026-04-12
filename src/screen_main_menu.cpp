@@ -25,7 +25,7 @@ MainMenuScreen::MainMenuScreen(GameController &game,Minimax &robot,int width,int
 bool MainMenuScreen::isFinished()
 /*
     Description:
-        Renvoie si l'ecran courant est terminer
+        Renvoie si l'écran courant est terminé
 */
 {
     return finished;
@@ -35,7 +35,7 @@ bool MainMenuScreen::isFinished()
 void MainMenuScreen::update()
 /*
     Description:
-        Actualise les paramètre en fonction d'input utilisateur
+        Actualise les paramètre en fonction d'inputs utilisateur
 */
 {
     if(playButton->isClicked())
