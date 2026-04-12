@@ -37,6 +37,8 @@ include-before: |
 - [Figure 4](#fig:img4) Capture d'écran personnelle 
 - [Figure 5](#fig:img5) Capture d'écran personnelle 
 - [Figure 6](#fig:img6) Capture d'écran personnelle 
+- [Figure 7](#fig:img7) Capture d'écran grâce à l'application JETUML 
+- [Figure 8](#fig:img8) Capture d'écran grâce à l'application JETUML
 
 \clearpage
 
@@ -65,7 +67,7 @@ Ce rapport présentera tout d'abord l'application que l'on a conçue, pour ensui
 
 ## Contenu de l'application
 
-Nous avons réaliser ce projet d'IA d'échecs dans le cadre de nos études, au cours de la matière Génie Logiciel. L'objectif de cette application est de pouvoir jouer aux échecs, sur terminal ou via une interface graphique sous raylib, contre une intelligence artificielle ou un autre joueur sur la même machine.  
+Nous avons réaliser ce projet d'IA d'échecs dans le cadre de nos études en L3 Informatique, au cours de la matière Génie Logiciel. L'objectif de cette application est de pouvoir jouer aux échecs, sur terminal ou via une interface graphique sous raylib, contre une intelligence artificielle ou un autre joueur sur la même machine. Le principal langage utilisé est le C++.  
 L'application contient un plateau d'échecs avec toutes les pièces à disposition que l'on peut déplacer sous la contrainte des règles officielles du jeu d'échecs. Elle dispose d'une IA qui se base sur l'algorithme de recherche "minimax" pour pouvoir trouver le coup le plus optimal. Il est aussi possible d'annuler le dernier coup de l'adversaire ou son propre coup grâce à un historique de coup. La configuration des joueurs (IA ou humains) se fait via le terminal, et il est possible de choisir son camp si on joue contre une IA.  
 
 ## Utilisation de l'application
@@ -113,17 +115,16 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
-# Diagramme de classes UML
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagrammeuml.png}
-\end{figure}
+# Diagramme de Classes UML
+![Diagramme de Classes UML](image/diagrammeuml.png){#fig:img7}
 
-# Diagramme de séquence UML
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagramme.png}
-\end{figure}
+# Diagramme de Séquence UML
+
+
+![Diagramme de Séquence UML](image/diagramme_seq.png){#fig:img8 width=80%}
+
+Le diagramme de séquence UML ci-dessus décrit comment les données sont envoyées aux classes lorsqu'un joueur fait un coup, et lorsque l'IA fait un coup.
+
 
 # Patrons de Conception utilisés
 Les deux patrons de conceptions principaux qui ont été utilisés sont les suivants :
