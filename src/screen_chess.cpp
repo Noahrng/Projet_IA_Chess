@@ -390,12 +390,12 @@ void ChessScreen::draw()
     std::sprintf(data_depth,"Depth=%d",(robot.getDepth()));
     DrawText(data_depth,10,10,50,YELLOW);
 
-    if(GetMouseWheelMove()<0.0)
+    if(IsKeyPressed(KEY_LEFT))
     {
         robot.sub_minimax_depth();
     }
 
-    if(GetMouseWheelMove()>0.0)
+    if(IsKeyPressed(KEY_RIGHT))
     {
         robot.add_minimax_depth();
     }
