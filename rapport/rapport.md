@@ -191,13 +191,13 @@ résultats étant renvoyés au processus père via des tubes de communication.
 \hline
 \textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} & \textbf{Qui ?}\\
 \hline
-A & Classe Coordinates & - & 1 jour & Valentin\\
+A & Classe Coordinates & - & <1 jour & Valentin\\
 \hline
-B & Classe Piece & A & 2 Jours & Noah\\
+B & Classe Piece & A & 3 Jours & Noah\\
 \hline
-C & Classe Player & B & 3 Jours & Noah\\
+C & Classe Player & B & 4 Jours & Noah\\
 \hline
-D & Classe GameController & C & 7 Jours & Noah, Valentin\\
+D & Classe GameController & C & 15 Jours & Noah, Valentin\\
 \hline
 E & Classe Evaluator & D & 1 Jours & Valentin\\
 \hline
@@ -205,7 +205,7 @@ F & Classe Minimax & E & 10 Jours & Valentin\\
 \hline
 G & Interface Terminal & D & 2 Jours & Noah\\
 \hline
-H & Interface Graphique & D & 5 Jours & Valentin\\
+H & Interface Graphique & D & 4 Jours & Valentin\\
 \hline
 \end{tabular}
 \end{center}
