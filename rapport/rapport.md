@@ -51,11 +51,37 @@ Ce rapport présentera tout d'abord l'application que l'on a conçue, pour ensui
 
 # Présentation de l'architecture logicielle
 
+L’application a été conçue selon une architecture modulaire, permettant de séparer clairement les différentes responsabilités du système. Cette organisation facilite la compréhension, la maintenance et l’évolution du code.
+
+L’architecture repose sur plusieurs composants principaux :  
+Tout d’abord, la gestion du jeu est assurée par un ensemble de classes représentant les éléments fondamentaux des échecs. La classe Piece constitue une classe de base dont héritent les différentes pièces du jeu telles que Pawn, Rook, Knight, Bishop, Queen et King. L’échiquier et les positions sont gérés à l’aide des classes Player et Coordinates, permettant de représenter l’état du jeu à tout instant.
+
+La logique du jeu est centralisée dans la classe GameController, qui gère le déroulement d’une partie, les déplacements des pièces, ainsi que les règles du jeu (déplacements valides, échecs, captures, etc.). Cette classe joue un rôle central dans la coordination des différents composants du projet.
+
+Le module d’intelligence artificielle est principalement composé des classes Minimax et Evaluator. La classe Minimax implémente un algorithme de recherche permettant d’explorer les coups possibles afin de déterminer le meilleur choix. Elle s’appuie sur la classe Evaluator, qui attribue un score à une position donnée en fonction de différents critères (valeur des pièces, position sur l’échiquier, etc.). Cette séparation permet de distinguer clairement la logique de recherche de celle d’évaluation.
+
+L’interface utilisateur est divisée en deux parties : une interface graphique (GraphicDisplay) et une interface terminale (TerminalDisplay). Ces composants permettent d’interagir avec le joueur et d’afficher l’état du jeu. Des classes supplémentaires telles que Button, Shape ou TextShape sont utilisées pour gérer les éléments graphiques.
+
+Enfin, des classes utilitaires comme MoveHistory permettent de suivre les coups joués, tandis que Player représente les joueurs et leurs pièces.
+
+Les différents modules interagissent de manière structurée. Par exemple, l’intelligence artificielle utilise l’état du jeu fourni par GameController pour simuler des coups, tandis que l’interface récupère ces informations pour les afficher à l’utilisateur.
+
+Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
+
 # Diagramme de classes UML
 
 # Diagramme de séquence UML
 
 # Patrons de Conception utilisés
+
+Modèle-Vue-Controlleur :
+
+Modèle
+Vue
+Controlleur
+
+Memento : 
+Historique des coups
 
 # Outils logiciels utilisés
 
