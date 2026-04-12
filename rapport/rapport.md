@@ -3,8 +3,12 @@ header-includes:
   - \usepackage{graphicx}
   - \usepackage{titlesec}
   - \usepackage{lscape}
+  - \usepackage{float}
+  - \usepackage{placeins}
+  - \usepackage{hyperref}
+  - \usepackage[all]{hypcap}
   - \geometry{bottom=2.5cm}
-  - \newcommand{\sectionbreak}{\clearpage}
+  - \newcommand{\sectionbreak}{\clearpage\FloatBarrier}
 
 include-before: |
   \begin{titlepage}
@@ -27,8 +31,9 @@ include-before: |
   \end{titlepage}
 ---
 
-\newpage
 
+<<<<<<< HEAD
+=======
 # Table des Figures
 
 - [Figure 1](#fig:img1) Capture d'écran personnelle 
@@ -39,6 +44,7 @@ include-before: |
 - [Figure 6](#fig:img6) Capture d'écran personnelle 
 - [Figure 7](#fig:img7) Capture d'écran grâce à l'application JETUML 
 - [Figure 8](#fig:img8) Capture d'écran grâce à l'application JETUML
+>>>>>>> noah
 
 \clearpage
 
@@ -115,6 +121,20 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
+<<<<<<< HEAD
+\clearpage
+# Diagramme de classes UML
+![Diagramme de classe UML](image/diagrammeuml.png){#fig:img7}
+
+\clearpage
+# Diagramme de séquence UML
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{image/diagrammeseq.png}
+  \caption{Diagramme de séquence UML}
+  \label{fig:img8}
+\end{figure}
+=======
 # Diagramme de Classes UML
 ![Diagramme de Classes UML](image/diagrammeuml.png){#fig:img7}
 
@@ -125,7 +145,9 @@ Cette architecture repose sur une séparation claire des responsabilités, renda
 
 Le diagramme de séquence UML ci-dessus décrit comment les données sont envoyées aux classes lorsqu'un joueur fait un coup, et lorsque l'IA fait un coup.
 
+>>>>>>> noah
 
+\clearpage
 # Patrons de Conception utilisés
 Les deux patrons de conceptions principaux qui ont été utilisés sont les suivants :
 
@@ -195,13 +217,13 @@ résultats étant renvoyés au processus père via des tubes de communication.
 \hline
 \textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} & \textbf{Qui ?}\\
 \hline
-A & Classe Coordinates & - & 1 jour & Valentin\\
+A & Classe Coordinates & - & <1 jour & Valentin\\
 \hline
-B & Classe Piece & A & 2 Jours & Noah\\
+B & Classe Piece & A & 3 Jours & Noah\\
 \hline
-C & Classe Player & B & 3 Jours & Noah\\
+C & Classe Player & B & 4 Jours & Noah\\
 \hline
-D & Classe GameController & C & 7 Jours & Noah, Valentin\\
+D & Classe GameController & C & 15 Jours & Noah, Valentin\\
 \hline
 E & Classe Evaluator & D & 1 Jours & Valentin\\
 \hline
@@ -209,7 +231,7 @@ F & Classe Minimax & E & 10 Jours & Valentin\\
 \hline
 G & Interface Terminal & D & 2 Jours & Noah\\
 \hline
-H & Interface Graphique & D & 5 Jours & Valentin\\
+H & Interface Graphique & D & 4 Jours & Valentin\\
 \hline
 \end{tabular}
 \end{center}
@@ -227,11 +249,12 @@ notamment pour garantir la validité des positions générées lors de la recher
 ## Equilibrage de l'évaluation
 Le choix de la fonction d’évaluation a été difficile, car il fallait trouver un équilibre entre précision et rapidité de calcul. 
 Une évaluation trop simple rend l’IA faible, tandis qu’une évaluation trop complexe ralentit fortement la recherche.
+Le choix c'est porté sur une évalutation du matériel (les pièces) ainsi que la position des pièce.
 
 ## Compléxité de l'algorithme Minimax
 L’implémentation de l’algorithme Minimax a posé des difficultés en raison de la complexité exponentielle du nombre de positions à explorer. 
 Sans optimisation, les temps de calcul devenaient rapidement trop importants, rendant l’IA peu réactive.\
-Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur -> nombre de coups possible
+Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur -> nombre de coups possible.
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 
@@ -261,7 +284,7 @@ Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisati
 ## Optimisation alpha-beta & heuristiques
 Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups. Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
 Voici un tableau représentant l'association \
-profondeur -> nombre de coups possible en utilisant l'élagage alpha-bêta
+profondeur -> nombre de coups possible en utilisant l'élagage alpha-bêta.
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 \hline
