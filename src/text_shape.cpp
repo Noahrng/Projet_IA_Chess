@@ -9,26 +9,46 @@ TextShape::TextShape(std::unique_ptr<Shape> s,const std::string &text)
 
 /*--------------------------------Setters---------------------------------*/
 void TextShape::setText(const std::string& newText)
+/*
+    Description:
+        Change le texte
+*/
 {
     text=newText;
 }
 
 void TextShape::setTextColor(Color color)
+/*
+    Description:
+        Change la couleur du texte
+*/
 {
     textColor=color;
 }
 
 void TextShape::setFontSize(int size)
+/*
+    Description:
+        Change la police du texte
+*/
 {
     fontSize=size;
 }
 void TextShape::setCentered(bool value)
+/*
+    Description:
+        Change si on centre ou pas le texte
+*/
 {
     centered=value;
 }
 
 /*---------------------------Dessiner le Texte----------------------------*/
 void TextShape::draw()
+/*
+    Description:
+        Affiche le texte
+*/
 {
     shape->draw();
 

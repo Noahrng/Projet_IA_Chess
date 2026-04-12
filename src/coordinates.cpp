@@ -142,7 +142,7 @@ std::ostream& operator<<(std::ostream& os, Coordinates &a)
 int Coordinates::getX() const
 /*
     Description:
-        retourne la valeur X courante
+        Retourne la valeur X courante
 */
 {
     return this->x;
@@ -151,7 +151,7 @@ int Coordinates::getX() const
 int Coordinates::getY() const
 /*
     Description:
-        retourne la valeur Y courrante
+        Retourne la valeur Y courrante
 */
 {
     return this->y;
@@ -161,7 +161,7 @@ int Coordinates::getY() const
 void Coordinates::setX(int new_x)
 /*
     Description:
-        affecte une nouvelle valeur a X
+        Affecte une nouvelle valeur à X
 */
 {
     x = new_x;
@@ -170,7 +170,7 @@ void Coordinates::setX(int new_x)
 void Coordinates::setY(int new_y)
 /*
     Description:
-        affecte une nouvelle valeur a Y
+        Affecte une nouvelle valeur à Y
 */
 {
     y = new_y;
@@ -179,7 +179,7 @@ void Coordinates::setY(int new_y)
 void Coordinates::setXY(int new_x,int new_y)
 /*
     Description:
-        affecte des nouvelles valeurs a X et Y
+        Affecte des nouvelles valeurs à X et Y
 */
 {
     x = new_x;
@@ -190,7 +190,7 @@ void Coordinates::setXY(int new_x,int new_y)
 bool Coordinates::onBoard() const
 /*
     Description:
-        renvoie si la coordonnée courant est contenu dans un plateau d'echec 8x8
+        Renvoie si la coordonnée courante est contenue dans un plateau d'échec 8x8
 */
 {
     if(x>=0 && x<8 && y>=0 && y<8) return true;
@@ -200,7 +200,7 @@ bool Coordinates::onBoard() const
 bool Coordinates::lowerThanX(Coordinates c) const
 /*
     Description:
-        Verifie sur l'abscisse de la coordonnée courant est inferieur ou égale a l'abscisse de c
+        Vérifie sur l'abscisse de la coordonnée courante est inférieur ou égale à l'abscisse de c
 */
 {
     if(c.x < x) return false;
@@ -210,7 +210,7 @@ bool Coordinates::lowerThanX(Coordinates c) const
 bool Coordinates::lowerThanY(Coordinates c) const
 /*
     Description:
-        Verifie sur l'ordonnée de la coordonnée courant est inferieur ou égale a l'ordonnée de c
+        Vérifie sur l'ordonnée de la coordonnée courante est inférieur ou égale à l'ordonnée de c
 */
 {
     if(c.y < y) return false;
@@ -220,7 +220,7 @@ bool Coordinates::lowerThanY(Coordinates c) const
 bool Coordinates::greaterThanX(Coordinates c) const 
 /*
     Description:
-        Verifie sur l'abscisse de la coordonnée courant est strictement supérieur a l'abscisse de c
+        Vérifie sur l'abscisse de la coordonnée courant est strictement supérieur à l'abscisse de c
 */
 {
     if(c.x < x) return true;
@@ -230,7 +230,7 @@ bool Coordinates::greaterThanX(Coordinates c) const
 bool Coordinates::greaterThanY(Coordinates c) const 
 /*
     Description:
-        Verifie sur l'ordonnée de la coordonnée courant est strictement supérieur a l'ordonnée de c
+        Vérifie sur l'ordonnée de la coordonnée courant est strictement supérieur à l'ordonnée de c
 */
 {
     if(c.y < y) return true;
@@ -241,7 +241,7 @@ bool Coordinates::greaterThanY(Coordinates c) const
 int Coordinates::distX(const Coordinates &other) const
 /*
     Description:
-        Calcule en renvoie la distance entre les deux abscisse
+        Calcule et renvoie la distance entre les deux abscisses
 */
 {
     return std::abs(this->x-other.x);
@@ -250,7 +250,7 @@ int Coordinates::distX(const Coordinates &other) const
 int Coordinates::distX(const int X) const
 /*
     Description:
-        Calcule en renvoie la distance de l'abscisse courant et un autre entier X
+        Calcule et renvoie la distance de l'abscisse courant et un autre entier X
 */
 {
     return std::abs(this->x-X);
@@ -259,7 +259,7 @@ int Coordinates::distX(const int X) const
 int Coordinates::distY(const Coordinates &other) const
 /*
     Description:
-        Calcule en renvoie la distance entre les deux ordonnées
+        Calcule et renvoie la distance entre les deux ordonnées
 */
 {
     return std::abs(this->y-other.y);
@@ -268,7 +268,7 @@ int Coordinates::distY(const Coordinates &other) const
 int Coordinates::distY(const int Y) const
 /*
     Description:
-        Calcule en renvoie la distance de l'ordonnée courant et un autre entier Y
+        Calcule et renvoie la distance de l'ordonnée courant et un autre entier Y
 */
 {
     return std::abs(this->y-Y);

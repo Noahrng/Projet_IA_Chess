@@ -16,7 +16,7 @@ Button::~Button()
 void Button::setNormalColor(Color c)
 /*
     Description:
-        affecte la couleur normal a la couleur c
+        Affecte la couleur normale a la couleur c
 */
 {
     normalColor=c;
@@ -25,7 +25,7 @@ void Button::setNormalColor(Color c)
 void Button::setHoverColor(Color c)
 /*
     Description:
-        affecte la couleur quand on survole avec la souris a la couleur c
+        Affecte la couleur quand on survole avec la souris à la couleur c
 */
 {
     hoverColor = c;
@@ -34,7 +34,7 @@ void Button::setHoverColor(Color c)
 void Button::setTextColor(Color c)
 /*
     Description:
-        affecte la couleur du texte a la couleur c
+        Affecte la couleur du texte à la couleur c
 */
 {
     textColor = c;
@@ -43,7 +43,7 @@ void Button::setTextColor(Color c)
 void Button::setFontSize(int s)
 /*
     Description:
-        affecte la couleur du texte a la couleur c
+        Affecte la couleur du texte à la couleur c
 */
 {
     fontSize=s;
@@ -53,7 +53,7 @@ void Button::setFontSize(int s)
 bool Button::isHovered()
 /*
     Description:
-        renvoie si le bouton est survolé avec la souris
+        Renvoie si le bouton est survolé avec la souris
 */
 {
     return drawable->isHovered(GetMousePosition());
@@ -62,7 +62,7 @@ bool Button::isHovered()
 bool Button::isClicked()
 /*
     Description:
-        renvoie si le bouton est cliquer avec la souris
+        Renvoie si le bouton est cliquer avec la souris
 */
 {
     return isHovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
