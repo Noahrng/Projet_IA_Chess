@@ -223,11 +223,12 @@ notamment pour garantir la validité des positions générées lors de la recher
 ## Equilibrage de l'évaluation
 Le choix de la fonction d’évaluation a été difficile, car il fallait trouver un équilibre entre précision et rapidité de calcul. 
 Une évaluation trop simple rend l’IA faible, tandis qu’une évaluation trop complexe ralentit fortement la recherche.
+Le choix c'est porté sur une évalutation du matériel (les pièces) ainsi que la position des pièce.
 
 ## Compléxité de l'algorithme Minimax
 L’implémentation de l’algorithme Minimax a posé des difficultés en raison de la complexité exponentielle du nombre de positions à explorer. 
 Sans optimisation, les temps de calcul devenaient rapidement trop importants, rendant l’IA peu réactive.\
-Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur -> nombre de coups possible
+Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur -> nombre de coups possible.
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 
@@ -257,7 +258,7 @@ Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisati
 ## Optimisation alpha-beta & heuristiques
 Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups. Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
 Voici un tableau représentant l'association \
-profondeur -> nombre de coups possible en utilisant l'élagage alpha-bêta
+profondeur -> nombre de coups possible en utilisant l'élagage alpha-bêta.
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 \hline
