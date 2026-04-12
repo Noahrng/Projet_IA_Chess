@@ -135,9 +135,107 @@ résultats étant renvoyés au processus père via des tubes de communication.
 
 \clearpage
 # Tableau des Tâches
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline
+\textbf{Tâche} & \textbf{Description} & \textbf{Dépendance} & \textbf{Temps estimé} \\
+\hline
+A & Classe Coordinates & - & 1 jour \\
+\hline
+B & Classe Piece & A & 2 Jours\\
+\hline
+C & Classe Player & B & 3 Jours \\
+\hline
+D & Classe GameController & C & 7 Jours\\
+\hline
+E & Classe Evaluator & D & 1 Jours\\
+\hline
+F & Classe Minimax & E & 10 Jours\\
+\hline
+G & Interface Terminal & D & 2 Jours\\
+\hline
+H & Interface Graphique & D & 5 Jours\\
+\hline
+\end{tabular}
+\end{center}
 
+\begin{itemize}
+    \item A → B → C → D → E → F
+    \item D → G
+    \item D → H
+\end{itemize}
 \clearpage
 # Difficultés rencontrées
+## Gestions des coups illégaux / reglès du jeu
+La gestion correcte des règles du jeu (déplacements valides, détection d’échec, captures, enPassant) a constitué une certaine difficulé, 
+notamment pour garantir la validité des positions générées lors de la recherche Minimax.
+
+## Equilibrage de l'évaluation
+Le choix de la fonction d’évaluation a été difficile, car il fallait trouver un équilibre entre précision et rapidité de calcul. 
+Une évaluation trop simple rend l’IA faible, tandis qu’une évaluation trop complexe ralentit fortement la recherche.
+
+## Compléxité de l'algorithme Minimax
+L’implémentation de l’algorithme Minimax a posé des difficultés en raison de la complexité exponentielle du nombre de positions à explorer. 
+Sans optimisation, les temps de calcul devenaient rapidement trop importants, rendant l’IA peu réactive.\
+Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur->nombre de coups possible
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+
+\hline
+\textbf{Profondeur en Demi-coups} & \textbf{Nombre de coups Possible}\\
+\hline
+1 & 20\\
+\hline
+2 & 420\\
+\hline
+3 & 9 322\\
+\hline
+4 & 206 599\\
+\hline
+5 & 5 072 033\\
+\hline
+6 & environ 124 000 000\\
+\hline
+7 & environ 3 319 000 000\\
+\hline
+8 & Trop long à calculé\\
+\hline
+
+\end{tabular}
+\end{center}
+
+## Optimisation alpha-beta & heuristiques
+Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups (killer move, history heuristic). Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
+Voici un tableau représentant l'association profondeur->nombre de coups possible en utilisant l'élagage alpha-bêta
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline
+\textbf{Profondeur en Demi-coups} & \textbf{Nombre de coups Possible}\\
+\hline
+1 & 20\\
+\hline
+2 & 125\\
+\hline
+3 & 1 191\\
+\hline
+4 & 7 470\\
+\hline
+5 & 167 120\\
+\hline
+6 & 715 953\\
+\hline
+7 & 6 756 624\\
+\hline
+8 & environ 47 000 000\\
+\hline
+\end{tabular}
+\end{center}
+
+Comme on peut le voir sur le tableau , l'élagage alpha-bêta a permis de réduire le nombre de coups exploré.
+
+## Parallélisme
+La mise en place du parallélisme via les appels système fork() et pipe() a représenté une petite difficulté technique. 
+Il a fallu gérer correctement la communication et la terminaison des processus , ainsi que la synchronisation des résultats.
 
 \clearpage
 # Conclusion
