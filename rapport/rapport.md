@@ -3,8 +3,12 @@ header-includes:
   - \usepackage{graphicx}
   - \usepackage{titlesec}
   - \usepackage{lscape}
+  - \usepackage{float}
+  - \usepackage{placeins}
+  - \usepackage{hyperref}
+  - \usepackage[all]{hypcap}
   - \geometry{bottom=2.5cm}
-  - \newcommand{\sectionbreak}{\clearpage}
+  - \newcommand{\sectionbreak}{\clearpage\FloatBarrier}
 
 include-before: |
   \begin{titlepage}
@@ -27,16 +31,7 @@ include-before: |
   \end{titlepage}
 ---
 
-\newpage
 
-# Table des Figures
-
-- [Figure 1](#fig:img1) Capture d'écran personnelle 
-- [Figure 2](#fig:img2) Capture d'écran personnelle 
-- [Figure 3](#fig:img3) Capture d'écran personnelle 
-- [Figure 4](#fig:img4) Capture d'écran personnelle 
-- [Figure 5](#fig:img5) Capture d'écran personnelle 
-- [Figure 6](#fig:img6) Capture d'écran personnelle 
 
 \clearpage
 
@@ -113,18 +108,20 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
+\clearpage
 # Diagramme de classes UML
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagrammeuml.png}
-\end{figure}
+![Diagramme de classe UML](image/diagrammeuml.png){#fig:img7}
 
+\clearpage
 # Diagramme de séquence UML
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagramme.png}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{image/diagrammeseq.png}
+  \caption{Diagramme de séquence UML}
+  \label{fig:img8}
 \end{figure}
 
+\clearpage
 # Patrons de Conception utilisés
 Les deux patrons de conceptions principaux qui ont été utilisés sont les suivants :
 
