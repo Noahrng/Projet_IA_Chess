@@ -16,28 +16,48 @@ std::string TerminalDisplay::playerEntryString()
 
 /*--------------------------Vérification d'état---------------------------*/
 bool TerminalDisplay::isGameQuitted(std::string s)
+/*
+    Description:
+        Vérifie si la chaîne de caractères en entrée est égale à "quit", et renvoie true si vrai.  
+*/
 {
     if(s == "quit") return true;
     return false;
 }
 
 bool TerminalDisplay::moveCancelled(std::string s)
+/*
+    Description:
+        Vérifie si la chaîne de caractères en entrée est égale à "cancel", et renvoie true si vrai.  
+*/
 {
     return (s == "cancel");
 }
 
 bool TerminalDisplay::isLetter(char c)
+/*
+    Description:
+        Vérifie si le caractère est une lettre, et renvoie true si vrai.  
+*/
 {
     return (c >= 'a' && c<='z') || (c >= 'A' && c<= 'Z');
 }
 
 bool TerminalDisplay::isNumber(char c)
+/*
+    Description:
+        Vérifie si le caractère est un nombre, et renvoie true si vrai.  
+*/
 {
     return (c >= '0' && c<='9');
 }
 
 /*---------------------------Conversions String---------------------------*/
 Coordinates TerminalDisplay::convertStringIntoCoords(std::string move)
+/*
+    Description:
+        Convertit une chaîne de caractère correspondant à une coordonnées en un oobjet coordonnées qui est renvoyé. 
+*/
 {
     int i= -1;
     int j= -1;
@@ -67,6 +87,10 @@ Coordinates TerminalDisplay::convertStringIntoCoords(std::string move)
 }
 
 PieceType TerminalDisplay::convertStringIntoType(std::string type)
+/*
+    Description:
+        Convertit une chaîne de caractère correspondant à un type de pièce en un objet PieceType renvoyé. 
+*/
 {
     if(type == "queen") return PieceType::Queen;
     if(type == "bishop") return PieceType::Bishop;
@@ -77,6 +101,10 @@ PieceType TerminalDisplay::convertStringIntoType(std::string type)
 
 /*-------------------------Affichage  du terminal-------------------------*/
 void TerminalDisplay::printBoard()
+/*
+    Description:
+        Afffiche le plateau avec les pièces et les mouvements possibles de la pièce choisie, et le dernier coup effectué. 
+*/
 {
     bool color_turn = game.blackTurn();
     std::string colored_cell;
@@ -182,17 +210,29 @@ void TerminalDisplay::printBoard()
 }
 
 void TerminalDisplay::clearTerminal()
+/*
+    Description:
+        Effectue un "clear" du terminal qui n'en est pas vraiment un.
+*/
 {
     std::cout << "\x1B[2J\x1B[H";
 }
 
 void TerminalDisplay::printInfosPromote()
+/*
+    Description:
+        Affiche le message demandant à l'utilisateur la promotion de quelle pièce il veut.
+*/
 {
     std::cout << "Promotion : queen, rook, bishop, knight" << "\n";
 }
 
 /*-------------------------------Exécution--------------------------------*/
 void TerminalDisplay::run()
+/*
+    Description:
+        Boucle d'éxécution de l'affichage terminal.
+*/
 {
     bool quit = false;
     bool checkmate = false;
