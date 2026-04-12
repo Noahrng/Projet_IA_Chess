@@ -75,6 +75,10 @@ Cette architecture repose sur une séparation claire des responsabilités, renda
 
 \clearpage
 # Diagramme de classes UML
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagrammeuml.png}
+\end{figure}
 
 \clearpage
 # Diagramme de séquence UML
