@@ -290,7 +290,7 @@ void Minimax::sortMoves(Coordinates* moves, int size, const Coordinates from)
 void Minimax::sortMovesWithPrevious(Coordinates *moves,int size,Coordinates from,const ChessMove &prev_best)
 /*
     Description:
-        Comme sortMoves excepté sauf que le meilleur mouvement précédant est placé en premier 
+        Comme sortMoves excepté que le meilleur mouvement précédant est placé en premier 
 */
 {
     std::sort(moves, moves+size,

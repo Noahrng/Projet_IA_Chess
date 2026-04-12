@@ -2,6 +2,8 @@
 header-includes:
   - \usepackage{graphicx}
   - \usepackage{titlesec}
+  - \usepackage{lscape}
+  - \geometry{bottom=2.5cm}
   - \newcommand{\sectionbreak}{\clearpage}
 
 include-before: |
@@ -76,6 +78,10 @@ Cette architecture repose sur une séparation claire des responsabilités, renda
 
 \clearpage
 # Diagramme de séquence UML
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth, height=0.76\textheight, keepaspectratio]{diagramme.png}
+\end{figure}
 
 \clearpage
 # Patrons de Conception utilisés
@@ -177,7 +183,7 @@ Une évaluation trop simple rend l’IA faible, tandis qu’une évaluation trop
 ## Compléxité de l'algorithme Minimax
 L’implémentation de l’algorithme Minimax a posé des difficultés en raison de la complexité exponentielle du nombre de positions à explorer. 
 Sans optimisation, les temps de calcul devenaient rapidement trop importants, rendant l’IA peu réactive.\
-Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur->nombre de coups possible
+Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisation. Voici un tableau représentant l'association profondeur -> nombre de coups possible
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 
@@ -205,8 +211,9 @@ Chaque Demi-coups suplémentaire c'est environ 20x plus de coups sans optimisati
 \end{center}
 
 ## Optimisation alpha-beta & heuristiques
-Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups (killer move, history heuristic). Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
-Voici un tableau représentant l'association profondeur->nombre de coups possible en utilisant l'élagage alpha-bêta
+Afin de réduire le nombre de positions explorées, plusieurs optimisations ont été nécessaires, comme l’élagage alpha-bêta, ainsi que des heuristiques de tri des coups. Leur mise en place a nécessité une bonne compréhension des interactions entre ces techniques.
+Voici un tableau représentant l'association \
+profondeur -> nombre de coups possible en utilisant l'élagage alpha-bêta
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
 \hline
