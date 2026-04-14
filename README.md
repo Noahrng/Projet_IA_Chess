@@ -62,6 +62,7 @@ dans le répertoire du projet.
 ├── src/                # Code source (.cpp)
 ├── include/            # Headers (.hpp) 
 ├── build/              # Fichiers compilés 
+├── rapport/            # Rapport du Projet
 ├── Dockerfile          # Configuration Docker 
 ├── guix.scm            # Configuration guix
 ├── Makefile            # Script de compilation 
