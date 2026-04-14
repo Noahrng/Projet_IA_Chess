@@ -20,7 +20,7 @@ include-before: |
     {\Large \textbf{31 mars 2026} \\[0.5cm]}
     
     \rule{.8\linewidth}{0.5mm} \\[0.5cm]
-    {\Huge \textbf{Rapport du projet : \\ IA d'Échecs}} \\[0.5cm]
+    {\Huge \textbf{Rapport de Projet : \\ IA d'Échecs}} \\[0.5cm]
     \rule{.8\linewidth}{0.5mm} \\[1.5cm]
     
     {\Large FAVRIOU Valentin \\ 
@@ -31,22 +31,6 @@ include-before: |
   \end{titlepage}
 ---
 
-
-<<<<<<< HEAD
-=======
-# Table des Figures
-
-- [Figure 1](#fig:img1) Capture d'écran personnelle 
-- [Figure 2](#fig:img2) Capture d'écran personnelle 
-- [Figure 3](#fig:img3) Capture d'écran personnelle 
-- [Figure 4](#fig:img4) Capture d'écran personnelle 
-- [Figure 5](#fig:img5) Capture d'écran personnelle 
-- [Figure 6](#fig:img6) Capture d'écran personnelle 
-- [Figure 7](#fig:img7) Capture d'écran grâce à l'application JETUML 
-- [Figure 8](#fig:img8) Capture d'écran grâce à l'application JETUML
->>>>>>> noah
-
-\clearpage
 
 # Introduction
 
@@ -121,20 +105,6 @@ Les différents modules interagissent de manière structurée. Par exemple, l’
 
 Cette architecture repose sur une séparation claire des responsabilités, rendant le code plus modulaire, maintenable et évolutif.
 
-<<<<<<< HEAD
-\clearpage
-# Diagramme de classes UML
-![Diagramme de classe UML](image/diagrammeuml.png){#fig:img7}
-
-\clearpage
-# Diagramme de séquence UML
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\linewidth]{image/diagrammeseq.png}
-  \caption{Diagramme de séquence UML}
-  \label{fig:img8}
-\end{figure}
-=======
 # Diagramme de Classes UML
 ![Diagramme de Classes UML](image/diagrammeuml.png){#fig:img7}
 
@@ -145,7 +115,6 @@ Cette architecture repose sur une séparation claire des responsabilités, renda
 
 Le diagramme de séquence UML ci-dessus décrit comment les données sont envoyées aux classes lorsqu'un joueur fait un coup, et lorsque l'IA fait un coup.
 
->>>>>>> noah
 
 \clearpage
 # Patrons de Conception utilisés
